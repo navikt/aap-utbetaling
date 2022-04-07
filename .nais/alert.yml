@@ -1,0 +1,38 @@
+apiVersion: "nais.io/v1"
+kind: "Alert"
+metadata:
+  name: utbetaling-alerts
+  labels:
+    team: aap
+    app: utbetaling
+  namespace: aap
+spec:
+  receivers:
+    slack:
+      channel: '#aap-github'
+  alerts:
+    - alert: utbetaling-app-nede
+      expr: kube_deployment_status_replicas_unavailable{deployment="utbetaling",job="kubernetes-service-endpoints"} > 0
+      for: 5m
+      description: "utbetaling har utilgjengelige podder i aap"
+      action: "kubectl describe pod -l app=utbetaling -n aap` for events og `kubectl get pods -l app=utbetaling -n aap` for å se feilende podder"
+      sla: respond within 1h, during office hours
+      severity: danger
+    - alert: utbetaling-kontinuerlig-restart
+      expr: sum(increase(kube_pod_container_status_restarts_total{container=~"utbetaling"}[5m])) by (container) > 2
+      for: 2m
+      description: "utbetaling har restartet flere ganger de siste 5 minuttene!"
+      action: "Se `kubectl describe pod utbetaling` for events, og `kubectl logs utbetaling` for logger"
+      sla: respond within 1h, during office hours
+      severity: danger
+    - alert: utbetaling-mangler-metrikker
+      expr: absent(up{app=~"utbetaling",job="kubernetes-pods"})
+      for: 2m
+      description: "utbetaling rapporterer ingen metrikker i aap"
+      action: "Sjekk om utbetaling i aap er oppe"
+      sla: respond within 1h, during office hours
+      severity: danger
+    - alert: høy feilrate i logger
+      expr: (100 * sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="utbetaling",log_level=~"Error"}[10m])) / sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="utbetaling"}[10m]))) > 15
+      for: 5m
+      action: "<https://logs.adeo.no/goto/1d394a6a4c647c93c51eda75e60999ed|Check logs>"
