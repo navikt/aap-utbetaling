@@ -6,7 +6,7 @@ import no.nav.aap.app.kafka.named
 import no.nav.aap.app.kafka.to
 import no.nav.aap.app.modell.toAvro
 import no.nav.aap.app.modell.toDto
-import no.nav.aap.domene.Søker
+import no.nav.aap.domene.utbetaling.Søker
 import no.nav.aap.dto.DtoInntekter
 import no.nav.aap.dto.DtoSøker
 import org.apache.kafka.streams.StreamsBuilder

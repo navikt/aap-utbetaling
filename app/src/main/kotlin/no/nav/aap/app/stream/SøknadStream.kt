@@ -3,7 +3,7 @@ package no.nav.aap.app.stream
 import no.nav.aap.app.kafka.*
 import no.nav.aap.app.modell.JsonSøknad
 import no.nav.aap.app.modell.toAvro
-import no.nav.aap.domene.entitet.Fødselsdato
+import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.entitet.Personident
 import no.nav.aap.hendelse.DtoBehov
 import no.nav.aap.hendelse.Søknad

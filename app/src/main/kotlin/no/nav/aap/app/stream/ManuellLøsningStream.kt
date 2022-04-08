@@ -3,7 +3,7 @@ package no.nav.aap.app.stream
 import no.nav.aap.app.kafka.*
 import no.nav.aap.app.modell.toAvro
 import no.nav.aap.app.modell.toDto
-import no.nav.aap.domene.Søker
+import no.nav.aap.domene.utbetaling.Søker
 import no.nav.aap.dto.DtoManuell
 import no.nav.aap.dto.DtoSøker
 import no.nav.aap.hendelse.DtoBehov
