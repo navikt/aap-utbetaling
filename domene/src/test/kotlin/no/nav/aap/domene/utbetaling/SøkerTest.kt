@@ -6,7 +6,7 @@ import no.nav.aap.domene.utbetaling.tidslinje.BrukeraktivitetPerDag
 import no.nav.aap.domene.utbetaling.tidslinje.Dag
 import no.nav.aap.domene.utbetaling.tidslinje.Meldepliktsmelding
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.util.*
@@ -16,13 +16,15 @@ internal class SøkerTest {
     @Test
     fun `Nytt vedtak oppdaterer vedtakshistorikk`() {
         val søker = Søker()
-        søker.håndterVedtak(Vedtakshendelse(
-            vedtaksid = UUID.randomUUID(),
-            innvilget = true,
-            grunnlagsfaktor = Grunnlagsfaktor(3),
-            vedtaksdato = LocalDate.now(),
-            virkningsdato = LocalDate.now()
-        ))
+        søker.håndterVedtak(
+            Vedtakshendelse(
+                vedtaksid = UUID.randomUUID(),
+                innvilget = true,
+                grunnlagsfaktor = Grunnlagsfaktor(3),
+                vedtaksdato = LocalDate.now(),
+                virkningsdato = LocalDate.now()
+            )
+        )
         val visitor = TestVisitor()
         søker.accept(visitor)
         assertEquals(1, visitor.vedtakListeSize)
@@ -58,27 +60,60 @@ internal class SøkerTest {
     @Test
     fun `Ny melding oppdaterer tidslinje`() {
         val søker = Søker()
-        søker.håndterVedtak(Vedtakshendelse(
-            vedtaksid = UUID.randomUUID(),
-            innvilget = true,
-            grunnlagsfaktor = Grunnlagsfaktor(3),
-            vedtaksdato = LocalDate.now(),
-            virkningsdato = LocalDate.now()
-        ))
-        søker.håndterMeldepliktsmelding(Meldepliktsmelding(
-            brukersAktivitet = listOf(
-                BrukeraktivitetPerDag(LocalDate.now())
+        søker.håndterVedtak(
+            Vedtakshendelse(
+                vedtaksid = UUID.randomUUID(),
+                innvilget = true,
+                grunnlagsfaktor = Grunnlagsfaktor(3),
+                vedtaksdato = LocalDate.now(),
+                virkningsdato = LocalDate.now()
             )
-        ))
+        )
+        søker.håndterMeldeplikt(
+            Meldepliktsmelding(
+                brukersAktivitet = listOf(
+                    BrukeraktivitetPerDag(LocalDate.now())
+                )
+            )
+        )
         val visitor = TestVisitor()
         søker.accept(visitor)
 
-        assertEquals(1, visitor.dagerListeSize)
+        assertEquals(1, visitor.antallDagerITidslinje)
+    }
+
+    @Test
+    fun `uavhengige innmeldte brukeraktiviteter aggregeres`() {
+        val visitor = TestVisitor()
+        val søker = Søker()
+
+        søker.håndterVedtak(
+            Vedtakshendelse(
+                vedtaksid = UUID.randomUUID(),
+                innvilget = true,
+                grunnlagsfaktor = Grunnlagsfaktor(3),
+                vedtaksdato = LocalDate.now(),
+                virkningsdato = LocalDate.now()
+            )
+        )
+        søker.håndterMeldeplikt(
+            Meldepliktsmelding(
+                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(2)))
+            )
+        )
+        søker.håndterMeldeplikt(
+            Meldepliktsmelding(
+                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(1)))
+            )
+        )
+        søker.accept(visitor)
+
+        assertEquals(2, visitor.antallDagerITidslinje)
     }
 
     private class TestVisitor : SøkerVisitor {
         var vedtakListeSize: Int = -1
-        var dagerListeSize: Int = -1
+        var antallDagerITidslinje: Int = -1
         lateinit var gjeldendeVedtak: Vedtak
 
         override fun visitVedtakshistorikk(vedtak: List<Vedtak>) {
@@ -90,7 +125,7 @@ internal class SøkerTest {
         }
 
         override fun visitTidslinje(dager: List<Dag>) {
-            this.dagerListeSize = dager.size
+            this.antallDagerITidslinje = dager.size
         }
     }
 }

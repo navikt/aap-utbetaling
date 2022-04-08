@@ -1,6 +1,7 @@
 package no.nav.aap.domene.utbetaling.entitet
 
 import kotlin.math.round
+import kotlin.math.roundToInt
 
 class Beløp(verdi: Number) : Comparable<Beløp> {
 
@@ -18,6 +19,8 @@ class Beløp(verdi: Number) : Comparable<Beløp> {
 
     internal operator fun div(nevner: Number): Beløp = Beløp(verdi / nevner.toDouble())
     internal operator fun div(nevner: Beløp): Double = this.verdi / nevner.verdi
+
+    internal fun avrundet(): Beløp = Beløp(this.verdi.roundToInt())
 
     internal fun toDto() = verdi
 

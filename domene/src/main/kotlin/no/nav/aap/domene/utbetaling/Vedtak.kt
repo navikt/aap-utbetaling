@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling
 
+import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.tidslinje.Meldepliktsmelding
@@ -28,7 +29,7 @@ internal class Vedtak(
     }
 
     fun oppdaterTidslinje(tidslinje: Tidslinje, melding: Meldepliktsmelding) {
-        melding.oppdaterTidlinje(tidslinje, grunnlagsfaktor)
+        melding.oppdaterTidlinje(tidslinje, grunnlagsfaktor, Beløp(0))
     }
 
     override fun equals(other: Any?): Boolean {
