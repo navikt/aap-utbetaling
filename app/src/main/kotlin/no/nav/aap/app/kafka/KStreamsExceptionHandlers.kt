@@ -1,6 +1,5 @@
 package no.nav.aap.app.kafka
 
-import no.nav.aap.domene.VedtakException
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.streams.errors.DeserializationExceptionHandler
@@ -42,7 +41,7 @@ class EntryPointExceptionHandler : DeserializationExceptionHandler {
 class ProcessingExceptionHandler : StreamsUncaughtExceptionHandler {
     override fun handle(exception: Throwable): StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse {
         return when (exception.cause) {
-            is VedtakException -> logAndReplaceThread(exception)
+            is RuntimeException -> logAndReplaceThread(exception)
             null -> logAndShutdownClient(exception)
             else -> logAndShutdownClient(exception)
         }

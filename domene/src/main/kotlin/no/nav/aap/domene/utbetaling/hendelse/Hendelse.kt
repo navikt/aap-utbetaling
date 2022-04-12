@@ -15,5 +15,31 @@ interface Behov {
 }
 
 sealed class DtoBehov {
+    open fun erBarn() = false
+    open fun erInstitusjon() = false
+    open fun erMeldeplikt() = false
+    open fun erVedtak() = false
+
+    open fun accept(lytter: Lytter) {}
+
+    class Barn : DtoBehov() {
+        override fun erBarn() = true
+    }
+
+    class Institusjon : DtoBehov() {
+        override fun erInstitusjon() = true
+    }
+
+    class Meldeplikt : DtoBehov() {
+        override fun erMeldeplikt() = true
+    }
+
+    class Vedtak : DtoBehov() {
+        override fun erVedtak() = true
+    }
+
+}
+
+interface Lytter {
 
 }

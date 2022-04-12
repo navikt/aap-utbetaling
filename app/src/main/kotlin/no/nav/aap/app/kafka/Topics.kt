@@ -1,17 +1,14 @@
 package no.nav.aap.app.kafka
 
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
-import no.nav.aap.app.modell.JsonSøknad
 import org.apache.avro.specific.SpecificRecord
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Joined
 import org.apache.kafka.streams.kstream.Produced
-import no.nav.aap.avro.inntekter.v1.Inntekter as AvroInntekter
-import no.nav.aap.avro.manuell.v1.Manuell as AvroManuell
-import no.nav.aap.avro.medlem.v1.Medlem as AvroMedlem
-import no.nav.aap.avro.sokere.v1.Soker as AvroSøker
+import java.time.LocalDate
+import java.util.*
 
 data class Topic<K, V>(
     val name: String,
@@ -25,11 +22,10 @@ data class Topic<K, V>(
 }
 
 class Topics(private val config: KafkaConfig) {
-    val søknad = Topic("aap.aap-soknad-sendt.v1", Serdes.StringSerde(), jsonSerde<JsonSøknad>())
-    val søkere = Topic("aap.sokere.v1", Serdes.StringSerde(), avroSerde<AvroSøker>())
-    val medlem = Topic("aap.medlem.v1", Serdes.StringSerde(), avroSerde<AvroMedlem>())
-    val manuell = Topic("aap.manuell.v1", Serdes.StringSerde(), avroSerde<AvroManuell>())
-    val inntekter = Topic("aap.inntekter.v1", Serdes.StringSerde(), avroSerde<AvroInntekter>())
+    val vedtak = Topic("aap.aap-vedtak-fattet.v1", Serdes.StringSerde(), jsonSerde<AvroVedtak>()) // FIXME endre til avroserde etterhvert
+    val barn = Topic("aap.barn.v1", Serdes.StringSerde(), jsonSerde<AvroBarna>()) // FIXME endre til avroserde etterhvert
+    val institusjon = Topic("aap.barn.v1", Serdes.StringSerde(), jsonSerde<AvroInstitusjon>()) // FIXME endre til avroserde etterhvert
+    val meldeplikt = Topic("aap.meldeplikt.v1", Serdes.StringSerde(), jsonSerde<AvroMeldeplikt>()) // FIXME endre til avroserde etterhvert
 
     private inline fun <reified V : Any> jsonSerde(): Serde<V> = JsonSerde(V::class)
 
@@ -39,3 +35,38 @@ class Topics(private val config: KafkaConfig) {
         configure(avroConfig.toMap(), false)
     }
 }
+
+/** Midlertidig Avro objekter så vi kan justere mens vi utvikler **/
+data class AvroVedtak(
+    val vedtaksid: UUID,
+    val innvilget: Boolean,
+    val grunnlagsfaktor: Double,
+    val vedtaksdato: LocalDate,
+    val virkningsdato: LocalDate
+)
+
+data class AvroBarna(
+    val barn: List<AvroBarn>
+)
+
+data class AvroBarn(
+    val fødselsnummer: String,
+    val fødselsdato: LocalDate,
+    // Hvor mye inntekt?
+)
+
+// 11-25
+data class AvroInstitusjon(
+    val institusjonsnavn: String,
+    val periodeFom: LocalDate,
+    val periodeTom: LocalDate
+    // Forsørgeransvar her?
+)
+
+data class AvroMeldeplikt(
+    val aktivitetPerDag: List<AvroBrukersAktivitetPerDag>
+)
+
+data class AvroBrukersAktivitetPerDag(
+    val dato: LocalDate
+)

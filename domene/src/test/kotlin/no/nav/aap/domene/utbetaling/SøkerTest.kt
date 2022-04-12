@@ -2,9 +2,9 @@ package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
-import no.nav.aap.domene.utbetaling.tidslinje.BrukeraktivitetPerDag
+import no.nav.aap.domene.utbetaling.hendelse.BrukeraktivitetPerDag
 import no.nav.aap.domene.utbetaling.tidslinje.Dag
-import no.nav.aap.domene.utbetaling.tidslinje.Meldepliktsmelding
+import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -70,7 +70,7 @@ internal class SøkerTest {
             )
         )
         søker.håndterMeldeplikt(
-            Meldepliktsmelding(
+            Meldepliktshendelse(
                 brukersAktivitet = listOf(
                     BrukeraktivitetPerDag(LocalDate.now())
                 )
@@ -97,12 +97,12 @@ internal class SøkerTest {
             )
         )
         søker.håndterMeldeplikt(
-            Meldepliktsmelding(
+            Meldepliktshendelse(
                 brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(2)))
             )
         )
         søker.håndterMeldeplikt(
-            Meldepliktsmelding(
+            Meldepliktshendelse(
                 brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(1)))
             )
         )

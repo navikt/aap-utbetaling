@@ -1,11 +1,11 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
-import no.nav.aap.domene.utbetaling.tidslinje.Meldepliktsmelding
+import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.tidslinje.Tidslinje
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 
-internal class Søker {
+class Søker {
     private val tidslinje = Tidslinje()
     private val vedtakshistorikk = Vedtakshistorikk()
 
@@ -13,7 +13,7 @@ internal class Søker {
         vedtakshistorikk.leggTilNyttVedtak(vedtak)
     }
 
-    internal fun håndterMeldeplikt(melding: Meldepliktsmelding) {
+    internal fun håndterMeldeplikt(melding: Meldepliktshendelse) {
         vedtakshistorikk.oppdaterTidslinje(tidslinje, melding)
         // behov -> slå opp barn og institusjon
     }
