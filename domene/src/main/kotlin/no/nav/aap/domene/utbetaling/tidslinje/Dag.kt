@@ -2,6 +2,7 @@ package no.nav.aap.domene.utbetaling.tidslinje
 
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
+import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.summerBeløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnbeløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import java.time.DayOfWeek
@@ -27,6 +28,8 @@ internal class Dag(
             grunnlagsfaktor = grunnlagsfaktor,
             barnetillegg = barnetillegg
         )
+
+        fun Iterable<Dag>.summer(fom: LocalDate, tom: LocalDate) = filter { it.dato in fom..tom }.map { it.dagsats }.summerBeløp()
     }
 
     private fun LocalDate.erHelg() = this.dayOfWeek in arrayOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)

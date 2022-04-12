@@ -111,6 +111,38 @@ internal class SøkerTest {
         assertEquals(2, visitor.antallDagerITidslinje)
     }
 
+    @Test
+    fun `Flere uavhengige innmeldte brukeraktiviteter aggregeres`() {
+        val visitor = TestVisitor()
+        val søker = Søker()
+
+        søker.håndterVedtak(
+            Vedtakshendelse(
+                vedtaksid = UUID.randomUUID(),
+                innvilget = true,
+                grunnlagsfaktor = Grunnlagsfaktor(3),
+                vedtaksdato = LocalDate.now(),
+                virkningsdato = LocalDate.now()
+            )
+        )
+        søker.håndterMeldeplikt(
+            Meldepliktshendelse(
+                brukersAktivitet = listOf(
+                    BrukeraktivitetPerDag(LocalDate.now().minusDays(2)),
+                    BrukeraktivitetPerDag(LocalDate.now().minusDays(3))
+                )
+            )
+        )
+        søker.håndterMeldeplikt(
+            Meldepliktshendelse(
+                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(1)))
+            )
+        )
+        søker.accept(visitor)
+
+        assertEquals(3, visitor.antallDagerITidslinje)
+    }
+
     private class TestVisitor : SøkerVisitor {
         var vedtakListeSize: Int = -1
         var antallDagerITidslinje: Int = -1

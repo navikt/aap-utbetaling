@@ -28,8 +28,8 @@ internal class Vedtak(
         fun Iterable<Vedtak>.sortertPåDato() = this.sortedBy { it.vedtaksdato }
     }
 
-    fun oppdaterTidslinje(tidslinje: Tidslinje, melding: Meldepliktshendelse) {
-        melding.oppdaterTidlinje(tidslinje, grunnlagsfaktor, Beløp(0))
+    fun oppdaterTidslinje(tidslinje: Tidslinje, barn: Barnehage, melding: Meldepliktshendelse) {
+        melding.oppdaterTidlinje(tidslinje, grunnlagsfaktor, barn)
     }
 
     override fun equals(other: Any?): Boolean {

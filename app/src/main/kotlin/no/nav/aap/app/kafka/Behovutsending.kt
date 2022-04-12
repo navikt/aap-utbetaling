@@ -1,6 +1,6 @@
 package no.nav.aap.app.kafka
 
-import no.nav.aap.domene.utbetaling.hendelse.DtoBehov
+import no.nav.aap.domene.utbetaling.dto.DtoBehov
 import no.nav.aap.domene.utbetaling.hendelse.Lytter
 import org.apache.kafka.streams.kstream.Branched
 import org.apache.kafka.streams.kstream.BranchedKStream
