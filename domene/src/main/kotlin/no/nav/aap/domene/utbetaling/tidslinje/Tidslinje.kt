@@ -2,20 +2,9 @@ package no.nav.aap.domene.utbetaling.tidslinje
 
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
-import no.nav.aap.domene.utbetaling.tidslinje.Dag.Arbeidsdag.Companion.summer
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import java.time.LocalDate
 
 internal class Tidslinje {
-    private val dager = mutableListOf<Dag.Arbeidsdag>()
-
-    internal fun leggTilDag(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor, barnetillegg: Beløp) {
-        dager.add(Dag.Arbeidsdag.opprettDag(dato, grunnlagsfaktor, barnetillegg))
-    }
-
-    internal fun summerPeriode(fom: LocalDate, tom: LocalDate) = dager.summer(fom, tom)
-
-    internal fun accept(visitor: SøkerVisitor) {
-        visitor.visitTidslinje(dager.toList())
-    }
+    private val dager = mutableListOf<Meldeperiode>()
 }

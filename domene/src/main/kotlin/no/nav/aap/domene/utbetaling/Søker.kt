@@ -31,7 +31,7 @@ class Søker {
 
     internal fun accept(visitor: SøkerVisitor) {
         vedtakshistorikk.accept(visitor)
-        tidslinje.accept(visitor)
+//        tidslinje.accept(visitor)
     }
 }
 

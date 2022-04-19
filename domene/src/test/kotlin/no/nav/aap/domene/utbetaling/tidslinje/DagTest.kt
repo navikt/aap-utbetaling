@@ -58,14 +58,14 @@ internal class DagTest {
 
     @Test
     fun `En fraværdag har ingen arbeidstimer`() {
-        val dag = Dag.Fraværsdag(3 januar 2022)
+        val dag = Dag.Fraværsdag(3 januar 2022, Grunnlagsfaktor(3), 0.beløp)
         val summerteArbeidstimer = listOf(dag).summerArbeidstimer()
         assertEquals(0.0, summerteArbeidstimer)
     }
 
     @Test
     fun `En ventedag har ingen arbeidstimer`() {
-        val dag = Dag.Ventedag(3 januar 2022)
+        val dag = Dag.Ventedag(3 januar 2022, Grunnlagsfaktor(3), 0.beløp)
         val summerteArbeidstimer = listOf(dag).summerArbeidstimer()
         assertEquals(0.0, summerteArbeidstimer)
     }
@@ -80,8 +80,8 @@ internal class DagTest {
             Dag.Arbeidsdag(7 januar 2022, Grunnlagsfaktor(3), 0.beløp, 5.0),
             Dag.Helg(8 januar 2022,1.0),
             Dag.Helg(9 januar 2022,1.0),
-            Dag.Ventedag(10 januar 2022),
-            Dag.Ventedag(11 januar 2022),
+            Dag.Ventedag(10 januar 2022, Grunnlagsfaktor(3), 0.beløp),
+            Dag.Ventedag(11 januar 2022, Grunnlagsfaktor(3), 0.beløp),
             Dag.Arbeidsdag(12 januar 2022, Grunnlagsfaktor(3), 0.beløp, 5.0),
             Dag.Arbeidsdag(13 januar 2022, Grunnlagsfaktor(3), 0.beløp, 5.0),
             Dag.Arbeidsdag(14 januar 2022, Grunnlagsfaktor(3), 0.beløp, 5.0)

@@ -19,6 +19,6 @@ internal class BrukeraktivitetPerDag(
     private val dato: LocalDate
 ) {
     fun oppdaterTidslinje(tidslinje: Tidslinje, grunnlagsfaktor: Grunnlagsfaktor, barn: Barnetillegg) {
-        tidslinje.leggTilDag(dato, grunnlagsfaktor, barn.barnetilleggForDag(dato))
+//        tidslinje.leggTilDag(dato, grunnlagsfaktor, barn.barnetilleggForDag(dato))
     }
 }
