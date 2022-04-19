@@ -8,33 +8,88 @@ import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import java.time.DayOfWeek
 import java.time.LocalDate
 
-internal class Dag(
-    private val dato: LocalDate,
-    private val grunnlagsfaktor: Grunnlagsfaktor,
-    private val barnetillegg: Beløp,
+internal sealed class Dag(
+    protected val dato: LocalDate,
 ) {
 
-    private val grunnlag: Beløp = if(dato.erHelg()) 0.beløp else Grunnbeløp.årligYtelseINOK(dato, grunnlagsfaktor)
-    private val minsteDagsats = grunnlag * 0.66 / 260
-    private val høyesteDagsats = grunnlag * 0.9 / 260
+    internal abstract fun arbeidstimer():Double
 
-    private val dagsats = minOf(høyesteDagsats, (minsteDagsats + barnetillegg)).avrundet()
+    internal abstract fun accept(visitor: DagVisitor)
 
-    internal fun accept(visitor: DagVisitor) = visitor.visitDag(dagsats)
+    internal class Helg(
+        dato: LocalDate,
+        private val arbeidstimer: Double
+    ) : Dag(dato) {
 
-    companion object {
-        fun opprettDag(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor, barnetillegg: Beløp) = Dag(
-            dato = dato,
-            grunnlagsfaktor = grunnlagsfaktor,
-            barnetillegg = barnetillegg
-        )
+        override fun arbeidstimer() = arbeidstimer
 
-        fun Iterable<Dag>.summer(fom: LocalDate, tom: LocalDate) = filter { it.dato in fom..tom }.map { it.dagsats }.summerBeløp()
+        override fun accept(visitor: DagVisitor) {
+            visitor.visitHelgedag()
+        }
     }
 
-    private fun LocalDate.erHelg() = this.dayOfWeek in arrayOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+    internal class Fraværsdag(
+        dato: LocalDate
+    ) : Dag(dato) {
+
+        override fun arbeidstimer() = 0.0
+
+        override fun accept(visitor: DagVisitor) {
+            visitor.visitFraværsdag()
+        }
+    }
+
+    internal class Ventedag(
+        dato: LocalDate
+    ) : Dag(dato) {
+
+        override fun arbeidstimer() = 0.0
+
+        override fun accept(visitor: DagVisitor) {
+            visitor.visitVentedag()
+        }
+    }
+
+    internal class Arbeidsdag(
+        dato: LocalDate,
+        private val grunnlagsfaktor: Grunnlagsfaktor,
+        private val barnetillegg: Beløp,
+        private val arbeidstimer: Double
+    ) : Dag(dato) {
+
+        private val grunnlag: Beløp = if (dato.erHelg()) 0.beløp else Grunnbeløp.årligYtelseINOK(dato, grunnlagsfaktor)
+        private val dagsats = grunnlag * 0.66 / 260 //TODO: Heltall??
+        private val høyestebeløpMedBarnetillegg = grunnlag * 0.9 / 260 //TODO: Denne også heltall??
+
+        private val beløpMedBarnetillegg = minOf(høyestebeløpMedBarnetillegg, (dagsats + barnetillegg)).avrundet()
+
+        override fun arbeidstimer() = arbeidstimer
+
+        override fun accept(visitor: DagVisitor) = visitor.visitArbeidsdag(beløpMedBarnetillegg)
+
+        companion object {
+            fun opprettDag(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor, barnetillegg: Beløp) = Arbeidsdag(
+                dato = dato,
+                grunnlagsfaktor = grunnlagsfaktor,
+                barnetillegg = barnetillegg,
+                0.0 //TODO
+            )
+
+            fun Iterable<Arbeidsdag>.summer(fom: LocalDate, tom: LocalDate) =
+                filter { it.dato in fom..tom }.map { it.beløpMedBarnetillegg }.summerBeløp()
+        }
+
+        private fun LocalDate.erHelg() = this.dayOfWeek in arrayOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+    }
+
+    internal companion object{
+        internal fun Iterable<Dag>.summerArbeidstimer() = sumOf { it.arbeidstimer() }
+    }
 }
 
 internal interface DagVisitor {
-    fun visitDag(dagsats: Beløp) {}
+    fun visitHelgedag() {}
+    fun visitFraværsdag() {}
+    fun visitVentedag() {}
+    fun visitArbeidsdag(dagsats: Beløp) {}
 }

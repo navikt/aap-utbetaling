@@ -15,7 +15,7 @@ internal class Vedtakshistorikk {
         vedtakshistorikk.add(vedtak)
     }
 
-    internal fun oppdaterTidslinje(tidslinje: Tidslinje, barn: Barnehage, melding: Meldepliktshendelse) {
+    internal fun oppdaterTidslinje(tidslinje: Tidslinje, barn: Barnetillegg, melding: Meldepliktshendelse) {
         finnGjeldendeVedtak().oppdaterTidslinje(tidslinje, barn, melding)
     }
 

@@ -10,19 +10,16 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import io.ktor.util.collections.*
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.aap.app.config.Config
 import no.nav.aap.app.config.loadConfig
 import no.nav.aap.app.kafka.*
-import no.nav.aap.app.stream.mock.soknadProducer
 import org.apache.kafka.streams.KafkaStreams.*
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.slf4j.LoggerFactory
 
-internal const val SØKERE_STORE_NAME = "soker-state-store-v1"
 private val secureLog = LoggerFactory.getLogger("secureLog")
 
 fun main() {
@@ -42,8 +39,6 @@ internal fun Application.server(kafka: Kafka = KStreams()) {
     val topics = Topics(config.kafka)
     val topology = createTopology(topics)
     kafka.start(topology, config.kafka, prometheus)
-
-    soknadProducer(kafka, topics)
 
     routing {
         actuator(prometheus, kafka)
@@ -70,6 +65,3 @@ private fun Routing.actuator(prometheus: PrometheusMeterRegistry, kafka: Kafka) 
         }
     }
 }
-
-val søkereToDelete: ConcurrentList<String> = ConcurrentList()
-

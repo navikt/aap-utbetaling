@@ -1,6 +1,5 @@
 package no.nav.aap.domene.utbetaling
 
-import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
@@ -28,7 +27,7 @@ internal class Vedtak(
         fun Iterable<Vedtak>.sortertPåDato() = this.sortedBy { it.vedtaksdato }
     }
 
-    fun oppdaterTidslinje(tidslinje: Tidslinje, barn: Barnehage, melding: Meldepliktshendelse) {
+    fun oppdaterTidslinje(tidslinje: Tidslinje, barn: Barnetillegg, melding: Meldepliktshendelse) {
         melding.oppdaterTidlinje(tidslinje, grunnlagsfaktor, barn)
     }
 

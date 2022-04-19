@@ -10,7 +10,7 @@ import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 class Søker {
     private val tidslinje = Tidslinje()
     private val vedtakshistorikk = Vedtakshistorikk()
-    private val barn = Barnehage()
+    private val barn = Barnetillegg()
 
     internal fun håndterVedtak(vedtak: Vedtakshendelse) {
         vedtakshistorikk.leggTilNyttVedtak(vedtak)

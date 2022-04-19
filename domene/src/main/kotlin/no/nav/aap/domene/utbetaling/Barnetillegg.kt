@@ -1,12 +1,12 @@
 package no.nav.aap.domene.utbetaling
 
-import no.nav.aap.domene.utbetaling.Barnehage.Barn.Companion.antallBarnUnder18År
+import no.nav.aap.domene.utbetaling.Barnetillegg.Barn.Companion.antallBarnUnder18År
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningBarn
 import java.time.LocalDate
 
-class Barnehage {
+class Barnetillegg {
     private val barn = mutableListOf<Barn>()
 
     private companion object {
