@@ -1,8 +1,8 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
-import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
+import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.tidslinje.Tidslinje
 import java.time.LocalDate
 import java.util.*
@@ -15,8 +15,8 @@ internal class Vedtak(
     private val virkningsdato: LocalDate
 ) {
 
-    companion object {
-        fun opprettFraVedtakshendelse(vedtakshendelse: Vedtakshendelse) = Vedtak(
+    internal companion object {
+        internal fun opprettFraVedtakshendelse(vedtakshendelse: Vedtakshendelse) = Vedtak(
             vedtaksid = vedtakshendelse.vedtaksid,
             innvilget = vedtakshendelse.innvilget,
             grunnlagsfaktor = vedtakshendelse.grunnlagsfaktor,
@@ -24,11 +24,11 @@ internal class Vedtak(
             virkningsdato = vedtakshendelse.virkningsdato
         )
 
-        fun Iterable<Vedtak>.sortertPåDato() = this.sortedBy { it.vedtaksdato }
+        internal fun Iterable<Vedtak>.sortertPåDato() = this.sortedBy { it.vedtaksdato }
     }
 
-    fun oppdaterTidslinje(tidslinje: Tidslinje, barn: Barnetillegg, melding: Meldepliktshendelse) {
-        melding.oppdaterTidlinje(tidslinje, grunnlagsfaktor, barn)
+    internal fun oppdaterTidslinje(tidslinje: Tidslinje, melding: Meldepliktshendelse) {
+        tidslinje.håndterMeldepliktshendelse(melding, grunnlagsfaktor)
     }
 
     override fun equals(other: Any?): Boolean {

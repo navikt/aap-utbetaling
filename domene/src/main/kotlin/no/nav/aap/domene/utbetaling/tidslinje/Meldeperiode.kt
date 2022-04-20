@@ -9,6 +9,10 @@ import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 internal class Meldeperiode {
     private val dager = mutableListOf<Dag>()
 
+    internal fun leggTilDag(dag: Dag) {
+        dager.add(dag)
+    }
+
     internal fun leggTilDager(dag: Iterable<Dag>) {
         dager.addAll(dag)
     }

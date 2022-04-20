@@ -67,13 +67,13 @@ internal sealed class Dag(
             ignoreMe = true
         }
 
-        override fun beløp(): Beløp = if(ignoreMe) {
+        override fun beløp(): Beløp = if (ignoreMe) {
             0.beløp
         } else {
             super.beløp()
         }
 
-        override fun beløp(arbeidsprosent: Double): Beløp = if(ignoreMe) {
+        override fun beløp(arbeidsprosent: Double): Beløp = if (ignoreMe) {
             0.beløp
         } else {
             super.beløp(arbeidsprosent)
@@ -81,12 +81,13 @@ internal sealed class Dag(
 
         override fun arbeidstimer() = 0.0
         override fun normalArbeidstimer(): Double {
-            return if(ignoreMe) {
+            return if (ignoreMe) {
                 0.0
             } else {
                 NORMAL_ARBEIDSTIMER
             }
         }
+
         override fun accept(visitor: DagVisitor) {
             visitor.visitFraværsdag(this, beløp())
         }
@@ -127,6 +128,10 @@ internal sealed class Dag(
             map { it.beløp(arbeidsprosent) }.summerBeløp()
 
         private fun LocalDate.erHelg() = this.dayOfWeek in arrayOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+
+        internal fun arbeidsdag(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor, arbeidstimer: Double) =
+            if (dato.erHelg()) Helg(dato, arbeidstimer)
+            else Arbeidsdag(dato, grunnlagsfaktor, 0.beløp, arbeidstimer)
     }
 }
 

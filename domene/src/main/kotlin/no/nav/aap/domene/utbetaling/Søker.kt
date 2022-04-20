@@ -17,7 +17,7 @@ class Søker {
     }
 
     internal fun håndterMeldeplikt(melding: Meldepliktshendelse) {
-        vedtakshistorikk.oppdaterTidslinje(tidslinje, barn, melding)
+        vedtakshistorikk.oppdaterTidslinje(tidslinje, melding)
         // behov -> slå opp barn og institusjon
     }
 

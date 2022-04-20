@@ -1,24 +1,25 @@
 package no.nav.aap.domene.utbetaling.hendelse
 
-import no.nav.aap.domene.utbetaling.Barnetillegg
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
-import no.nav.aap.domene.utbetaling.tidslinje.Tidslinje
+import no.nav.aap.domene.utbetaling.tidslinje.Dag
+import no.nav.aap.domene.utbetaling.tidslinje.Meldeperiode
 import java.time.LocalDate
 
 internal class Meldepliktshendelse(
     private val brukersAktivitet: List<BrukeraktivitetPerDag>
 ) : Hendelse() {
 
-    internal fun oppdaterTidlinje(tidslinje: Tidslinje, grunnlagsfaktor: Grunnlagsfaktor, barn: Barnetillegg) {
-        brukersAktivitet.forEach { it.oppdaterTidslinje(tidslinje, grunnlagsfaktor, barn) }
+    internal fun populerMeldeperiode(meldeperiode: Meldeperiode, grunnlagsfaktor: Grunnlagsfaktor) {
+        brukersAktivitet.forEach { it.oppdaterTidslinje(meldeperiode, grunnlagsfaktor) }
     }
 
 }
 
 internal class BrukeraktivitetPerDag(
-    private val dato: LocalDate
+    private val dato: LocalDate,
+    private val arbeidstimer: Double
 ) {
-    fun oppdaterTidslinje(tidslinje: Tidslinje, grunnlagsfaktor: Grunnlagsfaktor, barn: Barnetillegg) {
-//        tidslinje.leggTilDag(dato, grunnlagsfaktor, barn.barnetilleggForDag(dato))
+    fun oppdaterTidslinje(meldeperiode: Meldeperiode, grunnlagsfaktor: Grunnlagsfaktor) {
+        meldeperiode.leggTilDag(Dag.arbeidsdag(dato, grunnlagsfaktor, arbeidstimer))
     }
 }

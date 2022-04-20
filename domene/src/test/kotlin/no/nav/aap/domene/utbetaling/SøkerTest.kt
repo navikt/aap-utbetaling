@@ -2,10 +2,9 @@ package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
-import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.hendelse.BrukeraktivitetPerDag
-import no.nav.aap.domene.utbetaling.tidslinje.Dag.Arbeidsdag
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
+import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.tidslinje.Dag
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -74,7 +73,7 @@ internal class SøkerTest {
         søker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
-                    BrukeraktivitetPerDag(LocalDate.now())
+                    BrukeraktivitetPerDag(LocalDate.now(), 0.0)
                 )
             )
         )
@@ -100,12 +99,12 @@ internal class SøkerTest {
         )
         søker.håndterMeldeplikt(
             Meldepliktshendelse(
-                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(2)))
+                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(2), 0.0))
             )
         )
         søker.håndterMeldeplikt(
             Meldepliktshendelse(
-                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(1)))
+                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(1), 0.0))
             )
         )
         søker.accept(visitor)
@@ -130,14 +129,14 @@ internal class SøkerTest {
         søker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
-                    BrukeraktivitetPerDag(LocalDate.now().minusDays(2)),
-                    BrukeraktivitetPerDag(LocalDate.now().minusDays(3))
+                    BrukeraktivitetPerDag(LocalDate.now().minusDays(2), 0.0),
+                    BrukeraktivitetPerDag(LocalDate.now().minusDays(3), 0.0)
                 )
             )
         )
         søker.håndterMeldeplikt(
             Meldepliktshendelse(
-                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(1)))
+                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(1), 0.0))
             )
         )
         søker.accept(visitor)
