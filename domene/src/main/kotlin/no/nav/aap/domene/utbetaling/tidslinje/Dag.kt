@@ -38,17 +38,20 @@ internal sealed class Dag(
 
     internal abstract class Beløpdag(
         dato: LocalDate,
-        private val grunnlagsfaktor: Grunnlagsfaktor,
-        private val barnetillegg: Beløp
+        grunnlagsfaktor: Grunnlagsfaktor,
+        barnetillegg: Beløp
     ) : Dag(dato) {
 
         private companion object {
-            private const val HØYESTE_ARBEIDSMENGDE_SOM_GIR_YTELSE = 0.6
+            private const val HØYESTE_ARBEIDSMENGDE_SOM_GIR_YTELSE = 0.6 // TODO Skal justeres ved vedtak
+            private const val FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG = 0.66
+            private const val MAKS_FAKTOR_AV_GRUNNLAG = 0.9
+            private const val ANTALL_DAGER_MED_UTBETALING_PER_ÅR = 260
         }
 
         private val grunnlag: Beløp = Grunnbeløp.årligYtelseINOK(dato, grunnlagsfaktor)
-        private val dagsats = grunnlag * 0.66 / 260 //TODO: Heltall??
-        private val høyestebeløpMedBarnetillegg = grunnlag * 0.9 / 260 //TODO: Denne også heltall??
+        private val dagsats = grunnlag * FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG / ANTALL_DAGER_MED_UTBETALING_PER_ÅR //TODO: Heltall??
+        private val høyestebeløpMedBarnetillegg = grunnlag * MAKS_FAKTOR_AV_GRUNNLAG / ANTALL_DAGER_MED_UTBETALING_PER_ÅR //TODO: Denne også heltall??
 
         private val beløpMedBarnetillegg = minOf(høyestebeløpMedBarnetillegg, (dagsats + barnetillegg))
 
