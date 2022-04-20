@@ -9,11 +9,6 @@ import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 internal class Meldeperiode {
     private val dager = mutableListOf<Dag>()
 
-    private companion object {
-        private const val ARBEIDSTIMER_PER_UKE = 37.5
-        private const val ARBEIDSTIMER_PER_PERIODE = ARBEIDSTIMER_PER_UKE * 2
-    }
-
     internal fun leggTilDager(dag: Iterable<Dag>) {
         dager.addAll(dag)
     }

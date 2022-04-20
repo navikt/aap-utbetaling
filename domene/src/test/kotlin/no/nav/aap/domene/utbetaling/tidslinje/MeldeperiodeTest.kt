@@ -128,4 +128,15 @@ internal class MeldeperiodeTest {
         val beløp = meldeperiode.sumForPeriode()
         assertEquals(3241.12.beløp, beløp)
     }
+
+    @Test
+    fun `Hvis du jobber mer enn 100 prosent vil du få 0 i utbetaling`() {
+        val dager = 5.F + 2.H(arbeidstimer = 1) + 5.A
+
+        val meldeperiode = Meldeperiode()
+        meldeperiode.leggTilDager(dager)
+
+        val beløp = meldeperiode.sumForPeriode()
+        assertEquals(0.beløp, beløp)
+    }
 }
