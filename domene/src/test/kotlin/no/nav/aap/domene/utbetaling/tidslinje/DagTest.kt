@@ -1,10 +1,15 @@
 package no.nav.aap.domene.utbetaling.tidslinje
 
+import no.nav.aap.domene.utbetaling.*
+import no.nav.aap.domene.utbetaling.A
+import no.nav.aap.domene.utbetaling.H
+import no.nav.aap.domene.utbetaling.V
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.januar
 import no.nav.aap.domene.utbetaling.tidslinje.Dag.Companion.summerArbeidstimer
+import no.nav.aap.domene.utbetaling.tidslinje.Dag.Companion.summerNormalArbeidstimer
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -87,6 +92,38 @@ internal class DagTest {
             Dag.Arbeidsdag(14 januar 2022, Grunnlagsfaktor(3), 0.beløp, 5.0)
         ).summerArbeidstimer()
         assertEquals(42.0, summerteArbeidstimer)
+    }
+
+    @Test
+    fun `En arbeidsdag bidrar med 7,5 timer til summen av normalarbeidstid`() {
+        assertEquals(7.5, 1.A.summerNormalArbeidstimer())
+    }
+
+    @Test
+    fun `To arbeidsdager bidrar med 15 timer til summen av normalarbeidstid`() {
+        assertEquals(15.0, 2.A.summerNormalArbeidstimer())
+    }
+
+    @Test
+    fun `En helgedag bidrar med 0 timer til summen av normalarbeidstid`() {
+        assertEquals(0.0, 1.H.summerNormalArbeidstimer())
+    }
+
+    @Test
+    fun `En ventedag bidrar med 7,5 timer til summen av normalarbeidstid`() {
+        assertEquals(7.5, 1.V.summerNormalArbeidstimer())
+    }
+
+    @Test
+    fun `En ikke-ignorert fraværsdag bidrar med 7,5 timer til summen av normalarbeidstid`() {
+        assertEquals(7.5, 1.F.summerNormalArbeidstimer())
+    }
+
+    @Test
+    fun `En ignorert fraværsdag bidrar med 0 timer til summen av normalarbeidstid`() {
+        val dag = 1.F
+        dag.first().ignoreMe()
+        assertEquals(0.0, dag.summerNormalArbeidstimer())
     }
 
     private class TestDagVisitor : DagVisitor {

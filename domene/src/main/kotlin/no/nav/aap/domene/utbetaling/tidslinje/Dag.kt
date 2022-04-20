@@ -13,6 +13,7 @@ internal sealed class Dag(
 ) {
 
     internal abstract fun arbeidstimer(): Double
+    internal open fun normalArbeidstimer(): Double = NORMAL_ARBEIDSTIMER
     internal abstract fun beløp(arbeidsprosent: Double): Beløp
 
     internal abstract fun accept(visitor: DagVisitor)
@@ -23,6 +24,7 @@ internal sealed class Dag(
     ) : Dag(dato) {
 
         override fun arbeidstimer() = arbeidstimer
+        override fun normalArbeidstimer(): Double = 0.0
         override fun beløp(arbeidsprosent: Double) = 0.beløp
 
         override fun accept(visitor: DagVisitor) {
@@ -77,6 +79,13 @@ internal sealed class Dag(
         }
 
         override fun arbeidstimer() = 0.0
+        override fun normalArbeidstimer(): Double {
+            return if(ignoreMe) {
+                0.0
+            } else {
+                NORMAL_ARBEIDSTIMER
+            }
+        }
         override fun accept(visitor: DagVisitor) {
             visitor.visitFraværsdag(this, beløp())
         }
@@ -110,7 +119,9 @@ internal sealed class Dag(
     }
 
     internal companion object {
+        private const val NORMAL_ARBEIDSTIMER = 7.5
         internal fun Iterable<Dag>.summerArbeidstimer() = sumOf { it.arbeidstimer() }
+        internal fun Iterable<Dag>.summerNormalArbeidstimer() = sumOf { it.normalArbeidstimer() }
         internal fun Iterable<Dag>.beregnBeløp(arbeidsprosent: Double): Beløp =
             map { it.beløp(arbeidsprosent) }.summerBeløp()
 
