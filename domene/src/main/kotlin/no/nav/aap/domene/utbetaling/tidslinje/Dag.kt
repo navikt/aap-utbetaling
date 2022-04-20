@@ -52,7 +52,6 @@ internal sealed class Dag(
             else beløpMedBarnetillegg * (1 - arbeidsprosent)
     }
 
-
     internal class Fraværsdag(
         dato: LocalDate,
         grunnlagsfaktor: Grunnlagsfaktor,
@@ -64,7 +63,6 @@ internal sealed class Dag(
             visitor.visitFraværsdag(beløp())
         }
     }
-
 
     internal class Ventedag(
         dato: LocalDate,
