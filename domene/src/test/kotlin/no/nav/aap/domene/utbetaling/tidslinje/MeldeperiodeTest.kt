@@ -4,15 +4,12 @@ import no.nav.aap.domene.utbetaling.*
 import no.nav.aap.domene.utbetaling.A
 import no.nav.aap.domene.utbetaling.H
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
-import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.resetSeed
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
 
 internal class MeldeperiodeTest {
-
 
     @BeforeEach
     fun beforeEach() {
