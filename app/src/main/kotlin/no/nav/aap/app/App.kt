@@ -1,10 +1,7 @@
 package no.nav.aap.app
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.ktor.application.*
-import io.ktor.features.*
 import io.ktor.http.*
-import io.ktor.jackson.*
 import io.ktor.metrics.micrometer.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -14,8 +11,10 @@ import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.aap.app.config.Config
 import no.nav.aap.app.config.loadConfig
-import no.nav.aap.app.kafka.*
-import org.apache.kafka.streams.KafkaStreams.*
+import no.nav.aap.app.kafka.KStreams
+import no.nav.aap.app.kafka.Kafka
+import no.nav.aap.app.kafka.Topics
+import org.apache.kafka.streams.KafkaStreams.State
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.slf4j.LoggerFactory
@@ -31,7 +30,6 @@ internal fun Application.server(kafka: Kafka = KStreams()) {
     val config = loadConfig<Config>()
 
     install(MicrometerMetrics) { registry = prometheus }
-    install(ContentNegotiation) { jackson { registerModule(JavaTimeModule()) } }
 
     Thread.currentThread().setUncaughtExceptionHandler { _, e -> log.error("Uhåndtert feil", e) }
     environment.monitor.subscribe(ApplicationStopping) { kafka.close() }
