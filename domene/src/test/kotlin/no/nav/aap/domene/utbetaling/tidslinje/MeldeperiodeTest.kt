@@ -1,8 +1,11 @@
 package no.nav.aap.domene.utbetaling.tidslinje
 
+import no.nav.aap.domene.utbetaling.*
+import no.nav.aap.domene.utbetaling.A
+import no.nav.aap.domene.utbetaling.H
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
-import no.nav.aap.domene.utbetaling.januar
+import no.nav.aap.domene.utbetaling.resetSeed
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -71,26 +74,8 @@ internal class MeldeperiodeTest {
         assertEquals(3241.1.beløp, beløp)
     }
 
-    private var seed = 3 januar 2022
-        get() {
-            val f = field
-            field = field.plusDays(1)
-            return f
-        }
+    @Test
+    fun `Ved fravær så skal fraværsdagene ikke tas med i beregningen av arbeidsprosent`() {
 
-    private fun resetSeed(dato: LocalDate = 3 januar 2022) {
-        seed = dato
     }
-
-    private val Int.A get() = A()
-    private fun Int.A(grunnlagsfaktor: Number = 3, barnetillegg: Number = 0, arbeidstimer: Number = 7.5) = (1..this)
-        .map { Dag.Arbeidsdag(seed, Grunnlagsfaktor(grunnlagsfaktor), barnetillegg.beløp, arbeidstimer.toDouble()) }
-
-    private val Int.H get() = H()
-    private fun Int.H(arbeidstimer: Number = 0) = (1..this)
-        .map { Dag.Helg(seed, arbeidstimer.toDouble()) }
-
-    private val Int.V get() = V()
-    private fun Int.V(grunnlagsfaktor: Number = 3, barnetillegg: Number = 0) = (1..this)
-        .map { Dag.Ventedag(seed, Grunnlagsfaktor(grunnlagsfaktor), barnetillegg.beløp) }
 }

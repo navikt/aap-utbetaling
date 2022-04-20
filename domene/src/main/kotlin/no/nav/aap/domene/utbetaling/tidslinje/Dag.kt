@@ -46,7 +46,7 @@ internal sealed class Dag(
 
         private val beløpMedBarnetillegg = minOf(høyestebeløpMedBarnetillegg, (dagsats + barnetillegg))
 
-        internal fun beløp() = beløpMedBarnetillegg
+        internal open fun beløp() = beløpMedBarnetillegg
         override fun beløp(arbeidsprosent: Double) =
             if (arbeidsprosent > HØYESTE_ARBEIDSMENGDE_SOM_GIR_YTELSE) 0.beløp
             else beløpMedBarnetillegg * (1 - arbeidsprosent)
@@ -58,9 +58,27 @@ internal sealed class Dag(
         barnetillegg: Beløp
     ) : Beløpdag(dato, grunnlagsfaktor, barnetillegg) {
 
+        private var ignoreMe = false
+
+        internal fun ignoreMe() {
+            ignoreMe = true
+        }
+
+        override fun beløp(): Beløp = if(ignoreMe) {
+            0.beløp
+        } else {
+            super.beløp()
+        }
+
+        override fun beløp(arbeidsprosent: Double): Beløp = if(ignoreMe) {
+            0.beløp
+        } else {
+            super.beløp(arbeidsprosent)
+        }
+
         override fun arbeidstimer() = 0.0
         override fun accept(visitor: DagVisitor) {
-            visitor.visitFraværsdag(beløp())
+            visitor.visitFraværsdag(this, beløp())
         }
     }
 
@@ -102,7 +120,43 @@ internal sealed class Dag(
 
 internal interface DagVisitor {
     fun visitHelgedag() {}
-    fun visitFraværsdag(dagbeløp: Beløp) {}
+    fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp) {}
     fun visitVentedag(dagbeløp: Beløp) {}
     fun visitArbeidsdag(dagbeløp: Beløp) {}
+}
+
+internal class FraværsdagVisitor : DagVisitor {
+    private var tilstand: Tilstand = Tilstand.IngenFraværsdager()
+
+    private lateinit var førsteFraværsdag: Dag.Fraværsdag
+
+    override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp) {
+        tilstand.visitFraværsdag(this, fraværsdag)
+    }
+
+    sealed class Tilstand {
+        abstract fun visitFraværsdag(fraværsdagVisitor: FraværsdagVisitor, fraværsdag: Dag.Fraværsdag)
+
+        class IngenFraværsdager : Tilstand() {
+            override fun visitFraværsdag(fraværsdagVisitor: FraværsdagVisitor, fraværsdag: Dag.Fraværsdag) {
+                fraværsdagVisitor.førsteFraværsdag = fraværsdag
+                fraværsdagVisitor.tilstand = EnFraværsdag()
+            }
+
+        }
+
+        class EnFraværsdag : Tilstand() {
+            override fun visitFraværsdag(fraværsdagVisitor: FraværsdagVisitor, fraværsdag: Dag.Fraværsdag) {
+                fraværsdagVisitor.førsteFraværsdag.ignoreMe()
+                fraværsdag.ignoreMe()
+            }
+        }
+
+        class FlereFraværsdager : Tilstand() {
+            override fun visitFraværsdag(fraværsdagVisitor: FraværsdagVisitor, fraværsdag: Dag.Fraværsdag) {
+                fraværsdag.ignoreMe()
+            }
+        }
+    }
+
 }
