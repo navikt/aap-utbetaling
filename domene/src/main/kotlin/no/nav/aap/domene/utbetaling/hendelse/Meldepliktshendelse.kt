@@ -17,9 +17,14 @@ internal class Meldepliktshendelse(
 
 internal class BrukeraktivitetPerDag(
     private val dato: LocalDate,
-    private val arbeidstimer: Double
+    private val arbeidstimer: Double,
+    private val fraværsdag: Boolean
 ) {
-    fun oppdaterTidslinje(meldeperiode: Meldeperiode, grunnlagsfaktor: Grunnlagsfaktor) {
-        meldeperiode.leggTilDag(Dag.arbeidsdag(dato, grunnlagsfaktor, arbeidstimer))
+    internal fun oppdaterTidslinje(meldeperiode: Meldeperiode, grunnlagsfaktor: Grunnlagsfaktor) {
+        val dag = when {
+            fraværsdag -> Dag.fraværsdag(dato, grunnlagsfaktor)
+            else -> Dag.arbeidsdag(dato, grunnlagsfaktor, arbeidstimer)
+        }
+        meldeperiode.leggTilDag(dag)
     }
 }

@@ -73,7 +73,7 @@ internal class SøkerTest {
         søker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
-                    BrukeraktivitetPerDag(LocalDate.now(), 0.0)
+                    BrukeraktivitetPerDag(LocalDate.now(), 0.0, false)
                 )
             )
         )
@@ -99,12 +99,12 @@ internal class SøkerTest {
         )
         søker.håndterMeldeplikt(
             Meldepliktshendelse(
-                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(2), 0.0))
+                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(2), 0.0, false))
             )
         )
         søker.håndterMeldeplikt(
             Meldepliktshendelse(
-                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(1), 0.0))
+                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(1), 0.0, false))
             )
         )
         søker.accept(visitor)
@@ -129,14 +129,14 @@ internal class SøkerTest {
         søker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
-                    BrukeraktivitetPerDag(LocalDate.now().minusDays(2), 0.0),
-                    BrukeraktivitetPerDag(LocalDate.now().minusDays(3), 0.0)
+                    BrukeraktivitetPerDag(LocalDate.now().minusDays(2), 0.0, false),
+                    BrukeraktivitetPerDag(LocalDate.now().minusDays(3), 0.0, false)
                 )
             )
         )
         søker.håndterMeldeplikt(
             Meldepliktshendelse(
-                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(1), 0.0))
+                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(1), 0.0, false))
             )
         )
         søker.accept(visitor)
@@ -161,15 +161,15 @@ internal class SøkerTest {
             antallDagerITidslinje++
         }
 
+        override fun visitArbeidsdag(dagbeløp: Beløp) {
+            antallDagerITidslinje++
+        }
+
         override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp) {
             antallDagerITidslinje++
         }
 
         override fun visitVentedag(dagbeløp: Beløp) {
-            antallDagerITidslinje++
-        }
-
-        override fun visitArbeidsdag(dagbeløp: Beløp) {
             antallDagerITidslinje++
         }
     }

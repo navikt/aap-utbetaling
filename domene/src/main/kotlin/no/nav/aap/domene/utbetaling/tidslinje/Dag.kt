@@ -55,6 +55,21 @@ internal sealed class Dag(
             else beløpMedBarnetillegg * (1 - arbeidsprosent)
     }
 
+    internal class Arbeidsdag(
+        dato: LocalDate,
+        grunnlagsfaktor: Grunnlagsfaktor,
+        barnetillegg: Beløp,
+        private val arbeidstimer: Double
+    ) : Beløpdag(
+        dato,
+        grunnlagsfaktor,
+        barnetillegg
+    ) {
+        override fun arbeidstimer() = arbeidstimer
+
+        override fun accept(visitor: DagVisitor) = visitor.visitArbeidsdag(beløp())
+    }
+
     internal class Fraværsdag(
         dato: LocalDate,
         grunnlagsfaktor: Grunnlagsfaktor,
@@ -105,21 +120,6 @@ internal sealed class Dag(
         }
     }
 
-    internal class Arbeidsdag(
-        dato: LocalDate,
-        grunnlagsfaktor: Grunnlagsfaktor,
-        barnetillegg: Beløp,
-        private val arbeidstimer: Double
-    ) : Beløpdag(
-        dato,
-        grunnlagsfaktor,
-        barnetillegg
-    ) {
-        override fun arbeidstimer() = arbeidstimer
-
-        override fun accept(visitor: DagVisitor) = visitor.visitArbeidsdag(beløp())
-    }
-
     internal companion object {
         private const val NORMAL_ARBEIDSTIMER = 7.5
         internal fun Iterable<Dag>.summerArbeidstimer() = sumOf { it.arbeidstimer() }
@@ -132,14 +132,17 @@ internal sealed class Dag(
         internal fun arbeidsdag(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor, arbeidstimer: Double) =
             if (dato.erHelg()) Helg(dato, arbeidstimer)
             else Arbeidsdag(dato, grunnlagsfaktor, 0.beløp, arbeidstimer)
+
+        internal fun fraværsdag(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor) =
+            Fraværsdag(dato, grunnlagsfaktor, 0.beløp)
     }
 }
 
 internal interface DagVisitor {
     fun visitHelgedag() {}
+    fun visitArbeidsdag(dagbeløp: Beløp) {}
     fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp) {}
     fun visitVentedag(dagbeløp: Beløp) {}
-    fun visitArbeidsdag(dagbeløp: Beløp) {}
 }
 
 internal class FraværsdagVisitor : SøkerVisitor {
