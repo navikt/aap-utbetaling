@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling.hendelse
 
+import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.tidslinje.Dag
 import no.nav.aap.domene.utbetaling.tidslinje.Meldeperiode
@@ -17,7 +18,7 @@ internal class Meldepliktshendelse(
 
 internal class BrukeraktivitetPerDag(
     private val dato: LocalDate,
-    private val arbeidstimer: Double,
+    private val arbeidstimer: Arbeidstimer,
     private val fraværsdag: Boolean
 ) {
     internal fun oppdaterTidslinje(meldeperiode: Meldeperiode, grunnlagsfaktor: Grunnlagsfaktor) {

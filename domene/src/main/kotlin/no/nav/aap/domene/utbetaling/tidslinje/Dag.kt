@@ -1,5 +1,8 @@
 package no.nav.aap.domene.utbetaling.tidslinje
 
+import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
+import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
+import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.summer
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.summerBeløp
@@ -13,23 +16,23 @@ internal sealed class Dag(
     protected val dato: LocalDate,
 ) {
 
-    internal abstract fun arbeidstimer(): Double
-    internal open fun normalArbeidstimer(): Double = NORMAL_ARBEIDSTIMER
+    internal abstract fun arbeidstimer(): Arbeidstimer
+    internal open fun normalArbeidstimer(): Arbeidstimer = NORMAL_ARBEIDSTIMER
     internal abstract fun beløp(arbeidsprosent: Double): Beløp
 
     internal abstract fun accept(visitor: DagVisitor)
 
     internal class Helg(
         dato: LocalDate,
-        private val arbeidstimer: Double
+        private val arbeidstimer: Arbeidstimer
     ) : Dag(dato) {
 
         override fun arbeidstimer() = arbeidstimer
-        override fun normalArbeidstimer(): Double = 0.0
+        override fun normalArbeidstimer(): Arbeidstimer = 0.arbeidstimer
         override fun beløp(arbeidsprosent: Double) = 0.beløp
 
         override fun accept(visitor: DagVisitor) {
-            visitor.visitHelgedag()
+            visitor.visitHelgedag(this)
         }
     }
 
@@ -59,7 +62,7 @@ internal sealed class Dag(
         dato: LocalDate,
         grunnlagsfaktor: Grunnlagsfaktor,
         barnetillegg: Beløp,
-        private val arbeidstimer: Double
+        private val arbeidstimer: Arbeidstimer
     ) : Beløpdag(
         dato,
         grunnlagsfaktor,
@@ -94,10 +97,10 @@ internal sealed class Dag(
             super.beløp(arbeidsprosent)
         }
 
-        override fun arbeidstimer() = 0.0
-        override fun normalArbeidstimer(): Double {
+        override fun arbeidstimer() = 0.arbeidstimer
+        override fun normalArbeidstimer(): Arbeidstimer {
             return if (ignoreMe) {
-                0.0
+                0.arbeidstimer
             } else {
                 NORMAL_ARBEIDSTIMER
             }
@@ -114,22 +117,22 @@ internal sealed class Dag(
         barnetillegg: Beløp
     ) : Beløpdag(dato, grunnlagsfaktor, barnetillegg) {
 
-        override fun arbeidstimer() = 0.0
+        override fun arbeidstimer() = 0.arbeidstimer
         override fun accept(visitor: DagVisitor) {
             visitor.visitVentedag(beløp())
         }
     }
 
     internal companion object {
-        private const val NORMAL_ARBEIDSTIMER = 7.5
-        internal fun Iterable<Dag>.summerArbeidstimer() = sumOf { it.arbeidstimer() }
-        internal fun Iterable<Dag>.summerNormalArbeidstimer() = sumOf { it.normalArbeidstimer() }
+        private val NORMAL_ARBEIDSTIMER = 7.5.arbeidstimer
+        internal fun Iterable<Dag>.summerArbeidstimer() = map(Dag::arbeidstimer).summer()
+        internal fun Iterable<Dag>.summerNormalArbeidstimer() = map(Dag::normalArbeidstimer).summer()
         internal fun Iterable<Dag>.beregnBeløp(arbeidsprosent: Double): Beløp =
             map { it.beløp(arbeidsprosent) }.summerBeløp()
 
         private fun LocalDate.erHelg() = this.dayOfWeek in arrayOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
 
-        internal fun arbeidsdag(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor, arbeidstimer: Double) =
+        internal fun arbeidsdag(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor, arbeidstimer: Arbeidstimer) =
             if (dato.erHelg()) Helg(dato, arbeidstimer)
             else Arbeidsdag(dato, grunnlagsfaktor, 0.beløp, arbeidstimer)
 
@@ -139,7 +142,7 @@ internal sealed class Dag(
 }
 
 internal interface DagVisitor {
-    fun visitHelgedag() {}
+    fun visitHelgedag(helgedag: Dag.Helg) {}
     fun visitArbeidsdag(dagbeløp: Beløp) {}
     fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp) {}
     fun visitVentedag(dagbeløp: Beløp) {}

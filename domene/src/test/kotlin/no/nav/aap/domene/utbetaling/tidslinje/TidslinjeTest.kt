@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling.tidslinje
 
+import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.BrukeraktivitetPerDag
@@ -14,7 +15,7 @@ internal class TidslinjeTest {
     @Test
     fun `Oppretter en meldeperiode når det kommmer inn en meldepliktshendelse`() {
         val tidslinje = Tidslinje()
-        val hendelse = Meldepliktshendelse(listOf(BrukeraktivitetPerDag(3 januar 2022, 0.0, false)))
+        val hendelse = Meldepliktshendelse(listOf(BrukeraktivitetPerDag(3 januar 2022, 0.arbeidstimer, false)))
 
         tidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3))
 
@@ -28,7 +29,7 @@ internal class TidslinjeTest {
     fun `Oppretter en meldeperiode med 14 dager når det kommmer inn en meldepliktshendelse`() {
         val tidslinje = Tidslinje()
         val hendelse = Meldepliktshendelse((0 until 14L).map {
-            BrukeraktivitetPerDag((3 januar 2022).plusDays(it), 0.0, false)
+            BrukeraktivitetPerDag((3 januar 2022).plusDays(it), 0.arbeidstimer, false)
         })
 
         tidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3))
@@ -44,7 +45,7 @@ internal class TidslinjeTest {
     fun `Oppretter en meldeperiode med 10 arbeidsdager og 4 helgedager når det kommmer inn en meldepliktshendelse`() {
         val tidslinje = Tidslinje()
         val hendelse = Meldepliktshendelse((0 until 14L).map {
-            BrukeraktivitetPerDag((3 januar 2022).plusDays(it), 0.0, false)
+            BrukeraktivitetPerDag((3 januar 2022).plusDays(it), 0.arbeidstimer, false)
         })
 
         tidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3))
@@ -61,10 +62,10 @@ internal class TidslinjeTest {
     fun `En meldepliktshendelse med 4 fraværsdager og 10 arbeidsdager gir 4 helgedager, 6 arbdager og 4 fraværsdager`() {
         val tidslinje = Tidslinje()
         val fraværsdager = (0 until 4L).map {
-            BrukeraktivitetPerDag((3 januar 2022).plusDays(it), 0.0, true)
+            BrukeraktivitetPerDag((3 januar 2022).plusDays(it), 0.arbeidstimer, true)
         }
         val arbeidsdager = (0 until 10L).map {
-            BrukeraktivitetPerDag((7 januar 2022).plusDays(it), 0.0, false)
+            BrukeraktivitetPerDag((7 januar 2022).plusDays(it), 0.arbeidstimer, false)
         }
         val hendelse = Meldepliktshendelse(fraværsdager + arbeidsdager)
 
@@ -90,7 +91,7 @@ internal class TidslinjeTest {
             antallMeldeperioder++
         }
 
-        override fun visitHelgedag() {
+        override fun visitHelgedag(helgedag: Dag.Helg) {
             antallDager++
             antallHelgedager++
         }

@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling
 
+import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.BrukeraktivitetPerDag
@@ -73,7 +74,7 @@ internal class SøkerTest {
         søker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
-                    BrukeraktivitetPerDag(LocalDate.now(), 0.0, false)
+                    BrukeraktivitetPerDag(LocalDate.now(), 0.arbeidstimer, false)
                 )
             )
         )
@@ -99,12 +100,12 @@ internal class SøkerTest {
         )
         søker.håndterMeldeplikt(
             Meldepliktshendelse(
-                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(2), 0.0, false))
+                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(2), 0.arbeidstimer, false))
             )
         )
         søker.håndterMeldeplikt(
             Meldepliktshendelse(
-                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(1), 0.0, false))
+                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(1), 0.arbeidstimer, false))
             )
         )
         søker.accept(visitor)
@@ -129,14 +130,14 @@ internal class SøkerTest {
         søker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
-                    BrukeraktivitetPerDag(LocalDate.now().minusDays(2), 0.0, false),
-                    BrukeraktivitetPerDag(LocalDate.now().minusDays(3), 0.0, false)
+                    BrukeraktivitetPerDag(LocalDate.now().minusDays(2), 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(LocalDate.now().minusDays(3), 0.arbeidstimer, false)
                 )
             )
         )
         søker.håndterMeldeplikt(
             Meldepliktshendelse(
-                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(1), 0.0, false))
+                brukersAktivitet = listOf(BrukeraktivitetPerDag(LocalDate.now().minusDays(1), 0.arbeidstimer, false))
             )
         )
         søker.accept(visitor)
@@ -157,7 +158,7 @@ internal class SøkerTest {
             this.gjeldendeVedtak = gjeldendeVedtak
         }
 
-        override fun visitHelgedag() {
+        override fun visitHelgedag(helgedag: Dag.Helg) {
             antallDagerITidslinje++
         }
 

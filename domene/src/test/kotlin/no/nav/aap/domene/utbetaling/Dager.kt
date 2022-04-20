@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling
 
+import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.tidslinje.Dag
@@ -19,11 +20,11 @@ internal fun resetSeed(dato: LocalDate = 3 januar 2022) {
 
 internal val Int.A get() = A()
 internal fun Int.A(grunnlagsfaktor: Number = 3, barnetillegg: Number = 0, arbeidstimer: Number = 7.5) = (1..this)
-    .map { Dag.Arbeidsdag(seed, Grunnlagsfaktor(grunnlagsfaktor), barnetillegg.beløp, arbeidstimer.toDouble()) }
+    .map { Dag.Arbeidsdag(seed, Grunnlagsfaktor(grunnlagsfaktor), barnetillegg.beløp, arbeidstimer.arbeidstimer) }
 
 internal val Int.H get() = H()
 internal fun Int.H(arbeidstimer: Number = 0) = (1..this)
-    .map { Dag.Helg(seed, arbeidstimer.toDouble()) }
+    .map { Dag.Helg(seed, arbeidstimer.arbeidstimer) }
 
 internal val Int.V get() = V()
 internal fun Int.V(grunnlagsfaktor: Number = 3, barnetillegg: Number = 0) = (1..this)
