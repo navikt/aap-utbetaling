@@ -11,9 +11,15 @@ import no.nav.aap.domene.utbetaling.januar
 import no.nav.aap.domene.utbetaling.tidslinje.Dag.Companion.summerArbeidstimer
 import no.nav.aap.domene.utbetaling.tidslinje.Dag.Companion.summerNormalArbeidstimer
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class DagTest {
+
+    @BeforeEach
+    fun beforeEach() {
+        resetSeed()
+    }
 
     @Test
     fun `Omregner 66 prosent av grunnlaget til dagsats`() {

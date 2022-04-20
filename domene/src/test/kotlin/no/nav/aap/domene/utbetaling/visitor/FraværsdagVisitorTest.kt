@@ -2,11 +2,18 @@ package no.nav.aap.domene.utbetaling.visitor
 
 import no.nav.aap.domene.utbetaling.F
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
+import no.nav.aap.domene.utbetaling.resetSeed
 import no.nav.aap.domene.utbetaling.tidslinje.FraværsdagVisitor
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class FraværsdagVisitorTest {
+
+    @BeforeEach
+    fun beforeEach() {
+        resetSeed()
+    }
 
     @Test
     fun `Dersom vi har kun en fraværsdag blir beløpet summert til angitt`() {

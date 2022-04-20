@@ -5,6 +5,7 @@ import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.summerBeløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnbeløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
+import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -136,7 +137,7 @@ internal interface DagVisitor {
     fun visitArbeidsdag(dagbeløp: Beløp) {}
 }
 
-internal class FraværsdagVisitor : DagVisitor {
+internal class FraværsdagVisitor : SøkerVisitor {
     private var tilstand: Tilstand = Tilstand.IngenFraværsdager()
 
     private lateinit var førsteFraværsdag: Dag.Fraværsdag

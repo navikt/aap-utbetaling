@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling
 
+import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.hendelse.BrukeraktivitetPerDag
@@ -146,7 +147,7 @@ internal class SøkerTest {
 
     private class TestVisitor : SøkerVisitor {
         var vedtakListeSize: Int = -1
-        var antallDagerITidslinje: Int = -1
+        var antallDagerITidslinje: Int = 0
         lateinit var gjeldendeVedtak: Vedtak
 
         override fun visitVedtakshistorikk(vedtak: List<Vedtak>) {
@@ -157,8 +158,20 @@ internal class SøkerTest {
             this.gjeldendeVedtak = gjeldendeVedtak
         }
 
-        override fun visitTidslinje(dager: List<Dag>) {
-            this.antallDagerITidslinje = dager.size
+        override fun visitHelgedag() {
+            antallDagerITidslinje++
+        }
+
+        override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp) {
+            antallDagerITidslinje++
+        }
+
+        override fun visitVentedag(dagbeløp: Beløp) {
+            antallDagerITidslinje++
+        }
+
+        override fun visitArbeidsdag(dagbeløp: Beløp) {
+            antallDagerITidslinje++
         }
     }
 }
