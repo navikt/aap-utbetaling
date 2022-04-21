@@ -28,7 +28,7 @@ internal class Vedtak(
     }
 
     internal fun oppdaterTidslinje(tidslinje: Tidslinje, melding: Meldepliktshendelse) {
-        tidslinje.håndterMeldepliktshendelse(melding, grunnlagsfaktor)
+        tidslinje.håndterMeldepliktshendelse(melding, grunnlagsfaktor, virkningsdato)
     }
 
     override fun equals(other: Any?): Boolean {

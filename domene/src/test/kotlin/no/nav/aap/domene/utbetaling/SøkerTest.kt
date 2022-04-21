@@ -158,19 +158,19 @@ internal class SøkerTest {
             this.gjeldendeVedtak = gjeldendeVedtak
         }
 
-        override fun visitHelgedag(helgedag: Dag.Helg) {
+        override fun visitHelgedag(helgedag: Dag.Helg, dato: LocalDate) {
             antallDagerITidslinje++
         }
 
-        override fun visitArbeidsdag(dagbeløp: Beløp) {
+        override fun visitArbeidsdag(dagbeløp: Beløp, dato: LocalDate) {
             antallDagerITidslinje++
         }
 
-        override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp) {
+        override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate) {
             antallDagerITidslinje++
         }
 
-        override fun visitVentedag(dagbeløp: Beløp) {
+        override fun visitVentedag(dagbeløp: Beløp, dato: LocalDate) {
             antallDagerITidslinje++
         }
     }

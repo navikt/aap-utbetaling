@@ -32,7 +32,7 @@ internal sealed class Dag(
         override fun beløp(arbeidsprosent: Double) = 0.beløp
 
         override fun accept(visitor: DagVisitor) {
-            visitor.visitHelgedag(this)
+            visitor.visitHelgedag(this, dato)
         }
     }
 
@@ -51,8 +51,7 @@ internal sealed class Dag(
 
         private val grunnlag: Beløp = Grunnbeløp.årligYtelseINOK(dato, grunnlagsfaktor)
         private val dagsats = grunnlag * FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG / ANTALL_DAGER_MED_UTBETALING_PER_ÅR //TODO: Heltall??
-        private val høyestebeløpMedBarnetillegg = grunnlag * MAKS_FAKTOR_AV_GRUNNLAG / ANTALL_DAGER_MED_UTBETALING_PER_ÅR //TODO: Denne også heltall??
-
+        private val høyestebeløpMedBarnetillegg = grunnlag * MAKS_FAKTOR_AV_GRUNNLAG / ANTALL_DAGER_MED_UTBETALING_PER_ÅR //TODO: Denne også heltal
         private val beløpMedBarnetillegg = minOf(høyestebeløpMedBarnetillegg, (dagsats + barnetillegg))
 
         internal open fun beløp() = beløpMedBarnetillegg
@@ -73,7 +72,7 @@ internal sealed class Dag(
     ) {
         override fun arbeidstimer() = arbeidstimer
 
-        override fun accept(visitor: DagVisitor) = visitor.visitArbeidsdag(beløp())
+        override fun accept(visitor: DagVisitor) = visitor.visitArbeidsdag(beløp(), dato)
     }
 
     internal class Fraværsdag(
@@ -110,7 +109,7 @@ internal sealed class Dag(
         }
 
         override fun accept(visitor: DagVisitor) {
-            visitor.visitFraværsdag(this, beløp())
+            visitor.visitFraværsdag(this, beløp(), dato)
         }
     }
 
@@ -122,7 +121,7 @@ internal sealed class Dag(
 
         override fun arbeidstimer() = 0.arbeidstimer
         override fun accept(visitor: DagVisitor) {
-            visitor.visitVentedag(beløp())
+            visitor.visitVentedag(beløp(), dato)
         }
     }
 
@@ -145,10 +144,10 @@ internal sealed class Dag(
 }
 
 internal interface DagVisitor {
-    fun visitHelgedag(helgedag: Dag.Helg) {}
-    fun visitArbeidsdag(dagbeløp: Beløp) {}
-    fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp) {}
-    fun visitVentedag(dagbeløp: Beløp) {}
+    fun visitHelgedag(helgedag: Dag.Helg, dato: LocalDate) {}
+    fun visitArbeidsdag(dagbeløp: Beløp, dato: LocalDate) {}
+    fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate) {}
+    fun visitVentedag(dagbeløp: Beløp, dato: LocalDate) {}
 }
 
 internal class FraværsdagVisitor : SøkerVisitor {
@@ -156,7 +155,7 @@ internal class FraværsdagVisitor : SøkerVisitor {
 
     private lateinit var førsteFraværsdag: Dag.Fraværsdag
 
-    override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp) {
+    override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate) {
         tilstand.visitFraværsdag(this, fraværsdag)
     }
 

@@ -9,6 +9,7 @@ import no.nav.aap.domene.utbetaling.tidslinje.Dag.Companion.summerNormalArbeidst
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
 
 internal class DagTest {
 
@@ -110,11 +111,11 @@ internal class DagTest {
     private class TestDagVisitor : DagVisitor {
         lateinit var dagbeløp: Beløp
 
-        override fun visitArbeidsdag(dagbeløp: Beløp) {
+        override fun visitArbeidsdag(dagbeløp: Beløp, dato: LocalDate) {
             this.dagbeløp = dagbeløp
         }
 
-        override fun visitHelgedag(helgedag: Dag.Helg) {
+        override fun visitHelgedag(helgedag: Dag.Helg, dato: LocalDate) {
             this.dagbeløp = helgedag.beløp(0.0)
         }
     }
