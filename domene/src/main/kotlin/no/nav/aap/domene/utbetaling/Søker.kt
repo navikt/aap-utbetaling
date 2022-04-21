@@ -25,13 +25,12 @@ class Søker {
         barn.håndterLøsning(løsning)
     }
 
-    internal fun håmdterLøsning(løsningInstitusjon: LøsningInstitusjon) {
+    internal fun håndterLøsning(løsningInstitusjon: LøsningInstitusjon) {
 
     }
 
     internal fun accept(visitor: SøkerVisitor) {
         vedtakshistorikk.accept(visitor)
-//        tidslinje.accept(visitor)
+        tidslinje.accept(visitor)
     }
 }
-
