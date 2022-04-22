@@ -132,8 +132,6 @@ internal sealed class Dag(
         internal fun Iterable<Dag>.beregnBeløp(arbeidsprosent: Double): Beløp =
             map { it.beløp(arbeidsprosent) }.summerBeløp()
 
-        private fun LocalDate.erHelg() = this.dayOfWeek in arrayOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
-
         internal fun arbeidsdag(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor, arbeidstimer: Arbeidstimer) =
             if (dato.erHelg()) Helg(dato, arbeidstimer)
             else Arbeidsdag(dato, grunnlagsfaktor, 0.beløp, arbeidstimer)
@@ -142,6 +140,8 @@ internal sealed class Dag(
             Fraværsdag(dato, grunnlagsfaktor, 0.beløp)
     }
 }
+
+internal fun LocalDate.erHelg() = this.dayOfWeek in arrayOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
 
 internal interface DagVisitor {
     fun visitHelgedag(helgedag: Dag.Helg, dato: LocalDate) {}
