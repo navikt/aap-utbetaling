@@ -15,7 +15,6 @@ internal class Oppdrag private constructor(
     private val linjer: MutableList<Utbetalingslinje>,
     private var fagsystemId: String,
     private var endringskode: Endringskode,
-    private val sisteArbeidsgiverdag: LocalDate?,
     private var nettoBeløp: Int = linjer.sumOf { it.totalbeløp() },
     private var overføringstidspunkt: LocalDateTime? = null,
     private var avstemmingsnøkkel: Long? = null,
@@ -54,15 +53,13 @@ internal class Oppdrag private constructor(
         mottaker: String,
         fagområde: Fagområde,
         linjer: List<Utbetalingslinje> = listOf(),
-        fagsystemId: String = genererUtbetalingsreferanse(UUID.randomUUID()),
-        sisteArbeidsgiverdag: LocalDate? = null
+        fagsystemId: String = genererUtbetalingsreferanse(UUID.randomUUID())
     ) : this(
-        mottaker,
-        fagområde,
-        linjer.toMutableList(),
-        fagsystemId,
-        Endringskode.NY,
-        sisteArbeidsgiverdag,
+        mottaker = mottaker,
+        fagområde = fagområde,
+        linjer = linjer.toMutableList(),
+        fagsystemId = fagsystemId,
+        endringskode = Endringskode.NY,
         tidsstempel = LocalDateTime.now()
     )
 
@@ -74,7 +71,6 @@ internal class Oppdrag private constructor(
             mottaker,
             førstedato,
             sistedato,
-            sisteArbeidsgiverdag,
             stønadsdager(),
             totalbeløp(),
             nettoBeløp,
@@ -92,7 +88,6 @@ internal class Oppdrag private constructor(
             mottaker,
             førstedato,
             sistedato,
-            sisteArbeidsgiverdag,
             stønadsdager(),
             totalbeløp(),
             nettoBeløp,
@@ -106,13 +101,10 @@ internal class Oppdrag private constructor(
 
     internal fun fagsystemId() = fagsystemId
 
-    private operator fun contains(other: Oppdrag) = this.tilhører(other) || this.overlapperMed(other) || sammenhengendeUtbetalingsperiode(other)
+    private operator fun contains(other: Oppdrag) = this.tilhører(other) || this.overlapperMed(other)
 
     internal fun tilhører(other: Oppdrag) = this.fagsystemId == other.fagsystemId && this.fagområde == other.fagområde
     private fun overlapperMed(other: Oppdrag) = !erTomt() && maxOf(this.førstedato, other.førstedato) <= minOf(this.sistedato, other.sistedato)
-
-    private fun sammenhengendeUtbetalingsperiode(other: Oppdrag) =
-        this.sisteArbeidsgiverdag != null && this.sisteArbeidsgiverdag == other.sisteArbeidsgiverdag
 
     internal fun overfør(
         maksdato: LocalDate?,
@@ -167,8 +159,7 @@ internal class Oppdrag private constructor(
         Oppdrag(
             mottaker = mottaker,
             fagområde = fagområde,
-            fagsystemId = fagsystemId,
-            sisteArbeidsgiverdag = sisteArbeidsgiverdag
+            fagsystemId = fagsystemId
         )
 
     internal fun minus(eldre: Oppdrag): Oppdrag {
@@ -198,7 +189,7 @@ internal class Oppdrag private constructor(
         }.also { it.nettoBeløp(eldre) }
     }
 
-    private fun harIngenKoblingTilTidligereOppdrag(eldre: Oppdrag) = (eldre.erTomt() && !sammenhengendeUtbetalingsperiode(eldre)) || this !in eldre
+    private fun harIngenKoblingTilTidligereOppdrag(eldre: Oppdrag) = this !in eldre
 
     private fun ingenUtbetalteDager() = linjerUtenOpphør().isEmpty()
 
@@ -268,12 +259,11 @@ internal class Oppdrag private constructor(
         tidligere.last().opphørslinje(tidligere.førstedato)
 
     private fun kopierMed(linjer: List<Utbetalingslinje>) = Oppdrag(
-        mottaker,
-        fagområde,
-        linjer.toMutableList(),
-        fagsystemId,
-        endringskode,
-        sisteArbeidsgiverdag,
+        mottaker = mottaker,
+        fagområde = fagområde,
+        linjer = linjer.toMutableList(),
+        fagsystemId = fagsystemId,
+        endringskode = endringskode,
         overføringstidspunkt = overføringstidspunkt,
         avstemmingsnøkkel = avstemmingsnøkkel,
         status = status,
@@ -320,7 +310,6 @@ internal class Oppdrag private constructor(
         "linjer" to map(Utbetalingslinje::toHendelseMap),
         "fagsystemId" to fagsystemId,
         "endringskode" to "$endringskode",
-        "sisteArbeidsgiverdag" to sisteArbeidsgiverdag,
         "tidsstempel" to tidsstempel,
         "nettoBeløp" to nettoBeløp,
         "stønadsdager" to stønadsdager(),

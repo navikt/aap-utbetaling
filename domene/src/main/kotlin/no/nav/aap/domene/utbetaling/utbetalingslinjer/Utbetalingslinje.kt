@@ -15,6 +15,7 @@ internal class Utbetalingslinje internal constructor(
     private var refDelytelseId: Int? = null,
     private var endringskode: Endringskode = Endringskode.NY,
     private var klassekode: Klassekode = Klassekode.RefusjonIkkeOpplysningspliktig,
+    //Linje er annullert hvis datoStatusFom er satt
     private var datoStatusFom: LocalDate? = null
 ) : Iterable<LocalDate> {
 
