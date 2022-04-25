@@ -166,7 +166,7 @@ internal class SøkerTest {
             antallDagerITidslinje++
         }
 
-        override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate) {
+        override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate, ignoreMe: Boolean) {
             antallDagerITidslinje++
         }
 

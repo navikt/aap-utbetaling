@@ -6,8 +6,8 @@ import no.nav.aap.domene.utbetaling.tidslinje.Dag.Companion.summerArbeidstimer
 import no.nav.aap.domene.utbetaling.tidslinje.Dag.Companion.summerNormalArbeidstimer
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 
-internal class Meldeperiode {
-    private val dager = mutableListOf<Dag>()
+internal class Meldeperiode(dager: List<Dag> = emptyList()) {
+    private val dager: MutableList<Dag> = dager.toMutableList()
 
     internal fun leggTilDag(dag: Dag) {
         dager.add(dag)

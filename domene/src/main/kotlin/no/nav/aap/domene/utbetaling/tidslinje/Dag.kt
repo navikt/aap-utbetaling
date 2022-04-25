@@ -109,7 +109,7 @@ internal sealed class Dag(
         }
 
         override fun accept(visitor: DagVisitor) {
-            visitor.visitFraværsdag(this, beløp(), dato)
+            visitor.visitFraværsdag(this, beløp(), dato, ignoreMe)
         }
     }
 
@@ -146,42 +146,34 @@ internal fun LocalDate.erHelg() = this.dayOfWeek in arrayOf(DayOfWeek.SATURDAY, 
 internal interface DagVisitor {
     fun visitHelgedag(helgedag: Dag.Helg, dato: LocalDate) {}
     fun visitArbeidsdag(dagbeløp: Beløp, dato: LocalDate) {}
-    fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate) {}
+    fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate, ignoreMe: Boolean) {}
     fun visitVentedag(dagbeløp: Beløp, dato: LocalDate) {}
 }
 
 internal class FraværsdagVisitor : SøkerVisitor {
-    private var tilstand: Tilstand = Tilstand.IngenFraværsdager()
+    private var tilstand: Tilstand = Tilstand.IngenFraværsdager
 
     private lateinit var førsteFraværsdag: Dag.Fraværsdag
 
-    override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate) {
+    override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate, ignoreMe: Boolean) {
         tilstand.visitFraværsdag(this, fraværsdag)
     }
 
-    sealed class Tilstand {
+    private sealed class Tilstand {
         abstract fun visitFraværsdag(fraværsdagVisitor: FraværsdagVisitor, fraværsdag: Dag.Fraværsdag)
 
-        class IngenFraværsdager : Tilstand() {
+        object IngenFraværsdager : Tilstand() {
             override fun visitFraværsdag(fraværsdagVisitor: FraværsdagVisitor, fraværsdag: Dag.Fraværsdag) {
                 fraværsdagVisitor.førsteFraværsdag = fraværsdag
-                fraværsdagVisitor.tilstand = EnFraværsdag()
+                fraværsdagVisitor.tilstand = MinstEnFraværsdag
             }
-
         }
 
-        class EnFraværsdag : Tilstand() {
+        object MinstEnFraværsdag : Tilstand() {
             override fun visitFraværsdag(fraværsdagVisitor: FraværsdagVisitor, fraværsdag: Dag.Fraværsdag) {
                 fraværsdagVisitor.førsteFraværsdag.ignoreMe()
                 fraværsdag.ignoreMe()
             }
         }
-
-        class FlereFraværsdager : Tilstand() {
-            override fun visitFraværsdag(fraværsdagVisitor: FraværsdagVisitor, fraværsdag: Dag.Fraværsdag) {
-                fraværsdag.ignoreMe()
-            }
-        }
     }
-
 }

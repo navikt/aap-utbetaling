@@ -5,10 +5,15 @@ import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import java.time.LocalDate
 
-internal class Tidslinje {
-    private val meldeperioder = mutableListOf<Meldeperiode>()
+internal class Tidslinje(meldeperioder: List<Meldeperiode> = emptyList()) {
 
-    internal fun håndterMeldepliktshendelse(meldepliktshendelse: Meldepliktshendelse, grunnlagsfaktor: Grunnlagsfaktor, virkningsdato: LocalDate) {
+    private val meldeperioder: MutableList<Meldeperiode> = meldeperioder.toMutableList()
+
+    internal fun håndterMeldepliktshendelse(
+        meldepliktshendelse: Meldepliktshendelse,
+        grunnlagsfaktor: Grunnlagsfaktor,
+        virkningsdato: LocalDate
+    ) {
         val meldeperiode = Meldeperiode()
         meldepliktshendelse.populerMeldeperiode(meldeperiode, grunnlagsfaktor)
         meldeperioder.add(meldeperiode)

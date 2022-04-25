@@ -7,7 +7,6 @@ import no.nav.aap.domene.utbetaling.tidslinje.Tidslinje
 
 internal interface SøkerVisitor : DagVisitor {
 
-
     fun visitVedtakshistorikk(gjeldendeVedtak: Vedtak) {}
     fun visitVedtakshistorikk(vedtak: List<Vedtak>) {}
 
@@ -16,5 +15,4 @@ internal interface SøkerVisitor : DagVisitor {
 
     fun preVisitMeldeperiode(meldeperiode: Meldeperiode) {}
     fun postVisitMeldeperiode(meldeperiode: Meldeperiode) {}
-
 }
