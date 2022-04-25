@@ -2,6 +2,7 @@ package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.OppdragBuilder.Linje.Companion.toOppdragLinjer
+import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Fagområde
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdrag
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Utbetalingslinje
@@ -48,7 +49,7 @@ internal class OppdragBuilder : SøkerVisitor {
     private lateinit var linje: Linje
     private val linjer = mutableListOf<Linje>()
 
-    override fun visitArbeidsdag(dagbeløp: Beløp, dato: LocalDate) {
+    override fun visitArbeidsdag(dagbeløp: Beløp, dato: LocalDate, arbeidstimer: Arbeidstimer) {
         tilstand.arbeidsdag(this, dagbeløp, dato)
     }
 

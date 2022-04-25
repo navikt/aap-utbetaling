@@ -7,6 +7,7 @@ import no.nav.aap.domene.utbetaling.hendelse.BrukeraktivitetPerDag
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag
+import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -158,11 +159,11 @@ internal class SøkerTest {
             this.gjeldendeVedtak = gjeldendeVedtak
         }
 
-        override fun visitHelgedag(helgedag: Dag.Helg, dato: LocalDate) {
+        override fun visitHelgedag(helgedag: Dag.Helg, dato: LocalDate, arbeidstimer: Arbeidstimer) {
             antallDagerITidslinje++
         }
 
-        override fun visitArbeidsdag(dagbeløp: Beløp, dato: LocalDate) {
+        override fun visitArbeidsdag(dagbeløp: Beløp, dato: LocalDate, arbeidstimer: Arbeidstimer) {
             antallDagerITidslinje++
         }
 

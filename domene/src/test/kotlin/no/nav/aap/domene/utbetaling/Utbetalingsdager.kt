@@ -19,10 +19,15 @@ object Utbetalingsdager {
 
     internal val Int.U get() = U()
     internal fun Int.U(grunnlagsfaktor: Number = 3, arbeidsprosent: Number = 1, barnetillegg: Number = 0) = (1..this)
-        .map { Utbetalingsdag.Utbetaling(seed, Grunnlagsfaktor(grunnlagsfaktor), arbeidsprosent.toDouble(), barnetillegg.beløp) }
+        .map {
+            Utbetalingsdag.Utbetaling(seed, Grunnlagsfaktor(grunnlagsfaktor), barnetillegg.beløp).apply {
+                arbeidsprosent(arbeidsprosent.toDouble())
+            }
+        }
 
-    internal val Int.I get() = (1..this)
-        .map { Utbetalingsdag.IkkeUtbetaling(seed) }
+    internal val Int.I
+        get() = (1..this)
+            .map { Utbetalingsdag.IkkeUtbetaling(seed) }
 
     internal val Int.S: List<Utbetalingsdag>
         get() {

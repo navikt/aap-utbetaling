@@ -4,10 +4,15 @@ internal class Arbeidstimer(arbeidstimer: Number) : Comparable<Arbeidstimer> {
 
     private val arbeidstimer: Double = arbeidstimer.toDouble()
 
-    companion object {
+    internal companion object {
+        internal val NORMAL_ARBEIDSTIMER = 7.5.arbeidstimer
+
         internal fun Iterable<Arbeidstimer>.summer() = sumOf { it.arbeidstimer }.arbeidstimer
         val Number.arbeidstimer get() = Arbeidstimer(this)
     }
+
+    internal operator fun plus(addend: Arbeidstimer): Arbeidstimer =
+        Arbeidstimer(this.arbeidstimer + addend.arbeidstimer)
 
     internal operator fun div(nevner: Arbeidstimer): Double = this.arbeidstimer / nevner.arbeidstimer
 

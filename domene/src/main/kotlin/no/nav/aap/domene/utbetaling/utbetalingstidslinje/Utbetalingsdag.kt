@@ -15,20 +15,26 @@ internal sealed class Utbetalingsdag(
     protected val dato: LocalDate
 ) {
 
+    protected var arbeidsprosent: Double = Double.NaN
+
+    internal abstract fun arbeidsprosent(arbeidsprosent: Double)
+
     internal abstract fun accept(visitor: UtbetalingsdagVisitor)
 
     internal class Utbetaling(
         dato: LocalDate,
-        grunnlagsfaktor: Grunnlagsfaktor,
-        arbeidsprosent: Double,
-        barnetillegg: Beløp
+        private val grunnlagsfaktor: Grunnlagsfaktor,
+        private val barnetillegg: Beløp
     ) : Utbetalingsdag(dato) {
 
-        private companion object {
+        internal companion object {
             private const val HØYESTE_ARBEIDSMENGDE_SOM_GIR_YTELSE = 0.6 // TODO Skal justeres ved vedtak
             private const val FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG = 0.66
             private const val MAKS_FAKTOR_AV_GRUNNLAG = 0.9
             private const val ANTALL_DAGER_MED_UTBETALING_PER_ÅR = 260
+
+            internal fun Iterable<Utbetaling>.konverterTilIkkeUtbetaling() =
+                map { IkkeUtbetaling(it.dato) }
         }
 
         private val grunnlag: Beløp = Grunnbeløp.årligYtelseINOK(dato, grunnlagsfaktor)
@@ -37,9 +43,14 @@ internal sealed class Utbetalingsdag(
         private val høyestebeløpMedBarnetillegg =
             grunnlag * MAKS_FAKTOR_AV_GRUNNLAG / ANTALL_DAGER_MED_UTBETALING_PER_ÅR //TODO: Denne også heltal
         private val beløpMedBarnetillegg = minOf(høyestebeløpMedBarnetillegg, (dagsats + barnetillegg))
-        private val beløp =
-            if (arbeidsprosent > HØYESTE_ARBEIDSMENGDE_SOM_GIR_YTELSE) 0.beløp
+
+        private lateinit var beløp: Beløp
+
+        override fun arbeidsprosent(arbeidsprosent: Double) {
+            this.arbeidsprosent = arbeidsprosent
+            this.beløp = if (arbeidsprosent > HØYESTE_ARBEIDSMENGDE_SOM_GIR_YTELSE) 0.beløp
             else beløpMedBarnetillegg * (1 - arbeidsprosent)
+        }
 
         override fun accept(visitor: UtbetalingsdagVisitor) {
             visitor.visitUtbetaling(this, dato, beløp)
@@ -47,6 +58,10 @@ internal sealed class Utbetalingsdag(
     }
 
     internal class IkkeUtbetaling(dato: LocalDate) : Utbetalingsdag(dato) {
+
+        override fun arbeidsprosent(arbeidsprosent: Double) {
+            this.arbeidsprosent = arbeidsprosent
+        }
 
         override fun accept(visitor: UtbetalingsdagVisitor) {
             visitor.visitIkkeUtbetaling(this, dato)

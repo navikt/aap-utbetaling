@@ -1,6 +1,7 @@
 package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
+import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.NORMAL_ARBEIDSTIMER
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.summer
 import no.nav.aap.domene.utbetaling.entitet.Beløp
@@ -32,7 +33,7 @@ internal sealed class Dag(
         override fun beløp(arbeidsprosent: Double) = 0.beløp
 
         override fun accept(visitor: DagVisitor) {
-            visitor.visitHelgedag(this, dato)
+            visitor.visitHelgedag(this, dato, arbeidstimer)
         }
     }
 
@@ -72,7 +73,7 @@ internal sealed class Dag(
     ) {
         override fun arbeidstimer() = arbeidstimer
 
-        override fun accept(visitor: DagVisitor) = visitor.visitArbeidsdag(beløp(), dato)
+        override fun accept(visitor: DagVisitor) = visitor.visitArbeidsdag(beløp(), dato, arbeidstimer)
     }
 
     internal class Fraværsdag(
@@ -126,7 +127,6 @@ internal sealed class Dag(
     }
 
     internal companion object {
-        private val NORMAL_ARBEIDSTIMER = 7.5.arbeidstimer
         internal fun Iterable<Dag>.summerArbeidstimer() = map(Dag::arbeidstimer).summer()
         internal fun Iterable<Dag>.summerNormalArbeidstimer() = map(Dag::normalArbeidstimer).summer()
         internal fun Iterable<Dag>.beregnBeløp(arbeidsprosent: Double): Beløp =
@@ -144,8 +144,8 @@ internal sealed class Dag(
 internal fun LocalDate.erHelg() = this.dayOfWeek in arrayOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
 
 internal interface DagVisitor {
-    fun visitHelgedag(helgedag: Dag.Helg, dato: LocalDate) {}
-    fun visitArbeidsdag(dagbeløp: Beløp, dato: LocalDate) {}
+    fun visitHelgedag(helgedag: Dag.Helg, dato: LocalDate, arbeidstimer: Arbeidstimer) {}
+    fun visitArbeidsdag(dagbeløp: Beløp, dato: LocalDate, arbeidstimer: Arbeidstimer) {}
     fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate, ignoreMe: Boolean) {}
     fun visitVentedag(dagbeløp: Beløp, dato: LocalDate) {}
 }
