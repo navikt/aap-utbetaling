@@ -11,17 +11,15 @@ import kotlin.math.roundToInt
 
 internal class OppdragBuilder : SøkerVisitor {
 
-    private lateinit var oppdrag: Oppdrag
     private var tilstand: Tilstand = Tilstand.NyLinje
 
     internal fun build(tidslinje: Tidslinje): Oppdrag {
         tidslinje.accept(this)
-        oppdrag = Oppdrag(
+        return Oppdrag(
             mottaker = "mottaker", //FIXME
             fagområde = Fagområde.Arbeidsavklaringspenger,
             linjer = linjer.toOppdragLinjer(),
         )
-        return oppdrag
     }
 
     private class Linje(
