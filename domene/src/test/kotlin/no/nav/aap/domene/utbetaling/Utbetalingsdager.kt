@@ -23,4 +23,10 @@ object Utbetalingsdager {
 
     internal val Int.I get() = (1..this)
         .map { Utbetalingsdag.IkkeUtbetaling(seed) }
+
+    internal val Int.S: List<Utbetalingsdag>
+        get() {
+            resetSeed(seed.plusDays(this.toLong()))
+            return emptyList()
+        }
 }
