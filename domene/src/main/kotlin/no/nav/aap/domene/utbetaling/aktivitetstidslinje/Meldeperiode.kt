@@ -1,9 +1,9 @@
-package no.nav.aap.domene.utbetaling.tidslinje
+package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
 import no.nav.aap.domene.utbetaling.entitet.Beløp
-import no.nav.aap.domene.utbetaling.tidslinje.Dag.Companion.beregnBeløp
-import no.nav.aap.domene.utbetaling.tidslinje.Dag.Companion.summerArbeidstimer
-import no.nav.aap.domene.utbetaling.tidslinje.Dag.Companion.summerNormalArbeidstimer
+import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag.Companion.beregnBeløp
+import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag.Companion.summerArbeidstimer
+import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag.Companion.summerNormalArbeidstimer
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 
 internal class Meldeperiode(dager: List<Dag> = emptyList()) {

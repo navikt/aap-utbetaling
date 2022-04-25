@@ -1,11 +1,11 @@
-package no.nav.aap.domene.utbetaling.tidslinje
+package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
 import no.nav.aap.domene.utbetaling.*
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
-import no.nav.aap.domene.utbetaling.tidslinje.Dag.Companion.summerArbeidstimer
-import no.nav.aap.domene.utbetaling.tidslinje.Dag.Companion.summerNormalArbeidstimer
+import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag.Companion.summerArbeidstimer
+import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag.Companion.summerNormalArbeidstimer
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

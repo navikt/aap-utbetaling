@@ -1,4 +1,4 @@
-package no.nav.aap.domene.utbetaling.tidslinje
+package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Beløp
@@ -11,32 +11,32 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
-internal class TidslinjeTest {
+internal class AktivitetstidslinjeTest {
 
     @Test
     fun `Oppretter en meldeperiode når det kommmer inn en meldepliktshendelse`() {
-        val tidslinje = Tidslinje()
+        val aktivitetstidslinje = Aktivitetstidslinje()
         val hendelse = Meldepliktshendelse(listOf(BrukeraktivitetPerDag(3 januar 2022, 0.arbeidstimer, false)))
 
-        tidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3), 3 januar 2022)
+        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3), 3 januar 2022)
 
         val visitor = TidslinjeVisitor()
-        tidslinje.accept(visitor)
+        aktivitetstidslinje.accept(visitor)
 
         assertEquals(1, visitor.antallMeldeperioder)
     }
 
     @Test
     fun `Oppretter en meldeperiode med 14 dager når det kommmer inn en meldepliktshendelse`() {
-        val tidslinje = Tidslinje()
+        val aktivitetstidslinje = Aktivitetstidslinje()
         val hendelse = Meldepliktshendelse((0 until 14L).map {
             BrukeraktivitetPerDag((3 januar 2022).plusDays(it), 0.arbeidstimer, false)
         })
 
-        tidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3), 3 januar 2022)
+        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3), 3 januar 2022)
 
         val visitor = TidslinjeVisitor()
-        tidslinje.accept(visitor)
+        aktivitetstidslinje.accept(visitor)
 
         assertEquals(1, visitor.antallMeldeperioder)
         assertEquals(14, visitor.antallDager)
@@ -44,15 +44,15 @@ internal class TidslinjeTest {
 
     @Test
     fun `Oppretter en meldeperiode med 10 arbeidsdager og 4 helgedager når det kommmer inn en meldepliktshendelse`() {
-        val tidslinje = Tidslinje()
+        val aktivitetstidslinje = Aktivitetstidslinje()
         val hendelse = Meldepliktshendelse((0 until 14L).map {
             BrukeraktivitetPerDag((3 januar 2022).plusDays(it), 0.arbeidstimer, false)
         })
 
-        tidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3), 3 januar 2022)
+        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3), 3 januar 2022)
 
         val visitor = TidslinjeVisitor()
-        tidslinje.accept(visitor)
+        aktivitetstidslinje.accept(visitor)
 
         assertEquals(1, visitor.antallMeldeperioder)
         assertEquals(4, visitor.antallHelgedager)
@@ -61,7 +61,7 @@ internal class TidslinjeTest {
 
     @Test
     fun `En meldepliktshendelse med 4 fraværsdager og 10 arbeidsdager gir 4 helgedager, 6 arbdager og 4 fraværsdager`() {
-        val tidslinje = Tidslinje()
+        val aktivitetstidslinje = Aktivitetstidslinje()
         val fraværsdager = (0 until 4L).map {
             BrukeraktivitetPerDag((3 januar 2022).plusDays(it), 0.arbeidstimer, true)
         }
@@ -70,10 +70,10 @@ internal class TidslinjeTest {
         }
         val hendelse = Meldepliktshendelse(fraværsdager + arbeidsdager)
 
-        tidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3), 3 januar 2022)
+        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3), 3 januar 2022)
 
         val visitor = TidslinjeVisitor()
-        tidslinje.accept(visitor)
+        aktivitetstidslinje.accept(visitor)
 
         assertEquals(1, visitor.antallMeldeperioder)
         assertEquals(4, visitor.antallHelgedager)
@@ -83,7 +83,7 @@ internal class TidslinjeTest {
 
     @Test
     fun `Første meldepliktshendelse oppretter en meldeperiode på 14 dager fra virkningsdato`() {
-        val tidslinje = Tidslinje()
+        val aktivitetstidslinje = Aktivitetstidslinje()
         val fraværsdager = (0 until 4L).map {
             BrukeraktivitetPerDag((3 januar 2022).plusDays(it), 0.arbeidstimer, true)
         }
@@ -92,10 +92,10 @@ internal class TidslinjeTest {
         }
         val hendelse = Meldepliktshendelse(fraværsdager + arbeidsdager)
 
-        tidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3), 3 januar 2022)
+        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3), 3 januar 2022)
 
         val visitor = TidslinjeVisitor()
-        tidslinje.accept(visitor)
+        aktivitetstidslinje.accept(visitor)
 
         assertEquals(1, visitor.antallMeldeperioder)
         assertEquals(3 januar 2022, visitor.førsteDatoIMeldeperiode)

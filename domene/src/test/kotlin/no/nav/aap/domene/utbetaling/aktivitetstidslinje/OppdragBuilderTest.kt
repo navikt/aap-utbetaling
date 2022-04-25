@@ -1,4 +1,4 @@
-package no.nav.aap.domene.utbetaling.tidslinje
+package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
 import no.nav.aap.domene.utbetaling.A
 import no.nav.aap.domene.utbetaling.F
@@ -16,10 +16,10 @@ internal class OppdragBuilderTest {
     @Test
     fun `10 sammenhengende arbeidsdager pluss helg gir 10 stønadsdager i oppdraget`() {
         val dager = 5.A(arbeidstimer = 0) + 2.H + 5.A(arbeidstimer = 0) + 2.H
-        val tidslinje = Tidslinje(listOf(Meldeperiode(dager)))
+        val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
 
         val oppdragBuilder = OppdragBuilder()
-        val oppdrag: Oppdrag = oppdragBuilder.build(tidslinje)
+        val oppdrag: Oppdrag = oppdragBuilder.build(aktivitetstidslinje)
 
         assertEquals(10, oppdrag.stønadsdager())
         val inspektør = oppdrag.inspektør
@@ -33,10 +33,10 @@ internal class OppdragBuilderTest {
         val dager = 5.A(arbeidstimer = 0) + 2.H + 1.F + 4.A(arbeidstimer = 0) + 2.H
         val meldeperiode = Meldeperiode(dager)
         meldeperiode.accept(FraværsdagVisitor())
-        val tidslinje = Tidslinje(listOf(meldeperiode))
+        val aktivitetstidslinje = Aktivitetstidslinje(listOf(meldeperiode))
 
         val oppdragBuilder = OppdragBuilder()
-        val oppdrag: Oppdrag = oppdragBuilder.build(tidslinje)
+        val oppdrag: Oppdrag = oppdragBuilder.build(aktivitetstidslinje)
 
         assertEquals(10, oppdrag.stønadsdager())
         val inspektør = oppdrag.inspektør
@@ -50,10 +50,10 @@ internal class OppdragBuilderTest {
         val dager = 5.A(arbeidstimer = 0) + 2.H + 2.F + 3.A(arbeidstimer = 0) + 2.H
         val meldeperiode = Meldeperiode(dager)
         meldeperiode.accept(FraværsdagVisitor())
-        val tidslinje = Tidslinje(listOf(meldeperiode))
+        val aktivitetstidslinje = Aktivitetstidslinje(listOf(meldeperiode))
 
         val oppdragBuilder = OppdragBuilder()
-        val oppdrag: Oppdrag = oppdragBuilder.build(tidslinje)
+        val oppdrag: Oppdrag = oppdragBuilder.build(aktivitetstidslinje)
 
         assertEquals(8, oppdrag.stønadsdager())
         val inspektør = oppdrag.inspektør
@@ -67,10 +67,10 @@ internal class OppdragBuilderTest {
         val dager = 1.F + 4.A(arbeidstimer = 0) + 2.H + 1.F + 4.A(arbeidstimer = 0) + 2.H
         val meldeperiode = Meldeperiode(dager)
         meldeperiode.accept(FraværsdagVisitor())
-        val tidslinje = Tidslinje(listOf(meldeperiode))
+        val aktivitetstidslinje = Aktivitetstidslinje(listOf(meldeperiode))
 
         val oppdragBuilder = OppdragBuilder()
-        val oppdrag: Oppdrag = oppdragBuilder.build(tidslinje)
+        val oppdrag: Oppdrag = oppdragBuilder.build(aktivitetstidslinje)
 
         assertEquals(8, oppdrag.stønadsdager())
         val inspektør = oppdrag.inspektør
@@ -85,10 +85,10 @@ internal class OppdragBuilderTest {
         val dager = 5.F + 2.H + 5.F + 2.H
         val meldeperiode = Meldeperiode(dager)
         meldeperiode.accept(FraværsdagVisitor())
-        val tidslinje = Tidslinje(listOf(meldeperiode))
+        val aktivitetstidslinje = Aktivitetstidslinje(listOf(meldeperiode))
 
         val oppdragBuilder = OppdragBuilder()
-        val oppdrag: Oppdrag = oppdragBuilder.build(tidslinje)
+        val oppdrag: Oppdrag = oppdragBuilder.build(aktivitetstidslinje)
 
         assertEquals(0, oppdrag.stønadsdager())
         val inspektør = oppdrag.inspektør
@@ -102,10 +102,10 @@ internal class OppdragBuilderTest {
         val dager = 5.A(arbeidstimer = 7.5) + 2.H + 5.A(arbeidstimer = 7.5) + 2.H
         val meldeperiode = Meldeperiode(dager)
         meldeperiode.accept(FraværsdagVisitor())
-        val tidslinje = Tidslinje(listOf(meldeperiode))
+        val aktivitetstidslinje = Aktivitetstidslinje(listOf(meldeperiode))
 
         val oppdragBuilder = OppdragBuilder()
-        val oppdrag: Oppdrag = oppdragBuilder.build(tidslinje)
+        val oppdrag: Oppdrag = oppdragBuilder.build(aktivitetstidslinje)
 
         assertEquals(0, oppdrag.stønadsdager())
         val inspektør = oppdrag.inspektør

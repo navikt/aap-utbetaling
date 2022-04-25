@@ -3,7 +3,7 @@ package no.nav.aap.domene.utbetaling
 import no.nav.aap.domene.utbetaling.Vedtak.Companion.sortertPåDato
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
-import no.nav.aap.domene.utbetaling.tidslinje.Tidslinje
+import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Aktivitetstidslinje
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 
 internal class Vedtakshistorikk {
@@ -15,8 +15,8 @@ internal class Vedtakshistorikk {
         vedtakshistorikk.add(vedtak)
     }
 
-    internal fun oppdaterTidslinje(tidslinje: Tidslinje, melding: Meldepliktshendelse) {
-        finnGjeldendeVedtak().oppdaterTidslinje(tidslinje, melding)
+    internal fun oppdaterTidslinje(aktivitetstidslinje: Aktivitetstidslinje, melding: Meldepliktshendelse) {
+        finnGjeldendeVedtak().oppdaterTidslinje(aktivitetstidslinje, melding)
     }
 
     private fun finnGjeldendeVedtak() = vedtakshistorikk.sortertPåDato().last()

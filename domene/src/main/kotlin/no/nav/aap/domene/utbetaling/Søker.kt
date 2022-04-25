@@ -4,11 +4,11 @@ import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningBarn
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningInstitusjon
-import no.nav.aap.domene.utbetaling.tidslinje.Tidslinje
+import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Aktivitetstidslinje
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 
 class Søker {
-    private val tidslinje = Tidslinje()
+    private val aktivitetstidslinje = Aktivitetstidslinje()
     private val vedtakshistorikk = Vedtakshistorikk()
     private val barn = Barnetillegg()
 
@@ -17,7 +17,7 @@ class Søker {
     }
 
     internal fun håndterMeldeplikt(melding: Meldepliktshendelse) {
-        vedtakshistorikk.oppdaterTidslinje(tidslinje, melding)
+        vedtakshistorikk.oppdaterTidslinje(aktivitetstidslinje, melding)
         // behov -> slå opp barn og institusjon
     }
 
@@ -31,6 +31,6 @@ class Søker {
 
     internal fun accept(visitor: SøkerVisitor) {
         vedtakshistorikk.accept(visitor)
-        tidslinje.accept(visitor)
+        aktivitetstidslinje.accept(visitor)
     }
 }

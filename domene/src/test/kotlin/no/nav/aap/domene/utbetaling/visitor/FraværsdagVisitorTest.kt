@@ -3,7 +3,7 @@ package no.nav.aap.domene.utbetaling.visitor
 import no.nav.aap.domene.utbetaling.F
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.resetSeed
-import no.nav.aap.domene.utbetaling.tidslinje.FraværsdagVisitor
+import no.nav.aap.domene.utbetaling.aktivitetstidslinje.FraværsdagVisitor
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

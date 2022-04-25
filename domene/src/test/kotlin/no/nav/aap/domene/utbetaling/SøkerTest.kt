@@ -6,7 +6,7 @@ import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.BrukeraktivitetPerDag
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
-import no.nav.aap.domene.utbetaling.tidslinje.Dag
+import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

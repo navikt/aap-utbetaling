@@ -1,11 +1,11 @@
-package no.nav.aap.domene.utbetaling.tidslinje
+package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import java.time.LocalDate
 
-internal class Tidslinje(meldeperioder: List<Meldeperiode> = emptyList()) {
+internal class Aktivitetstidslinje(meldeperioder: List<Meldeperiode> = emptyList()) {
 
     private val meldeperioder: MutableList<Meldeperiode> = meldeperioder.toMutableList()
 

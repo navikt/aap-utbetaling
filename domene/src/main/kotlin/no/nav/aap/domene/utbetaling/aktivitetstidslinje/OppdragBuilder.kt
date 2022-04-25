@@ -1,7 +1,7 @@
-package no.nav.aap.domene.utbetaling.tidslinje
+package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
 import no.nav.aap.domene.utbetaling.entitet.Beløp
-import no.nav.aap.domene.utbetaling.tidslinje.OppdragBuilder.Linje.Companion.toOppdragLinjer
+import no.nav.aap.domene.utbetaling.aktivitetstidslinje.OppdragBuilder.Linje.Companion.toOppdragLinjer
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Fagområde
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdrag
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Utbetalingslinje
@@ -13,8 +13,8 @@ internal class OppdragBuilder : SøkerVisitor {
 
     private var tilstand: Tilstand = Tilstand.NyLinje
 
-    internal fun build(tidslinje: Tidslinje): Oppdrag {
-        tidslinje.accept(this)
+    internal fun build(aktivitetstidslinje: Aktivitetstidslinje): Oppdrag {
+        aktivitetstidslinje.accept(this)
         return Oppdrag(
             mottaker = "mottaker", //FIXME
             fagområde = Fagområde.Arbeidsavklaringspenger,

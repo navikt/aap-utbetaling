@@ -1,4 +1,4 @@
-package no.nav.aap.domene.utbetaling.tidslinje
+package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
 import no.nav.aap.domene.utbetaling.*
 import no.nav.aap.domene.utbetaling.A

@@ -3,7 +3,7 @@ package no.nav.aap.domene.utbetaling
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
-import no.nav.aap.domene.utbetaling.tidslinje.Dag
+import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag
 import java.time.LocalDate
 
 

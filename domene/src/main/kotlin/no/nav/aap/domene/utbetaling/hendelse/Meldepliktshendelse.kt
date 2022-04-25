@@ -2,8 +2,8 @@ package no.nav.aap.domene.utbetaling.hendelse
 
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
-import no.nav.aap.domene.utbetaling.tidslinje.Dag
-import no.nav.aap.domene.utbetaling.tidslinje.Meldeperiode
+import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag
+import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Meldeperiode
 import java.time.LocalDate
 
 internal class Meldepliktshendelse(
