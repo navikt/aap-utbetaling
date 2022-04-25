@@ -1,10 +1,11 @@
 package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
-import no.nav.aap.domene.utbetaling.*
-import no.nav.aap.domene.utbetaling.A
-import no.nav.aap.domene.utbetaling.H
+import no.nav.aap.domene.utbetaling.Aktivitetsdager.A
+import no.nav.aap.domene.utbetaling.Aktivitetsdager.F
+import no.nav.aap.domene.utbetaling.Aktivitetsdager.H
+import no.nav.aap.domene.utbetaling.Aktivitetsdager.V
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
-import no.nav.aap.domene.utbetaling.resetSeed
+import no.nav.aap.domene.utbetaling.Aktivitetsdager.resetSeed
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

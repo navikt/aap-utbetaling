@@ -1,17 +1,24 @@
 package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
-import no.nav.aap.domene.utbetaling.A
-import no.nav.aap.domene.utbetaling.F
-import no.nav.aap.domene.utbetaling.H
+import no.nav.aap.domene.utbetaling.Aktivitetsdager.A
+import no.nav.aap.domene.utbetaling.Aktivitetsdager.F
+import no.nav.aap.domene.utbetaling.Aktivitetsdager.H
+import no.nav.aap.domene.utbetaling.Aktivitetsdager.resetSeed
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Endringskode
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdrag
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.inspektør
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class OppdragBuilderTest {
+
+    @BeforeEach
+    fun beforeEach() {
+        resetSeed()
+    }
 
     @Test
     fun `10 sammenhengende arbeidsdager pluss helg gir 10 stønadsdager i oppdraget`() {

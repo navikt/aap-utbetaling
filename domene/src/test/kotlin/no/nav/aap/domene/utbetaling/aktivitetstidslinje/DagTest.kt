@@ -1,6 +1,10 @@
 package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
-import no.nav.aap.domene.utbetaling.*
+import no.nav.aap.domene.utbetaling.Aktivitetsdager.A
+import no.nav.aap.domene.utbetaling.Aktivitetsdager.F
+import no.nav.aap.domene.utbetaling.Aktivitetsdager.H
+import no.nav.aap.domene.utbetaling.Aktivitetsdager.V
+import no.nav.aap.domene.utbetaling.Aktivitetsdager.resetSeed
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
