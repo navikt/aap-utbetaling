@@ -7,6 +7,7 @@ import no.nav.aap.domene.utbetaling.Utbetalingsdager.resetSeed
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Endringskode
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdrag
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.inspektør
+import no.nav.aap.domene.utbetaling.utbetalingstidslinje.OppdragBuilder
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -25,7 +26,7 @@ internal class OppdragBuilderTest {
         val dager = 5.U(arbeidsprosent = 0) + 2.S + 5.U(arbeidsprosent = 0) + 2.S
         val utbetalingstidslinje = Utbetalingstidslinje(dager)
 
-        val oppdragBuilder = OppdragBuilder2()
+        val oppdragBuilder = OppdragBuilder()
         val oppdrag: Oppdrag = oppdragBuilder.build(utbetalingstidslinje)
 
         assertEquals(10, oppdrag.stønadsdager())
@@ -40,7 +41,7 @@ internal class OppdragBuilderTest {
         val dager = 5.U(arbeidsprosent = 0) + 2.S + 2.I + 3.U(arbeidsprosent = 0) + 2.S
         val utbetalingstidslinje = Utbetalingstidslinje(dager)
 
-        val oppdragBuilder = OppdragBuilder2()
+        val oppdragBuilder = OppdragBuilder()
         val oppdrag: Oppdrag = oppdragBuilder.build(utbetalingstidslinje)
 
         assertEquals(8, oppdrag.stønadsdager())
@@ -55,7 +56,7 @@ internal class OppdragBuilderTest {
         val dager = 1.I + 4.U(arbeidsprosent = 0) + 2.S + 1.I + 4.U(arbeidsprosent = 0) + 2.S
         val utbetalingstidslinje = Utbetalingstidslinje(dager)
 
-        val oppdragBuilder = OppdragBuilder2()
+        val oppdragBuilder = OppdragBuilder()
         val oppdrag: Oppdrag = oppdragBuilder.build(utbetalingstidslinje)
 
         assertEquals(8, oppdrag.stønadsdager())
@@ -71,7 +72,7 @@ internal class OppdragBuilderTest {
         val dager = 5.I + 2.S + 5.I + 2.S
         val utbetalingstidslinje = Utbetalingstidslinje(dager)
 
-        val oppdragBuilder = OppdragBuilder2()
+        val oppdragBuilder = OppdragBuilder()
         val oppdrag: Oppdrag = oppdragBuilder.build(utbetalingstidslinje)
 
         assertEquals(0, oppdrag.stønadsdager())

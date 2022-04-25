@@ -9,6 +9,7 @@ import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import java.time.LocalDate
 import kotlin.math.roundToInt
 
+@Deprecated("Erstattes av utbetalingstidslinje.OppdragBuilder")
 internal class OppdragBuilder : SøkerVisitor {
 
     private var tilstand: Tilstand = Tilstand.NyLinje

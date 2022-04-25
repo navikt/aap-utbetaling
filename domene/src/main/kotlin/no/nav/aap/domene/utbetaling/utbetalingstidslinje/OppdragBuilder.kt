@@ -1,17 +1,14 @@
-package no.nav.aap.domene.utbetaling.aktivitetstidslinje
+package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
-import no.nav.aap.domene.utbetaling.aktivitetstidslinje.OppdragBuilder2.Linje.Companion.toOppdragLinjer
+import no.nav.aap.domene.utbetaling.utbetalingstidslinje.OppdragBuilder.Linje.Companion.toOppdragLinjer
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Fagområde
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdrag
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Utbetalingslinje
-import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingsdag
-import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
-import no.nav.aap.domene.utbetaling.utbetalingstidslinje.UtbetalingstidslinjeVisitor
 import java.time.LocalDate
 import kotlin.math.roundToInt
 
-internal class OppdragBuilder2 : UtbetalingstidslinjeVisitor {
+internal class OppdragBuilder : UtbetalingstidslinjeVisitor {
 
     private var tilstand: Tilstand = Tilstand.NyLinje
 
@@ -59,11 +56,11 @@ internal class OppdragBuilder2 : UtbetalingstidslinjeVisitor {
 
     private sealed interface Tilstand {
 
-        fun arbeidsdag(builder: OppdragBuilder2, dagbeløp: Beløp, dato: LocalDate) {}
-        fun fraværsdag(builder: OppdragBuilder2, dato: LocalDate) {}
+        fun arbeidsdag(builder: OppdragBuilder, dagbeløp: Beløp, dato: LocalDate) {}
+        fun fraværsdag(builder: OppdragBuilder, dato: LocalDate) {}
 
         object NyLinje : Tilstand {
-            override fun arbeidsdag(builder: OppdragBuilder2, dagbeløp: Beløp, dato: LocalDate) {
+            override fun arbeidsdag(builder: OppdragBuilder, dagbeløp: Beløp, dato: LocalDate) {
                 builder.linje = Linje(dato, dato, dagbeløp)
                 builder.linjer.add(builder.linje)
                 builder.tilstand = SammenhengendeLinje
@@ -71,11 +68,11 @@ internal class OppdragBuilder2 : UtbetalingstidslinjeVisitor {
         }
 
         object SammenhengendeLinje : Tilstand {
-            override fun arbeidsdag(builder: OppdragBuilder2, dagbeløp: Beløp, dato: LocalDate) {
+            override fun arbeidsdag(builder: OppdragBuilder, dagbeløp: Beløp, dato: LocalDate) {
                 builder.linje.oppdaterTom(dato)
             }
 
-            override fun fraværsdag(builder: OppdragBuilder2, dato: LocalDate) {
+            override fun fraværsdag(builder: OppdragBuilder, dato: LocalDate) {
                 builder.tilstand = NyLinje
             }
         }
