@@ -1,13 +1,11 @@
 package no.nav.aap.app
 
-import com.nimbusds.jwt.SignedJWT
 import io.confluent.kafka.schemaregistry.testutil.MockSchemaRegistry
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.binder.kafka.KtorKafkaMetrics
 import no.nav.aap.app.kafka.*
-import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.apache.avro.specific.SpecificRecord
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.MockConsumer
@@ -26,19 +24,11 @@ import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
 class Mocks : AutoCloseable {
-    val azure = AzureMock().apply { start() }
     val kafka = KStreamsMock()
 
     override fun close() {
-        azure.close()
+        kafka.close()
     }
-}
-
-class AzureMock(private val server: MockOAuth2Server = MockOAuth2Server()) {
-    fun wellKnownUrl(): String = server.wellKnownUrl("azure").toString()
-    fun issueAzureToken(): SignedJWT = server.issueToken(issuerId = "azure", audience = "vedtak")
-    fun start() = server.start()
-    fun close() = server.shutdown()
 }
 
 class KStreamsMock : Kafka {
