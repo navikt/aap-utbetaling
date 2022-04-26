@@ -2,7 +2,6 @@ package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
-import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.BrukeraktivitetPerDag
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
@@ -123,21 +122,21 @@ internal class AktivitetstidslinjeTest {
             sisteDatoIMeldeperiode = dato
         }
 
-        override fun visitArbeidsdag(dagbeløp: Beløp, dato: LocalDate, arbeidstimer: Arbeidstimer) {
+        override fun visitArbeidsdag(dato: LocalDate, arbeidstimer: Arbeidstimer) {
             antallDager++
             antallArbeidsdager++
             if (førsteDatoIMeldeperiode == null) førsteDatoIMeldeperiode = dato
             sisteDatoIMeldeperiode = dato
         }
 
-        override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate) {
+        override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dato: LocalDate) {
             antallDager++
             antallFraværsdager++
             if (førsteDatoIMeldeperiode == null) førsteDatoIMeldeperiode = dato
             sisteDatoIMeldeperiode = dato
         }
 
-        override fun visitVentedag(dagbeløp: Beløp, dato: LocalDate) {
+        override fun visitVentedag(dato: LocalDate) {
             antallDager++
             if (førsteDatoIMeldeperiode == null) førsteDatoIMeldeperiode = dato
             sisteDatoIMeldeperiode = dato

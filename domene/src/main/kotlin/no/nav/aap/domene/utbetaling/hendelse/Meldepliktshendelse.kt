@@ -23,8 +23,8 @@ internal class BrukeraktivitetPerDag(
 ) {
     internal fun oppdaterTidslinje(meldeperiode: Meldeperiode, grunnlagsfaktor: Grunnlagsfaktor) {
         val dag = when {
-            fraværsdag -> Dag.fraværsdag(dato, grunnlagsfaktor)
-            else -> Dag.arbeidsdag(dato, grunnlagsfaktor, arbeidstimer)
+            fraværsdag -> Dag.fraværsdag(dato)
+            else -> Dag.arbeidsdag(dato, arbeidstimer)
         }
         meldeperiode.leggTilDag(dag)
     }

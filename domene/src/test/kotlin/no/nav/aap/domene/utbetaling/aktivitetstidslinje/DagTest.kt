@@ -5,54 +5,18 @@ import no.nav.aap.domene.utbetaling.Aktivitetsdager.F
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.H
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.V
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.resetSeed
-import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
-import no.nav.aap.domene.utbetaling.entitet.Beløp
-import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag.Companion.summerArbeidstimer
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag.Companion.summerNormalArbeidstimer
-import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
+import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
 
 internal class DagTest {
 
     @BeforeEach
     fun beforeEach() {
         resetSeed()
-    }
-
-    @Test
-    fun `Omregner 66 prosent av grunnlaget til dagsats`() {
-        val visitor = TestDagVisitor()
-        val dager = 1.A(arbeidstimer = 0)
-        dager.forEach { it.accept(visitor) }
-        assertEquals(810.27.beløp, visitor.dagbeløp)
-    }
-
-    @Test
-    fun `På helg er dagsats 0`() {
-        val visitor = TestDagVisitor()
-        val dager = 1.H
-        dager.forEach { it.accept(visitor) }
-        assertEquals(0.beløp, visitor.dagbeløp)
-    }
-
-    @Test
-    fun `Omregner 66 prosent av grunnlaget til dagsats - dagsats økes med barnetillegg`() {
-        val visitor = TestDagVisitor()
-        val dager = 1.A(grunnlagsfaktor = 5, barnetillegg = 27 * 13, arbeidstimer = 0)
-        dager.forEach { it.accept(visitor) }
-        assertEquals(1701.45.beløp, visitor.dagbeløp)
-    }
-
-    @Test
-    fun `Dagsats inkludert barnetillegg begrenses oppad til 90 prosent av grunnlaget`() {
-        val visitor = TestDagVisitor()
-        val dager = 1.A(grunnlagsfaktor = 2, barnetillegg = 27 * 14, arbeidstimer = 0)
-        dager.forEach { it.accept(visitor) }
-        assertEquals(736.61.beløp, visitor.dagbeløp)
     }
 
     @Test
@@ -99,17 +63,5 @@ internal class DagTest {
     @Test
     fun `En ventedag bidrar med 7,5 timer til summen av normalarbeidstid`() {
         assertEquals(7.5.arbeidstimer, 1.V.summerNormalArbeidstimer())
-    }
-
-    private class TestDagVisitor : DagVisitor {
-        lateinit var dagbeløp: Beløp
-
-        override fun visitArbeidsdag(dagbeløp: Beløp, dato: LocalDate, arbeidstimer: Arbeidstimer) {
-            this.dagbeløp = dagbeløp
-        }
-
-        override fun visitHelgedag(helgedag: Dag.Helg, dato: LocalDate, arbeidstimer: Arbeidstimer) {
-            this.dagbeløp = 0.beløp
-        }
     }
 }

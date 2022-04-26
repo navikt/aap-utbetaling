@@ -3,7 +3,6 @@ package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.NORMAL_ARBEIDSTIMER
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
-import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingsdag
@@ -46,18 +45,18 @@ internal class UtbetalingstidslinjeBuilder : SøkerVisitor {
         arbeidstimerIPeriode += arbeidstimer
     }
 
-    override fun visitArbeidsdag(dagbeløp: Beløp, dato: LocalDate, arbeidstimer: Arbeidstimer) {
+    override fun visitArbeidsdag(dato: LocalDate, arbeidstimer: Arbeidstimer) {
         arbeidstimerIPeriode += arbeidstimer
         normalarbeidstimerIPeriode += NORMAL_ARBEIDSTIMER
 
-        tilstand.arbeidsdag(this, dagbeløp, dato, arbeidstimer)
+        tilstand.arbeidsdag(this, dato, arbeidstimer)
     }
 
-    override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate) {
-        tilstand.fraværsdag(this, dagbeløp, dato)
+    override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dato: LocalDate) {
+        tilstand.fraværsdag(this, dato)
     }
 
-    override fun visitVentedag(dagbeløp: Beløp, dato: LocalDate) {
+    override fun visitVentedag(dato: LocalDate) {
 
     }
 
@@ -74,21 +73,13 @@ internal class UtbetalingstidslinjeBuilder : SøkerVisitor {
     }
 
     private sealed interface Tilstand {
-        fun arbeidsdag(
-            builder: UtbetalingstidslinjeBuilder,
-            dagbeløp: Beløp,
-            dato: LocalDate,
-            arbeidstimer: Arbeidstimer
-        ) {
-        }
-
-        fun fraværsdag(builder: UtbetalingstidslinjeBuilder, dagbeløp: Beløp, dato: LocalDate) {}
+        fun arbeidsdag(builder: UtbetalingstidslinjeBuilder, dato: LocalDate, arbeidstimer: Arbeidstimer) {}
+        fun fraværsdag(builder: UtbetalingstidslinjeBuilder, dato: LocalDate) {}
         fun fullførMeldeperiode(builder: UtbetalingstidslinjeBuilder) {}
 
         object Start : Tilstand {
             override fun arbeidsdag(
                 builder: UtbetalingstidslinjeBuilder,
-                dagbeløp: Beløp,
                 dato: LocalDate,
                 arbeidstimer: Arbeidstimer
             ) {
@@ -104,7 +95,7 @@ internal class UtbetalingstidslinjeBuilder : SøkerVisitor {
                 builder.avvisteDagerUtbetalingstidslinje += ikkeUtbetalingsdag
             }
 
-            override fun fraværsdag(builder: UtbetalingstidslinjeBuilder, dagbeløp: Beløp, dato: LocalDate) {
+            override fun fraværsdag(builder: UtbetalingstidslinjeBuilder, dato: LocalDate) {
                 val utbetalingsdag = Utbetalingsdag.Utbetaling(
                     dato = dato,
                     grunnlagsfaktor = Grunnlagsfaktor(0),
@@ -127,7 +118,6 @@ internal class UtbetalingstidslinjeBuilder : SøkerVisitor {
         object EnFraværsdag : Tilstand {
             override fun arbeidsdag(
                 builder: UtbetalingstidslinjeBuilder,
-                dagbeløp: Beløp,
                 dato: LocalDate,
                 arbeidstimer: Arbeidstimer
             ) {
@@ -143,7 +133,7 @@ internal class UtbetalingstidslinjeBuilder : SøkerVisitor {
                 builder.avvisteDagerUtbetalingstidslinje += ikkeUtbetalingsdag
             }
 
-            override fun fraværsdag(builder: UtbetalingstidslinjeBuilder, dagbeløp: Beløp, dato: LocalDate) {
+            override fun fraværsdag(builder: UtbetalingstidslinjeBuilder, dato: LocalDate) {
                 val ikkeUtbetalingsdag = Utbetalingsdag.IkkeUtbetaling(dato = dato)
                 builder.avvisteFraværsdagerUtbetalingstidslinje += ikkeUtbetalingsdag
                 builder.avvisteDagerUtbetalingstidslinje += ikkeUtbetalingsdag
@@ -159,7 +149,6 @@ internal class UtbetalingstidslinjeBuilder : SøkerVisitor {
         object MerEnnEnFraværsdag : Tilstand {
             override fun arbeidsdag(
                 builder: UtbetalingstidslinjeBuilder,
-                dagbeløp: Beløp,
                 dato: LocalDate,
                 arbeidstimer: Arbeidstimer
             ) {
@@ -174,7 +163,7 @@ internal class UtbetalingstidslinjeBuilder : SøkerVisitor {
                 builder.avvisteDagerUtbetalingstidslinje += ikkeUtbetalingsdag
             }
 
-            override fun fraværsdag(builder: UtbetalingstidslinjeBuilder, dagbeløp: Beløp, dato: LocalDate) {
+            override fun fraværsdag(builder: UtbetalingstidslinjeBuilder, dato: LocalDate) {
                 val ikkeUtbetalingsdag = Utbetalingsdag.IkkeUtbetaling(dato = dato)
                 builder.avvisteFraværsdagerUtbetalingstidslinje += ikkeUtbetalingsdag
                 builder.avvisteDagerUtbetalingstidslinje += ikkeUtbetalingsdag

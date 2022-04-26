@@ -4,10 +4,6 @@ import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.NORMAL_ARBEIDSTIMER
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.summer
-import no.nav.aap.domene.utbetaling.entitet.Beløp
-import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
-import no.nav.aap.domene.utbetaling.entitet.Grunnbeløp
-import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -24,7 +20,6 @@ internal sealed class Dag(
         dato: LocalDate,
         private val arbeidstimer: Arbeidstimer
     ) : Dag(dato) {
-
         override fun arbeidstimer() = arbeidstimer
         override fun normalArbeidstimer(): Arbeidstimer = 0.arbeidstimer
 
@@ -33,64 +28,33 @@ internal sealed class Dag(
         }
     }
 
-    internal abstract class Beløpdag(
-        dato: LocalDate,
-        grunnlagsfaktor: Grunnlagsfaktor,
-        barnetillegg: Beløp
-    ) : Dag(dato) {
-
-        private companion object {
-            private const val FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG = 0.66
-            private const val MAKS_FAKTOR_AV_GRUNNLAG = 0.9
-            private const val ANTALL_DAGER_MED_UTBETALING_PER_ÅR = 260
-        }
-
-        private val grunnlag: Beløp = Grunnbeløp.årligYtelseINOK(dato, grunnlagsfaktor)
-        private val dagsats = grunnlag * FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG / ANTALL_DAGER_MED_UTBETALING_PER_ÅR //TODO: Heltall??
-        private val høyestebeløpMedBarnetillegg = grunnlag * MAKS_FAKTOR_AV_GRUNNLAG / ANTALL_DAGER_MED_UTBETALING_PER_ÅR //TODO: Denne også heltal
-        private val beløpMedBarnetillegg = minOf(høyestebeløpMedBarnetillegg, (dagsats + barnetillegg))
-
-        internal open fun beløp() = beløpMedBarnetillegg
-    }
-
     internal class Arbeidsdag(
         dato: LocalDate,
-        grunnlagsfaktor: Grunnlagsfaktor,
-        barnetillegg: Beløp,
         private val arbeidstimer: Arbeidstimer
-    ) : Beløpdag(
-        dato,
-        grunnlagsfaktor,
-        barnetillegg
-    ) {
+    ) : Dag(dato) {
         override fun arbeidstimer() = arbeidstimer
 
-        override fun accept(visitor: DagVisitor) = visitor.visitArbeidsdag(beløp(), dato, arbeidstimer)
+        override fun accept(visitor: DagVisitor) = visitor.visitArbeidsdag(dato, arbeidstimer)
     }
 
     internal class Fraværsdag(
-        dato: LocalDate,
-        grunnlagsfaktor: Grunnlagsfaktor,
-        barnetillegg: Beløp
-    ) : Beløpdag(dato, grunnlagsfaktor, barnetillegg) {
-
+        dato: LocalDate
+    ) : Dag(dato) {
         override fun arbeidstimer() = 0.arbeidstimer
         override fun normalArbeidstimer() = NORMAL_ARBEIDSTIMER
 
         override fun accept(visitor: DagVisitor) {
-            visitor.visitFraværsdag(this, beløp(), dato)
+            visitor.visitFraværsdag(this, dato)
         }
     }
 
     internal class Ventedag(
-        dato: LocalDate,
-        grunnlagsfaktor: Grunnlagsfaktor,
-        barnetillegg: Beløp
-    ) : Beløpdag(dato, grunnlagsfaktor, barnetillegg) {
-
+        dato: LocalDate
+    ) : Dag(dato) {
         override fun arbeidstimer() = 0.arbeidstimer
+
         override fun accept(visitor: DagVisitor) {
-            visitor.visitVentedag(beløp(), dato)
+            visitor.visitVentedag(dato)
         }
     }
 
@@ -98,12 +62,12 @@ internal sealed class Dag(
         internal fun Iterable<Dag>.summerArbeidstimer() = map(Dag::arbeidstimer).summer()
         internal fun Iterable<Dag>.summerNormalArbeidstimer() = map(Dag::normalArbeidstimer).summer()
 
-        internal fun arbeidsdag(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor, arbeidstimer: Arbeidstimer) =
+        internal fun arbeidsdag(dato: LocalDate, arbeidstimer: Arbeidstimer) =
             if (dato.erHelg()) Helg(dato, arbeidstimer)
-            else Arbeidsdag(dato, grunnlagsfaktor, 0.beløp, arbeidstimer)
+            else Arbeidsdag(dato, arbeidstimer)
 
-        internal fun fraværsdag(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor) =
-            Fraværsdag(dato, grunnlagsfaktor, 0.beløp)
+        internal fun fraværsdag(dato: LocalDate) =
+            Fraværsdag(dato)
     }
 }
 
@@ -111,7 +75,7 @@ internal fun LocalDate.erHelg() = this.dayOfWeek in arrayOf(DayOfWeek.SATURDAY, 
 
 internal interface DagVisitor {
     fun visitHelgedag(helgedag: Dag.Helg, dato: LocalDate, arbeidstimer: Arbeidstimer) {}
-    fun visitArbeidsdag(dagbeløp: Beløp, dato: LocalDate, arbeidstimer: Arbeidstimer) {}
-    fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate) {}
-    fun visitVentedag(dagbeløp: Beløp, dato: LocalDate) {}
+    fun visitArbeidsdag(dato: LocalDate, arbeidstimer: Arbeidstimer) {}
+    fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dato: LocalDate) {}
+    fun visitVentedag(dato: LocalDate) {}
 }

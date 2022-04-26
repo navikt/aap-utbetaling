@@ -1,8 +1,6 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
-import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
-import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag
 import java.time.LocalDate
 
@@ -19,18 +17,16 @@ object Aktivitetsdager {
     }
 
     internal val Int.A get() = A()
-    internal fun Int.A(grunnlagsfaktor: Number = 3, barnetillegg: Number = 0, arbeidstimer: Number = 7.5) = (1..this)
-        .map { Dag.Arbeidsdag(seed, Grunnlagsfaktor(grunnlagsfaktor), barnetillegg.beløp, arbeidstimer.arbeidstimer) }
+    internal fun Int.A(arbeidstimer: Number = 7.5) = (1..this)
+        .map { Dag.Arbeidsdag(seed, arbeidstimer.arbeidstimer) }
 
     internal val Int.H get() = H()
     internal fun Int.H(arbeidstimer: Number = 0) = (1..this)
         .map { Dag.Helg(seed, arbeidstimer.arbeidstimer) }
 
-    internal val Int.V get() = V()
-    internal fun Int.V(grunnlagsfaktor: Number = 3, barnetillegg: Number = 0) = (1..this)
-        .map { Dag.Ventedag(seed, Grunnlagsfaktor(grunnlagsfaktor), barnetillegg.beløp) }
+    internal val Int.V get() = (1..this)
+        .map { Dag.Ventedag(seed) }
 
-    internal val Int.F get() = F()
-    internal fun Int.F(grunnlagsfaktor: Number = 3, barnetillegg: Number = 0) = (1..this)
-        .map { Dag.Fraværsdag(seed, Grunnlagsfaktor(grunnlagsfaktor), barnetillegg.beløp) }
+    internal val Int.F get() = (1..this)
+        .map { Dag.Fraværsdag(seed) }
 }
