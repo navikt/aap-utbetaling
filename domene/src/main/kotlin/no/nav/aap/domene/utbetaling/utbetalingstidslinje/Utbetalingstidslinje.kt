@@ -5,7 +5,14 @@ internal class Utbetalingstidslinje(
 ) {
     private val dager = dager.toMutableList()
 
-    internal fun accept(visitor: UtbetalingstidslinjeVisitor){
+    internal fun arbeidsprosent(arbeidsprosent: Double) {
+        dager.forEach { it.arbeidsprosent(arbeidsprosent) }
+    }
+
+    internal operator fun plus(dag: Utbetalingsdag) = Utbetalingstidslinje(dager + dag)
+    internal operator fun plus(other: Utbetalingstidslinje) = Utbetalingstidslinje(this.dager + other.dager)
+
+    internal fun accept(visitor: UtbetalingstidslinjeVisitor) {
         visitor.preVisitUtbetalingstidslinje(this)
         dager.forEach { it.accept(visitor) }
         visitor.postVisitUtbetalingstidslinje(this)
