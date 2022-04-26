@@ -6,10 +6,8 @@ import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.summer
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
-import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.summerBeløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnbeløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
-import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -19,7 +17,6 @@ internal sealed class Dag(
 
     internal abstract fun arbeidstimer(): Arbeidstimer
     internal open fun normalArbeidstimer(): Arbeidstimer = NORMAL_ARBEIDSTIMER
-    internal abstract fun beløp(arbeidsprosent: Double): Beløp
 
     internal abstract fun accept(visitor: DagVisitor)
 
@@ -30,7 +27,6 @@ internal sealed class Dag(
 
         override fun arbeidstimer() = arbeidstimer
         override fun normalArbeidstimer(): Arbeidstimer = 0.arbeidstimer
-        override fun beløp(arbeidsprosent: Double) = 0.beløp
 
         override fun accept(visitor: DagVisitor) {
             visitor.visitHelgedag(this, dato, arbeidstimer)
@@ -44,7 +40,6 @@ internal sealed class Dag(
     ) : Dag(dato) {
 
         private companion object {
-            private const val HØYESTE_ARBEIDSMENGDE_SOM_GIR_YTELSE = 0.6 // TODO Skal justeres ved vedtak
             private const val FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG = 0.66
             private const val MAKS_FAKTOR_AV_GRUNNLAG = 0.9
             private const val ANTALL_DAGER_MED_UTBETALING_PER_ÅR = 260
@@ -56,9 +51,6 @@ internal sealed class Dag(
         private val beløpMedBarnetillegg = minOf(høyestebeløpMedBarnetillegg, (dagsats + barnetillegg))
 
         internal open fun beløp() = beløpMedBarnetillegg
-        override fun beløp(arbeidsprosent: Double) =
-            if (arbeidsprosent > HØYESTE_ARBEIDSMENGDE_SOM_GIR_YTELSE) 0.beløp
-            else beløpMedBarnetillegg * (1 - arbeidsprosent)
     }
 
     internal class Arbeidsdag(
@@ -82,35 +74,11 @@ internal sealed class Dag(
         barnetillegg: Beløp
     ) : Beløpdag(dato, grunnlagsfaktor, barnetillegg) {
 
-        private var ignoreMe = false
-
-        internal fun ignoreMe() {
-            ignoreMe = true
-        }
-
-        override fun beløp(): Beløp = if (ignoreMe) {
-            0.beløp
-        } else {
-            super.beløp()
-        }
-
-        override fun beløp(arbeidsprosent: Double): Beløp = if (ignoreMe) {
-            0.beløp
-        } else {
-            super.beløp(arbeidsprosent)
-        }
-
         override fun arbeidstimer() = 0.arbeidstimer
-        override fun normalArbeidstimer(): Arbeidstimer {
-            return if (ignoreMe) {
-                0.arbeidstimer
-            } else {
-                NORMAL_ARBEIDSTIMER
-            }
-        }
+        override fun normalArbeidstimer() = NORMAL_ARBEIDSTIMER
 
         override fun accept(visitor: DagVisitor) {
-            visitor.visitFraværsdag(this, beløp(), dato, ignoreMe)
+            visitor.visitFraværsdag(this, beløp(), dato)
         }
     }
 
@@ -129,8 +97,6 @@ internal sealed class Dag(
     internal companion object {
         internal fun Iterable<Dag>.summerArbeidstimer() = map(Dag::arbeidstimer).summer()
         internal fun Iterable<Dag>.summerNormalArbeidstimer() = map(Dag::normalArbeidstimer).summer()
-        internal fun Iterable<Dag>.beregnBeløp(arbeidsprosent: Double): Beløp =
-            map { it.beløp(arbeidsprosent) }.summerBeløp()
 
         internal fun arbeidsdag(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor, arbeidstimer: Arbeidstimer) =
             if (dato.erHelg()) Helg(dato, arbeidstimer)
@@ -146,34 +112,6 @@ internal fun LocalDate.erHelg() = this.dayOfWeek in arrayOf(DayOfWeek.SATURDAY, 
 internal interface DagVisitor {
     fun visitHelgedag(helgedag: Dag.Helg, dato: LocalDate, arbeidstimer: Arbeidstimer) {}
     fun visitArbeidsdag(dagbeløp: Beløp, dato: LocalDate, arbeidstimer: Arbeidstimer) {}
-    fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate, ignoreMe: Boolean) {}
+    fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate) {}
     fun visitVentedag(dagbeløp: Beløp, dato: LocalDate) {}
-}
-
-internal class FraværsdagVisitor : SøkerVisitor {
-    private var tilstand: Tilstand = Tilstand.IngenFraværsdager
-
-    private lateinit var førsteFraværsdag: Dag.Fraværsdag
-
-    override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate, ignoreMe: Boolean) {
-        tilstand.visitFraværsdag(this, fraværsdag)
-    }
-
-    private sealed class Tilstand {
-        abstract fun visitFraværsdag(fraværsdagVisitor: FraværsdagVisitor, fraværsdag: Dag.Fraværsdag)
-
-        object IngenFraværsdager : Tilstand() {
-            override fun visitFraværsdag(fraværsdagVisitor: FraværsdagVisitor, fraværsdag: Dag.Fraværsdag) {
-                fraværsdagVisitor.førsteFraværsdag = fraværsdag
-                fraværsdagVisitor.tilstand = MinstEnFraværsdag
-            }
-        }
-
-        object MinstEnFraværsdag : Tilstand() {
-            override fun visitFraværsdag(fraværsdagVisitor: FraværsdagVisitor, fraværsdag: Dag.Fraværsdag) {
-                fraværsdagVisitor.førsteFraværsdag.ignoreMe()
-                fraværsdag.ignoreMe()
-            }
-        }
-    }
 }

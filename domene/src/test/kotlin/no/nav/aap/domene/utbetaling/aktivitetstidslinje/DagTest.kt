@@ -101,18 +101,6 @@ internal class DagTest {
         assertEquals(7.5.arbeidstimer, 1.V.summerNormalArbeidstimer())
     }
 
-    @Test
-    fun `En ikke-ignorert fraværsdag bidrar med 7,5 timer til summen av normalarbeidstid`() {
-        assertEquals(7.5.arbeidstimer, 1.F.summerNormalArbeidstimer())
-    }
-
-    @Test
-    fun `En ignorert fraværsdag bidrar med 0 timer til summen av normalarbeidstid`() {
-        val dager = 1.F
-        dager.first().ignoreMe()
-        assertEquals(0.arbeidstimer, dager.summerNormalArbeidstimer())
-    }
-
     private class TestDagVisitor : DagVisitor {
         lateinit var dagbeløp: Beløp
 
@@ -121,7 +109,7 @@ internal class DagTest {
         }
 
         override fun visitHelgedag(helgedag: Dag.Helg, dato: LocalDate, arbeidstimer: Arbeidstimer) {
-            this.dagbeløp = helgedag.beløp(0.0)
+            this.dagbeløp = 0.beløp
         }
     }
 }

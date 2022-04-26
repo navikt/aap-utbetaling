@@ -130,7 +130,7 @@ internal class AktivitetstidslinjeTest {
             sisteDatoIMeldeperiode = dato
         }
 
-        override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate, ignoreMe: Boolean) {
+        override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate) {
             antallDager++
             antallFraværsdager++
             if (førsteDatoIMeldeperiode == null) førsteDatoIMeldeperiode = dato

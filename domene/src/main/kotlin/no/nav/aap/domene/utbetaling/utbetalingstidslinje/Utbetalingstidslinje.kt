@@ -9,7 +9,7 @@ internal class Utbetalingstidslinje(
         dager.forEach { it.arbeidsprosent(arbeidsprosent) }
     }
 
-    internal operator fun plus(dag: Utbetalingsdag) = Utbetalingstidslinje(dager + dag)
+    internal operator fun plus(dag: Utbetalingsdag) = Utbetalingstidslinje(this.dager + dag)
     internal operator fun plus(other: Utbetalingstidslinje) = Utbetalingstidslinje(this.dager + other.dager)
 
     internal fun accept(visitor: UtbetalingstidslinjeVisitor) {

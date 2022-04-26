@@ -53,7 +53,7 @@ internal class UtbetalingstidslinjeBuilder : SøkerVisitor {
         tilstand.arbeidsdag(this, dagbeløp, dato, arbeidstimer)
     }
 
-    override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate, ignoreMe: Boolean) {
+    override fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dagbeløp: Beløp, dato: LocalDate) {
         tilstand.fraværsdag(this, dagbeløp, dato)
     }
 
