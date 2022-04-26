@@ -142,6 +142,7 @@ internal class UtbetalingstidslinjeBuilder : SøkerVisitor {
             }
 
             override fun fullførMeldeperiode(builder: UtbetalingstidslinjeBuilder) {
+                builder.normalarbeidstimerIPeriode += NORMAL_ARBEIDSTIMER
                 builder.fullførMeldeperiode(builder.vanligUtbetalingstidslinje)
             }
         }

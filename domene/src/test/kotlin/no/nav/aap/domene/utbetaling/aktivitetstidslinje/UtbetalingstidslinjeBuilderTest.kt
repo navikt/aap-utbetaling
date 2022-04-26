@@ -7,7 +7,7 @@ import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingsdag
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.UtbetalingstidslinjeVisitor
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
@@ -95,6 +95,34 @@ internal class UtbetalingstidslinjeBuilderTest {
 
         assertEquals(0, inspektør.antallUtbetalingsdager)
         assertEquals(10, inspektør.antallIkkeUtbetalingsdager)
+    }
+
+    @Test
+    fun `To fraværsdager fører til at disse dagene ikke regnes med i normalarbeidstid og derfor gir for høy arbeidsprosent i denne testen`() {
+        val dager = 5.A(arbeidstimer = 5) + 2.H(arbeidstimer = 1) + 2.F + 3.A(arbeidstimer = 5)
+        val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
+
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder()
+        val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
+
+        val inspektør = utbetalingstidslinje.inspektør
+
+        assertEquals(0, inspektør.antallUtbetalingsdager)
+        assertEquals(10, inspektør.antallIkkeUtbetalingsdager)
+    }
+
+    @Test
+    fun `Jobber 60 prosent og har en fraværsdag`() {
+        val dager = 5.A + 2.H + 1.A + 1.F + 3.A(arbeidstimer = 0) + 2.H
+        val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
+
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder()
+        val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
+
+        val inspektør = utbetalingstidslinje.inspektør
+
+        assertEquals(10, inspektør.antallUtbetalingsdager)
+        assertEquals(0, inspektør.antallIkkeUtbetalingsdager)
     }
 
     private val Utbetalingstidslinje.inspektør
