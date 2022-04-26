@@ -125,6 +125,83 @@ internal class UtbetalingstidslinjeBuilderTest {
         assertEquals(0, inspektør.antallIkkeUtbetalingsdager)
     }
 
+    @Test
+    fun `Aktivitetstidslinje med flere meldeperioder med full jobb`() {
+        val meldeperiode1 = Meldeperiode(5.A + 2.H + 5.A + 2.H)
+        val meldeperiode2 = Meldeperiode(5.A + 2.H + 5.A + 2.H)
+        val aktivitetstidslinje = Aktivitetstidslinje(listOf(meldeperiode1, meldeperiode2))
+
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder()
+        val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
+
+        val inspektør = utbetalingstidslinje.inspektør
+
+        assertEquals(0, inspektør.antallUtbetalingsdager)
+        assertEquals(20, inspektør.antallIkkeUtbetalingsdager)
+    }
+
+    @Test
+    fun `Aktivitetstidslinje med flere meldeperioder med null jobb`() {
+        val meldeperiode1 = Meldeperiode(5.A(arbeidstimer = 0) + 2.H + 5.A(arbeidstimer = 0) + 2.H)
+        val meldeperiode2 = Meldeperiode(5.A(arbeidstimer = 0) + 2.H + 5.A(arbeidstimer = 0) + 2.H)
+        val aktivitetstidslinje = Aktivitetstidslinje(listOf(meldeperiode1, meldeperiode2))
+
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder()
+        val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
+
+        val inspektør = utbetalingstidslinje.inspektør
+
+        assertEquals(20, inspektør.antallUtbetalingsdager)
+        assertEquals(0, inspektør.antallIkkeUtbetalingsdager)
+    }
+
+    @Test
+    fun `Aktivitetstidslinje med to meldeperioder med ulik arbeidsprosent`() {
+        val meldeperiode1 = Meldeperiode(5.A(arbeidstimer = 7.5) + 2.H + 5.A(arbeidstimer = 7.5) + 2.H)
+        val meldeperiode2 = Meldeperiode(5.A(arbeidstimer = 0) + 2.H + 5.A(arbeidstimer = 0) + 2.H)
+        val aktivitetstidslinje = Aktivitetstidslinje(listOf(meldeperiode1, meldeperiode2))
+
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder()
+        val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
+
+        val inspektør = utbetalingstidslinje.inspektør
+
+        assertEquals(10, inspektør.antallUtbetalingsdager)
+        assertEquals(10, inspektør.antallIkkeUtbetalingsdager)
+    }
+
+    @Test
+    fun `Aktivitetstidslinje med tre meldeperioder med ulik arbeidsprosent - første og siste periode har arbeid`() {
+        val meldeperiode1 = Meldeperiode(5.A(arbeidstimer = 7.5) + 2.H + 5.A(arbeidstimer = 7.5) + 2.H)
+        val meldeperiode2 = Meldeperiode(5.A(arbeidstimer = 0) + 2.H + 5.A(arbeidstimer = 0) + 2.H)
+        val meldeperiode3 = Meldeperiode(5.A(arbeidstimer = 7.5) + 2.H + 5.A(arbeidstimer = 7.5) + 2.H)
+        val aktivitetstidslinje = Aktivitetstidslinje(listOf(meldeperiode1, meldeperiode2, meldeperiode3))
+
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder()
+        val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
+
+        val inspektør = utbetalingstidslinje.inspektør
+
+        assertEquals(10, inspektør.antallUtbetalingsdager)
+        assertEquals(20, inspektør.antallIkkeUtbetalingsdager)
+    }
+
+    @Test
+    fun `Aktivitetstidslinje med tre meldeperioder med ulik arbeidsprosent - andre periode har arbeid`() {
+        val meldeperiode1 = Meldeperiode(5.A(arbeidstimer = 0) + 2.H + 5.A(arbeidstimer = 0) + 2.H)
+        val meldeperiode2 = Meldeperiode(5.A(arbeidstimer = 7.5) + 2.H + 5.A(arbeidstimer = 7.5) + 2.H)
+        val meldeperiode3 = Meldeperiode(5.A(arbeidstimer = 0) + 2.H + 5.A(arbeidstimer = 0) + 2.H)
+        val aktivitetstidslinje = Aktivitetstidslinje(listOf(meldeperiode1, meldeperiode2, meldeperiode3))
+
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder()
+        val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
+
+        val inspektør = utbetalingstidslinje.inspektør
+
+        assertEquals(20, inspektør.antallUtbetalingsdager)
+        assertEquals(10, inspektør.antallIkkeUtbetalingsdager)
+    }
+
     private val Utbetalingstidslinje.inspektør
         get() = UtbetalingstidslinjeInspektør().also { accept(it) }
 
