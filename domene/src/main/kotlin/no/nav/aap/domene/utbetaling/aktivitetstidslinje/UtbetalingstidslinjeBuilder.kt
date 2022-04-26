@@ -10,7 +10,9 @@ import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import java.time.LocalDate
 
-internal class UtbetalingstidslinjeBuilder : SøkerVisitor {
+internal class UtbetalingstidslinjeBuilder(
+    private val grunnlagsfaktor: Grunnlagsfaktor
+) : SøkerVisitor {
 
     private var utbetalingstidslinje = Utbetalingstidslinje(emptyList())
 
@@ -85,7 +87,7 @@ internal class UtbetalingstidslinjeBuilder : SøkerVisitor {
             ) {
                 val utbetalingsdag = Utbetalingsdag.Utbetaling(
                     dato = dato,
-                    grunnlagsfaktor = Grunnlagsfaktor(0),
+                    grunnlagsfaktor = builder.grunnlagsfaktor,
                     barnetillegg = 0.beløp
                 )
                 builder.vanligUtbetalingstidslinje += utbetalingsdag
@@ -98,7 +100,7 @@ internal class UtbetalingstidslinjeBuilder : SøkerVisitor {
             override fun fraværsdag(builder: UtbetalingstidslinjeBuilder, dato: LocalDate) {
                 val utbetalingsdag = Utbetalingsdag.Utbetaling(
                     dato = dato,
-                    grunnlagsfaktor = Grunnlagsfaktor(0),
+                    grunnlagsfaktor = builder.grunnlagsfaktor,
                     barnetillegg = 0.beløp
                 )
                 builder.vanligUtbetalingstidslinje += utbetalingsdag
@@ -123,7 +125,7 @@ internal class UtbetalingstidslinjeBuilder : SøkerVisitor {
             ) {
                 val utbetalingsdag = Utbetalingsdag.Utbetaling(
                     dato = dato,
-                    grunnlagsfaktor = Grunnlagsfaktor(0),
+                    grunnlagsfaktor = builder.grunnlagsfaktor,
                     barnetillegg = 0.beløp
                 )
                 builder.vanligUtbetalingstidslinje += utbetalingsdag
@@ -155,7 +157,7 @@ internal class UtbetalingstidslinjeBuilder : SøkerVisitor {
             ) {
                 val utbetalingsdag = Utbetalingsdag.Utbetaling(
                     dato = dato,
-                    grunnlagsfaktor = Grunnlagsfaktor(0),
+                    grunnlagsfaktor = builder.grunnlagsfaktor,
                     barnetillegg = 0.beløp
                 )
                 builder.avvisteFraværsdagerUtbetalingstidslinje += utbetalingsdag

@@ -34,6 +34,7 @@ internal class OppdragBuilderTest {
         assertEquals(1, inspektør.antallLinjer())
         assertNull(inspektør.datoStatusFom(0))
         assertEquals(Endringskode.NY, inspektør.endringskode)
+        assertEquals(8100, inspektør.totalBeløp(0))
     }
 
     @Test
@@ -49,6 +50,7 @@ internal class OppdragBuilderTest {
         assertEquals(2, inspektør.antallLinjer())
         assertNull(inspektør.datoStatusFom(0))
         assertEquals(Endringskode.NY, inspektør.endringskode)
+        assertEquals(6480, inspektør.totalBeløp(0))
     }
 
     @Test
@@ -65,6 +67,7 @@ internal class OppdragBuilderTest {
         assertNull(inspektør.datoStatusFom(0))
         assertNull(inspektør.datoStatusFom(1))
         assertEquals(Endringskode.NY, inspektør.endringskode)
+        assertEquals(6480, inspektør.totalBeløp(0))
     }
 
     @Test
@@ -79,5 +82,22 @@ internal class OppdragBuilderTest {
         val inspektør = oppdrag.inspektør
         assertEquals(0, inspektør.antallLinjer())
         assertEquals(Endringskode.NY, inspektør.endringskode)
+        assertEquals(0, inspektør.totalBeløp(0))
+    }
+
+    @Test
+    fun `10 sammenhengende utbetalingsdager med 50 prosent arbeid gir 10 stønadsdager i oppdraget`() {
+        val dager = 5.U(arbeidsprosent = 0.5) + 2.S + 5.U(arbeidsprosent = 0.5) + 2.S
+        val utbetalingstidslinje = Utbetalingstidslinje(dager)
+
+        val oppdragBuilder = OppdragBuilder()
+        val oppdrag: Oppdrag = oppdragBuilder.build(utbetalingstidslinje)
+
+        assertEquals(10, oppdrag.stønadsdager())
+        val inspektør = oppdrag.inspektør
+        assertEquals(1, inspektør.antallLinjer())
+        assertNull(inspektør.datoStatusFom(0))
+        assertEquals(Endringskode.NY, inspektør.endringskode)
+        assertEquals(4050, inspektør.totalBeløp(0))
     }
 }

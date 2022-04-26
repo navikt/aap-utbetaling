@@ -4,6 +4,7 @@ import no.nav.aap.domene.utbetaling.Aktivitetsdager.A
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.F
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.H
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.resetSeed
+import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Endringskode
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdrag
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.inspektør
@@ -26,7 +27,7 @@ internal class FraAktivitetstidslinjeTilOppdragBuilderTest {
         val dager = 5.A(arbeidstimer = 0) + 2.H + 5.A(arbeidstimer = 0) + 2.H
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder()
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val oppdragBuilder = OppdragBuilder()
@@ -44,7 +45,7 @@ internal class FraAktivitetstidslinjeTilOppdragBuilderTest {
         val dager = 5.A(arbeidstimer = 0) + 2.H + 1.F + 4.A(arbeidstimer = 0) + 2.H
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder()
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val oppdragBuilder = OppdragBuilder()
@@ -62,7 +63,7 @@ internal class FraAktivitetstidslinjeTilOppdragBuilderTest {
         val dager = 5.A(arbeidstimer = 0) + 2.H + 2.F + 3.A(arbeidstimer = 0) + 2.H
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder()
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val oppdragBuilder = OppdragBuilder()
@@ -80,7 +81,7 @@ internal class FraAktivitetstidslinjeTilOppdragBuilderTest {
         val dager = 1.F + 4.A(arbeidstimer = 0) + 2.H + 1.F + 4.A(arbeidstimer = 0) + 2.H
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder()
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val oppdragBuilder = OppdragBuilder()
@@ -99,7 +100,7 @@ internal class FraAktivitetstidslinjeTilOppdragBuilderTest {
         val dager = 5.F + 2.H + 5.F + 2.H
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder()
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val oppdragBuilder = OppdragBuilder()
@@ -116,7 +117,7 @@ internal class FraAktivitetstidslinjeTilOppdragBuilderTest {
         val dager = 5.A(arbeidstimer = 7.5) + 2.H + 5.A(arbeidstimer = 7.5) + 2.H
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder()
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val oppdragBuilder = OppdragBuilder()

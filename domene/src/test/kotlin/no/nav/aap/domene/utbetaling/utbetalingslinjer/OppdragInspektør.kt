@@ -50,6 +50,7 @@ internal class OppdragInspektør(oppdrag: Oppdrag) : OppdragVisitor {
         this.fagområde = fagområde
         this.endringskode = endringskode
         this.mottaker = mottaker
+        this.totalBeløp.add(totalBeløp)
         this.nettoBeløp.add(nettoBeløp)
         this.status = status
         this.avstemmingsnøkkel = avstemmingsnøkkel

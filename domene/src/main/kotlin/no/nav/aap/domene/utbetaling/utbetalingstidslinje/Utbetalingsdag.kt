@@ -1,7 +1,6 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
 import no.nav.aap.domene.utbetaling.entitet.Beløp
-import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnbeløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import java.time.LocalDate
@@ -28,13 +27,9 @@ internal sealed class Utbetalingsdag(
     ) : Utbetalingsdag(dato) {
 
         internal companion object {
-            private const val HØYESTE_ARBEIDSMENGDE_SOM_GIR_YTELSE = 0.6 // TODO Skal justeres ved vedtak
             private const val FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG = 0.66
             private const val MAKS_FAKTOR_AV_GRUNNLAG = 0.9
             private const val ANTALL_DAGER_MED_UTBETALING_PER_ÅR = 260
-
-            internal fun Iterable<Utbetaling>.konverterTilIkkeUtbetaling() =
-                map { IkkeUtbetaling(it.dato) }
         }
 
         private val grunnlag: Beløp = Grunnbeløp.årligYtelseINOK(dato, grunnlagsfaktor)
@@ -48,8 +43,7 @@ internal sealed class Utbetalingsdag(
 
         override fun arbeidsprosent(arbeidsprosent: Double) {
             this.arbeidsprosent = arbeidsprosent
-            this.beløp = if (arbeidsprosent > HØYESTE_ARBEIDSMENGDE_SOM_GIR_YTELSE) 0.beløp
-            else beløpMedBarnetillegg * (1 - arbeidsprosent)
+            this.beløp = beløpMedBarnetillegg * (1 - arbeidsprosent)
         }
 
         override fun accept(visitor: UtbetalingsdagVisitor) {
