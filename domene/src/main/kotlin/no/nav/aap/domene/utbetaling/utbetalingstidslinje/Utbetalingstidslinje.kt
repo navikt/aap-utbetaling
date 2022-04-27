@@ -20,6 +20,8 @@ internal class Utbetalingstidslinje(
 }
 
 internal interface UtbetalingstidslinjeVisitor : UtbetalingsdagVisitor {
+    fun preVisitUtbetalingstidslinjehistorikk(historikk: Utbetalingstidslinjehistorikk) {}
     fun preVisitUtbetalingstidslinje(tidslinje: Utbetalingstidslinje) {}
     fun postVisitUtbetalingstidslinje(tidslinje: Utbetalingstidslinje) {}
+    fun postVisitUtbetalingstidslinjehistorikk(historikk: Utbetalingstidslinjehistorikk) {}
 }

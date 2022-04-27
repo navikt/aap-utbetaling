@@ -1,9 +1,8 @@
 package no.nav.aap.domene.utbetaling
 
+import no.nav.aap.domene.utbetaling.aktivitetstidslinje.UtbetalingstidslinjeBuilder
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
-import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
-import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Aktivitetstidslinje
 import java.time.LocalDate
 import java.util.*
 
@@ -27,9 +26,7 @@ internal class Vedtak(
         internal fun Iterable<Vedtak>.sortertPåDato() = this.sortedBy { it.vedtaksdato }
     }
 
-    internal fun oppdaterTidslinje(aktivitetstidslinje: Aktivitetstidslinje, melding: Meldepliktshendelse) {
-        aktivitetstidslinje.håndterMeldepliktshendelse(melding, grunnlagsfaktor, virkningsdato)
-    }
+    internal fun utbetalingstidslinjeBuilder() = UtbetalingstidslinjeBuilder(grunnlagsfaktor)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

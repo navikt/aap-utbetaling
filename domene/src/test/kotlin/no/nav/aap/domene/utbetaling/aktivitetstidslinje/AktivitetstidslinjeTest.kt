@@ -2,7 +2,6 @@ package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
-import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.BrukeraktivitetPerDag
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.januar
@@ -18,7 +17,7 @@ internal class AktivitetstidslinjeTest {
         val aktivitetstidslinje = Aktivitetstidslinje()
         val hendelse = Meldepliktshendelse(listOf(BrukeraktivitetPerDag(3 januar 2022, 0.arbeidstimer, false)))
 
-        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3), 3 januar 2022)
+        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse)
 
         val visitor = TidslinjeVisitor()
         aktivitetstidslinje.accept(visitor)
@@ -33,7 +32,7 @@ internal class AktivitetstidslinjeTest {
             BrukeraktivitetPerDag((3 januar 2022).plusDays(it), 0.arbeidstimer, false)
         })
 
-        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3), 3 januar 2022)
+        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse)
 
         val visitor = TidslinjeVisitor()
         aktivitetstidslinje.accept(visitor)
@@ -49,7 +48,7 @@ internal class AktivitetstidslinjeTest {
             BrukeraktivitetPerDag((3 januar 2022).plusDays(it), 0.arbeidstimer, false)
         })
 
-        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3), 3 januar 2022)
+        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse)
 
         val visitor = TidslinjeVisitor()
         aktivitetstidslinje.accept(visitor)
@@ -70,7 +69,7 @@ internal class AktivitetstidslinjeTest {
         }
         val hendelse = Meldepliktshendelse(fraværsdager + arbeidsdager)
 
-        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3), 3 januar 2022)
+        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse)
 
         val visitor = TidslinjeVisitor()
         aktivitetstidslinje.accept(visitor)
@@ -92,7 +91,7 @@ internal class AktivitetstidslinjeTest {
         }
         val hendelse = Meldepliktshendelse(fraværsdager + arbeidsdager)
 
-        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse, Grunnlagsfaktor(3), 3 januar 2022)
+        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse)
 
         val visitor = TidslinjeVisitor()
         aktivitetstidslinje.accept(visitor)
