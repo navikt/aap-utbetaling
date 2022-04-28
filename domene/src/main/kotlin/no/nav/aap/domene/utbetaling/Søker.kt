@@ -12,7 +12,7 @@ class Søker {
     private val aktivitetstidslinje = Aktivitetstidslinje()
     private val utbetalingstidslinjehistorikk = Utbetalingstidslinjehistorikk()
     private val vedtakshistorikk = Vedtakshistorikk()
-    private val barn = Barnetillegg()
+    private val barn = Barnetillegg(emptyList())
 
     internal fun håndterVedtak(vedtak: Vedtakshendelse) {
         vedtakshistorikk.leggTilNyttVedtak(vedtak)

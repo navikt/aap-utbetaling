@@ -6,8 +6,8 @@ import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningBarn
 import java.time.LocalDate
 
-class Barnetillegg {
-    private val barn = mutableListOf<Barn>()
+class Barnetillegg(barn: List<Barn>) {
+    private val barn = barn.toMutableList()
 
     private companion object {
         private val BARNETILLEGG = 27.beløp

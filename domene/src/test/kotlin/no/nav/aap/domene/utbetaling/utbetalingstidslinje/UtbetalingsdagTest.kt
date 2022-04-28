@@ -1,10 +1,13 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
+import no.nav.aap.domene.utbetaling.Barnetillegg
 import no.nav.aap.domene.utbetaling.Utbetalingsdager.I
 import no.nav.aap.domene.utbetaling.Utbetalingsdager.U
 import no.nav.aap.domene.utbetaling.Utbetalingsdager.resetSeed
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
+import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
+import no.nav.aap.domene.utbetaling.januar
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -36,7 +39,10 @@ internal class UtbetalingsdagTest {
     @Test
     fun `Omregner 66 prosent av grunnlaget til dagsats - dagsats økes med barnetillegg`() {
         val visitor = TestDagVisitor()
-        val dager = 1.U(grunnlagsfaktor = 5, arbeidsprosent = 0, barnetillegg = 27 * 13)
+        val dager = 1.U(
+            grunnlagsfaktor = 5,
+            arbeidsprosent = 0,
+            barn = (1..13).map { Barnetillegg.Barn(Fødselsdato(3 januar 2017)) })
         dager.forEach { it.accept(visitor) }
         assertEquals(1701.45.beløp, visitor.dagbeløp)
     }
@@ -44,7 +50,10 @@ internal class UtbetalingsdagTest {
     @Test
     fun `Dagsats inkludert barnetillegg begrenses oppad til 90 prosent av grunnlaget`() {
         val visitor = TestDagVisitor()
-        val dager = 1.U(grunnlagsfaktor = 2, arbeidsprosent = 0, barnetillegg = 27 * 14)
+        val dager = 1.U(
+            grunnlagsfaktor = 2,
+            arbeidsprosent = 0,
+            barn = (1..14).map { Barnetillegg.Barn(Fødselsdato(3 januar 2017)) })
         dager.forEach { it.accept(visitor) }
         assertEquals(736.61.beløp, visitor.dagbeløp)
     }
@@ -52,7 +61,7 @@ internal class UtbetalingsdagTest {
     private class TestDagVisitor : UtbetalingsdagVisitor {
         lateinit var dagbeløp: Beløp
 
-        override fun visitUtbetaling(dag: Utbetalingsdag.Utbetaling, dato: LocalDate, beløp: Beløp) {
+        override fun visitUtbetalingMedBeløp(dag: Utbetalingsdag.Utbetaling, dato: LocalDate, beløp: Beløp) {
             this.dagbeløp = beløp
         }
 

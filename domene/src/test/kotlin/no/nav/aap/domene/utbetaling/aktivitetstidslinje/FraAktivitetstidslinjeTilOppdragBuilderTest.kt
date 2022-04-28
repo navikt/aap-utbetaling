@@ -4,6 +4,7 @@ import no.nav.aap.domene.utbetaling.Aktivitetsdager.A
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.F
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.H
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.resetSeed
+import no.nav.aap.domene.utbetaling.Barnetillegg
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Endringskode
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdrag
@@ -30,6 +31,8 @@ internal class FraAktivitetstidslinjeTilOppdragBuilderTest {
         val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
+        utbetalingstidslinje.barnetillegg(Barnetillegg(emptyList()))
+
         val oppdragBuilder = OppdragBuilder()
         val oppdrag: Oppdrag = oppdragBuilder.build(utbetalingstidslinje)
 
@@ -47,6 +50,8 @@ internal class FraAktivitetstidslinjeTilOppdragBuilderTest {
 
         val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
+
+        utbetalingstidslinje.barnetillegg(Barnetillegg(emptyList()))
 
         val oppdragBuilder = OppdragBuilder()
         val oppdrag: Oppdrag = oppdragBuilder.build(utbetalingstidslinje)
@@ -66,6 +71,8 @@ internal class FraAktivitetstidslinjeTilOppdragBuilderTest {
         val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
+        utbetalingstidslinje.barnetillegg(Barnetillegg(emptyList()))
+
         val oppdragBuilder = OppdragBuilder()
         val oppdrag: Oppdrag = oppdragBuilder.build(utbetalingstidslinje)
 
@@ -83,6 +90,8 @@ internal class FraAktivitetstidslinjeTilOppdragBuilderTest {
 
         val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
+
+        utbetalingstidslinje.barnetillegg(Barnetillegg(emptyList()))
 
         val oppdragBuilder = OppdragBuilder()
         val oppdrag: Oppdrag = oppdragBuilder.build(utbetalingstidslinje)

@@ -3,7 +3,6 @@ package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.A
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.F
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.H
-import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingsdag
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
@@ -210,7 +209,7 @@ internal class UtbetalingstidslinjeBuilderTest {
         var antallUtbetalingsdager: Int = 0
         var antallIkkeUtbetalingsdager: Int = 0
 
-        override fun visitUtbetaling(dag: Utbetalingsdag.Utbetaling, dato: LocalDate, beløp: Beløp) {
+        override fun visitUtbetaling(dag: Utbetalingsdag.Utbetaling, dato: LocalDate) {
             antallUtbetalingsdager++
         }
 

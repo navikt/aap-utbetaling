@@ -78,7 +78,7 @@ internal class SøkerTest {
         )
 
         assertEquals(1, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(1, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(1, søker.inspektør.antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje[0])
         assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
     }
 
@@ -107,9 +107,9 @@ internal class SøkerTest {
         )
 
         assertEquals(2, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(1, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(1, søker.inspektør.antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje[0])
         assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(2, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertEquals(2, søker.inspektør.antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje[1])
         assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
     }
 
@@ -141,9 +141,9 @@ internal class SøkerTest {
         )
 
         assertEquals(3, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(2, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(2, søker.inspektør.antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje[0])
         assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(3, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertEquals(3, søker.inspektør.antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje[1])
         assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
     }
 
@@ -154,6 +154,7 @@ internal class SøkerTest {
         var vedtakListeSize: Int = -1
         var antallDagerIAktivitetstidslinje: Int = 0
         private var utbetalingstidslinjeIndex: Int = -1
+        var antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje = mutableMapOf<Int, Int>()
         var antallUtbetalingsdagerIUtbetalingstidslinje = mutableMapOf<Int, Int>()
         var antallIkkeUtbetalingsdagerIUtbetalingstidslinje = mutableMapOf<Int, Int>()
         lateinit var gjeldendeVedtak: Vedtak
@@ -188,11 +189,16 @@ internal class SøkerTest {
 
         override fun preVisitUtbetalingstidslinje(tidslinje: Utbetalingstidslinje) {
             utbetalingstidslinjeIndex++
+            antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje[utbetalingstidslinjeIndex] = 0
             antallUtbetalingsdagerIUtbetalingstidslinje[utbetalingstidslinjeIndex] = 0
             antallIkkeUtbetalingsdagerIUtbetalingstidslinje[utbetalingstidslinjeIndex] = 0
         }
 
-        override fun visitUtbetaling(dag: Utbetalingsdag.Utbetaling, dato: LocalDate, beløp: Beløp) {
+        override fun visitUtbetaling(dag: Utbetalingsdag.Utbetaling, dato: LocalDate) {
+            antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje.computeIfPresent(utbetalingstidslinjeIndex) { _, old -> old + 1 }
+        }
+
+        override fun visitUtbetalingMedBeløp(dag: Utbetalingsdag.Utbetaling, dato: LocalDate, beløp: Beløp) {
             antallUtbetalingsdagerIUtbetalingstidslinje.computeIfPresent(utbetalingstidslinjeIndex) { _, old -> old + 1 }
         }
 

@@ -1,10 +1,10 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
-import no.nav.aap.domene.utbetaling.utbetalingstidslinje.OppdragBuilder.Linje.Companion.toOppdragLinjer
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Fagområde
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdrag
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Utbetalingslinje
+import no.nav.aap.domene.utbetaling.utbetalingstidslinje.OppdragBuilder.Linje.Companion.toOppdragLinjer
 import java.time.LocalDate
 import kotlin.math.roundToInt
 
@@ -46,7 +46,7 @@ internal class OppdragBuilder : UtbetalingstidslinjeVisitor {
     private lateinit var linje: Linje
     private val linjer = mutableListOf<Linje>()
 
-    override fun visitUtbetaling(dag: Utbetalingsdag.Utbetaling, dato: LocalDate, beløp: Beløp) {
+    override fun visitUtbetalingMedBeløp(dag: Utbetalingsdag.Utbetaling, dato: LocalDate, beløp: Beløp) {
         tilstand.arbeidsdag(this, beløp, dato)
     }
 
