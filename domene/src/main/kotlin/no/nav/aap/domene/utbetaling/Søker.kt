@@ -12,7 +12,7 @@ class Søker {
     private val aktivitetstidslinje = Aktivitetstidslinje()
     private val utbetalingstidslinjehistorikk = Utbetalingstidslinjehistorikk()
     private val vedtakshistorikk = Vedtakshistorikk()
-    private val barn = Barnetillegg(emptyList())
+    private val barnetillegg = Barnetillegg(emptyList())
 
     internal fun håndterVedtak(vedtak: Vedtakshendelse) {
         vedtakshistorikk.leggTilNyttVedtak(vedtak)
@@ -30,7 +30,9 @@ class Søker {
     }
 
     internal fun håndterLøsning(løsning: LøsningBarn) {
-        barn.håndterLøsning(løsning)
+        løsning.leggTilBarn(barnetillegg)
+
+        utbetalingstidslinjehistorikk.barnetillegg(barnetillegg)
     }
 
     internal fun håndterLøsning(løsningInstitusjon: LøsningInstitusjon) {

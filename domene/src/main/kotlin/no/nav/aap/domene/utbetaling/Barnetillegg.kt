@@ -3,7 +3,6 @@ package no.nav.aap.domene.utbetaling
 import no.nav.aap.domene.utbetaling.Barnetillegg.Barn.Companion.antallBarnUnder18År
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
-import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningBarn
 import java.time.LocalDate
 
 class Barnetillegg(barn: List<Barn>) {
@@ -15,8 +14,8 @@ class Barnetillegg(barn: List<Barn>) {
 
     internal fun barnetilleggForDag(dato: LocalDate) = BARNETILLEGG * barn.antallBarnUnder18År(dato)
 
-    internal fun håndterLøsning(løsning: LøsningBarn) {
-        // Oppdater barnehagen med evt nye opplysninger?
+    internal fun leggTilBarn(barna: List<Barn>) {
+        barn.addAll(barna)
     }
 
     class Barn(

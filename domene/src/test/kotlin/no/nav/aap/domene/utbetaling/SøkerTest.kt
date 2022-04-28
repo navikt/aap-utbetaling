@@ -4,10 +4,12 @@ import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Beløp
+import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.BrukeraktivitetPerDag
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
+import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningBarn
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingsdag
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
@@ -145,6 +147,35 @@ internal class SøkerTest {
         assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
         assertEquals(3, søker.inspektør.antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje[1])
         assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
+    }
+
+    @Test
+    fun `Utbetalingsdager beregner beløp ved håndtering av barnetillegg`() {
+        val søker = Søker()
+
+        søker.håndterVedtak(
+            Vedtakshendelse(
+                vedtaksid = UUID.randomUUID(),
+                innvilget = true,
+                grunnlagsfaktor = Grunnlagsfaktor(3),
+                vedtaksdato = 2 mai 2022,
+                virkningsdato = 2 mai 2022
+            )
+        )
+        søker.håndterMeldeplikt(
+            Meldepliktshendelse(
+                brukersAktivitet = listOf(
+                    BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(3 mai 2022, 0.arbeidstimer, false)
+                )
+            )
+        )
+
+        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+
+        assertEquals(2, søker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(2, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
     }
 
     private val Søker.inspektør get() = TestVisitor(this)
