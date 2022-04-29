@@ -3,6 +3,7 @@ package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.NORMAL_ARBEIDSTIMER
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
+import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingsdag
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
@@ -10,7 +11,8 @@ import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import java.time.LocalDate
 
 internal class UtbetalingstidslinjeBuilder(
-    private val grunnlagsfaktor: Grunnlagsfaktor
+    private val grunnlagsfaktor: Grunnlagsfaktor,
+    private val fødselsdato: Fødselsdato
 ) : SøkerVisitor {
 
     private var utbetalingstidslinje = Utbetalingstidslinje(emptyList())
@@ -73,6 +75,11 @@ internal class UtbetalingstidslinjeBuilder(
         utbetalingstidslinje += tidslinje
     }
 
+    private fun opprettUtbetaling(dato: LocalDate) = Utbetalingsdag.Utbetaling(
+        dato = dato,
+        grunnlagsfaktor = fødselsdato.justerGrunnlagsfaktorForAlder(dato, grunnlagsfaktor)
+    )
+
     private sealed interface Tilstand {
         fun arbeidsdag(builder: UtbetalingstidslinjeBuilder, dato: LocalDate, arbeidstimer: Arbeidstimer) {}
         fun fraværsdag(builder: UtbetalingstidslinjeBuilder, dato: LocalDate) {}
@@ -84,10 +91,7 @@ internal class UtbetalingstidslinjeBuilder(
                 dato: LocalDate,
                 arbeidstimer: Arbeidstimer
             ) {
-                val utbetalingsdag = Utbetalingsdag.Utbetaling(
-                    dato = dato,
-                    grunnlagsfaktor = builder.grunnlagsfaktor
-                )
+                val utbetalingsdag = builder.opprettUtbetaling(dato)
                 builder.vanligUtbetalingstidslinje += utbetalingsdag
                 builder.avvisteFraværsdagerUtbetalingstidslinje += utbetalingsdag
 
@@ -96,10 +100,7 @@ internal class UtbetalingstidslinjeBuilder(
             }
 
             override fun fraværsdag(builder: UtbetalingstidslinjeBuilder, dato: LocalDate) {
-                val utbetalingsdag = Utbetalingsdag.Utbetaling(
-                    dato = dato,
-                    grunnlagsfaktor = builder.grunnlagsfaktor
-                )
+                val utbetalingsdag = builder.opprettUtbetaling(dato)
                 builder.vanligUtbetalingstidslinje += utbetalingsdag
 
                 val ikkeUtbetalingsdag = Utbetalingsdag.IkkeUtbetaling(dato = dato)
@@ -120,10 +121,7 @@ internal class UtbetalingstidslinjeBuilder(
                 dato: LocalDate,
                 arbeidstimer: Arbeidstimer
             ) {
-                val utbetalingsdag = Utbetalingsdag.Utbetaling(
-                    dato = dato,
-                    grunnlagsfaktor = builder.grunnlagsfaktor
-                )
+                val utbetalingsdag = builder.opprettUtbetaling(dato)
                 builder.vanligUtbetalingstidslinje += utbetalingsdag
                 builder.avvisteFraværsdagerUtbetalingstidslinje += utbetalingsdag
 
@@ -151,10 +149,7 @@ internal class UtbetalingstidslinjeBuilder(
                 dato: LocalDate,
                 arbeidstimer: Arbeidstimer
             ) {
-                val utbetalingsdag = Utbetalingsdag.Utbetaling(
-                    dato = dato,
-                    grunnlagsfaktor = builder.grunnlagsfaktor
-                )
+                val utbetalingsdag = builder.opprettUtbetaling(dato)
                 builder.avvisteFraværsdagerUtbetalingstidslinje += utbetalingsdag
 
                 val ikkeUtbetalingsdag = Utbetalingsdag.IkkeUtbetaling(dato = dato)

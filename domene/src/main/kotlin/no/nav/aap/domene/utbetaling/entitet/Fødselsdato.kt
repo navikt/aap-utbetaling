@@ -13,9 +13,7 @@ class Fødselsdato(private val dato: LocalDate) {
         private val MINSTE_GRUNNLAGSFAKTOR_UNDER_25_ÅR = Grunnlagsfaktor(4.0 / 3 / .66)
     }
 
-    internal fun erMellom18Og67År(vurderingsdato: LocalDate) = vurderingsdato in `18ÅrsDagen`..`67ÅrsDagen`
     internal fun erUnder18År(dato: LocalDate) = dato < `18ÅrsDagen`
-    internal fun erUnder62(dato: LocalDate) = dato < `62ÅrsDagen`
 
     internal fun justerGrunnlagsfaktorForAlder(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor): Grunnlagsfaktor {
         val minsteGrunnlagsfaktorForAlder =

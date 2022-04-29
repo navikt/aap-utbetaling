@@ -34,7 +34,8 @@ internal class SøkerTest {
                 innvilget = true,
                 grunnlagsfaktor = Grunnlagsfaktor(3),
                 vedtaksdato = 2 mai 2022,
-                virkningsdato = 2 mai 2022
+                virkningsdato = 2 mai 2022,
+                fødselsdato = Fødselsdato(30 november 1979)
             )
         )
         assertEquals(1, søker.inspektør.vedtakListeSize)
@@ -48,7 +49,8 @@ internal class SøkerTest {
             innvilget = true,
             grunnlagsfaktor = Grunnlagsfaktor(3),
             vedtaksdato = 2 mai 2022,
-            virkningsdato = 2 mai 2022
+            virkningsdato = 2 mai 2022,
+            fødselsdato = Fødselsdato(30 november 1979)
         )
         søker.håndterVedtak(vedtak1)
         assertEquals(Vedtak.opprettFraVedtakshendelse(vedtak1), søker.inspektør.gjeldendeVedtak)
@@ -58,7 +60,8 @@ internal class SøkerTest {
             innvilget = true,
             grunnlagsfaktor = Grunnlagsfaktor(3),
             vedtaksdato = 4 mai 2022,
-            virkningsdato = 4 mai 2022
+            virkningsdato = 4 mai 2022,
+            fødselsdato = Fødselsdato(30 november 1979)
         )
         søker.håndterVedtak(vedtak2)
         assertEquals(Vedtak.opprettFraVedtakshendelse(vedtak2), søker.inspektør.gjeldendeVedtak)
@@ -73,7 +76,8 @@ internal class SøkerTest {
                 innvilget = true,
                 grunnlagsfaktor = Grunnlagsfaktor(3),
                 vedtaksdato = 2 mai 2022,
-                virkningsdato = 2 mai 2022
+                virkningsdato = 2 mai 2022,
+                fødselsdato = Fødselsdato(30 november 1979)
             )
         )
         søker.håndterMeldeplikt(
@@ -99,7 +103,8 @@ internal class SøkerTest {
                 innvilget = true,
                 grunnlagsfaktor = Grunnlagsfaktor(3),
                 vedtaksdato = 2 mai 2022,
-                virkningsdato = 2 mai 2022
+                virkningsdato = 2 mai 2022,
+                fødselsdato = Fødselsdato(30 november 1979)
             )
         )
         søker.håndterMeldeplikt(
@@ -130,7 +135,8 @@ internal class SøkerTest {
                 innvilget = true,
                 grunnlagsfaktor = Grunnlagsfaktor(3),
                 vedtaksdato = 2 mai 2022,
-                virkningsdato = 2 mai 2022
+                virkningsdato = 2 mai 2022,
+                fødselsdato = Fødselsdato(30 november 1979)
             )
         )
         søker.håndterMeldeplikt(
@@ -164,7 +170,8 @@ internal class SøkerTest {
                 innvilget = true,
                 grunnlagsfaktor = Grunnlagsfaktor(3),
                 vedtaksdato = 2 mai 2022,
-                virkningsdato = 2 mai 2022
+                virkningsdato = 2 mai 2022,
+                fødselsdato = Fødselsdato(30 november 1979)
             )
         )
         søker.håndterMeldeplikt(
@@ -191,9 +198,10 @@ internal class SøkerTest {
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
-                grunnlagsfaktor = Grunnlagsfaktor(3),
+                grunnlagsfaktor = Grunnlagsfaktor(4),
                 vedtaksdato = 2 mai 2022,
-                virkningsdato = 2 mai 2022
+                virkningsdato = 2 mai 2022,
+                fødselsdato = Fødselsdato(30 november 1979)
             )
         )
         søker.håndterMeldeplikt(
@@ -210,7 +218,7 @@ internal class SøkerTest {
         assertEquals(2, søker.inspektør.antallDagerIAktivitetstidslinje)
         assertEquals(2, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
         assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(1674, søker.inspektør.totalBeløp[0])
+        assertEquals(2214, søker.inspektør.totalBeløp[0])
     }
 
     @Test
@@ -221,9 +229,10 @@ internal class SøkerTest {
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
-                grunnlagsfaktor = Grunnlagsfaktor(3),
+                grunnlagsfaktor = Grunnlagsfaktor(4),
                 vedtaksdato = 2 mai 2022,
-                virkningsdato = 2 mai 2022
+                virkningsdato = 2 mai 2022,
+                fødselsdato = Fødselsdato(30 november 1979)
             )
         )
         søker.håndterMeldeplikt(
@@ -252,7 +261,7 @@ internal class SøkerTest {
         assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
         assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
         assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(6696, søker.inspektør.totalBeløp[0])
+        assertEquals(8856, søker.inspektør.totalBeløp[0])
     }
 
     @Test
@@ -263,9 +272,10 @@ internal class SøkerTest {
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
-                grunnlagsfaktor = Grunnlagsfaktor(3),
+                grunnlagsfaktor = Grunnlagsfaktor(4),
                 vedtaksdato = 2 mai 2022,
-                virkningsdato = 2 mai 2022
+                virkningsdato = 2 mai 2022,
+                fødselsdato = Fødselsdato(30 november 1979)
             )
         )
         søker.håndterMeldeplikt(
@@ -294,7 +304,7 @@ internal class SøkerTest {
         assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
         assertEquals(10, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
         assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(5020, søker.inspektør.totalBeløp[0])
+        assertEquals(6640, søker.inspektør.totalBeløp[0])
     }
 
     private val Søker.inspektør get() = TestVisitor(this)

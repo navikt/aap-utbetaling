@@ -3,7 +3,9 @@ package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.A
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.F
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.H
+import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
+import no.nav.aap.domene.utbetaling.november
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingsdag
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.UtbetalingstidslinjeVisitor
@@ -18,7 +20,7 @@ internal class UtbetalingstidslinjeBuilderTest {
         val dager = 5.A(arbeidstimer = 0) + 2.H + 5.A(arbeidstimer = 0) + 2.H
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3), Fødselsdato(30 november 1979))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val inspektør = utbetalingstidslinje.inspektør
@@ -32,7 +34,7 @@ internal class UtbetalingstidslinjeBuilderTest {
         val dager = 5.A(arbeidstimer = 7.5) + 2.H + 5.A(arbeidstimer = 7.5) + 2.H
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3), Fødselsdato(30 november 1979))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val inspektør = utbetalingstidslinje.inspektør
@@ -46,7 +48,7 @@ internal class UtbetalingstidslinjeBuilderTest {
         val dager = 5.A(arbeidstimer = 0) + 2.H + 1.F + 4.A(arbeidstimer = 0) + 2.H
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3), Fødselsdato(30 november 1979))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val inspektør = utbetalingstidslinje.inspektør
@@ -60,7 +62,7 @@ internal class UtbetalingstidslinjeBuilderTest {
         val dager = 5.A(arbeidstimer = 0) + 2.H + 2.F + 3.A(arbeidstimer = 0) + 2.H
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3), Fødselsdato(30 november 1979))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val inspektør = utbetalingstidslinje.inspektør
@@ -74,7 +76,7 @@ internal class UtbetalingstidslinjeBuilderTest {
         val dager = 1.F + 4.A(arbeidstimer = 0) + 2.H + 1.F + 4.A(arbeidstimer = 0) + 2.H
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3), Fødselsdato(30 november 1979))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val inspektør = utbetalingstidslinje.inspektør
@@ -88,7 +90,7 @@ internal class UtbetalingstidslinjeBuilderTest {
         val dager = 5.F + 2.H + 5.F + 2.H
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3), Fødselsdato(30 november 1979))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val inspektør = utbetalingstidslinje.inspektør
@@ -102,7 +104,7 @@ internal class UtbetalingstidslinjeBuilderTest {
         val dager = 5.A(arbeidstimer = 5) + 2.H(arbeidstimer = 1) + 2.F + 3.A(arbeidstimer = 5)
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3), Fødselsdato(30 november 1979))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val inspektør = utbetalingstidslinje.inspektør
@@ -116,7 +118,7 @@ internal class UtbetalingstidslinjeBuilderTest {
         val dager = 5.A + 2.H + 1.A + 1.F + 3.A(arbeidstimer = 0) + 2.H
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(Meldeperiode(dager)))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3), Fødselsdato(30 november 1979))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val inspektør = utbetalingstidslinje.inspektør
@@ -131,7 +133,7 @@ internal class UtbetalingstidslinjeBuilderTest {
         val meldeperiode2 = Meldeperiode(5.A + 2.H + 5.A + 2.H)
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(meldeperiode1, meldeperiode2))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3), Fødselsdato(30 november 1979))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val inspektør = utbetalingstidslinje.inspektør
@@ -146,7 +148,7 @@ internal class UtbetalingstidslinjeBuilderTest {
         val meldeperiode2 = Meldeperiode(5.A(arbeidstimer = 0) + 2.H + 5.A(arbeidstimer = 0) + 2.H)
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(meldeperiode1, meldeperiode2))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3), Fødselsdato(30 november 1979))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val inspektør = utbetalingstidslinje.inspektør
@@ -161,7 +163,7 @@ internal class UtbetalingstidslinjeBuilderTest {
         val meldeperiode2 = Meldeperiode(5.A(arbeidstimer = 0) + 2.H + 5.A(arbeidstimer = 0) + 2.H)
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(meldeperiode1, meldeperiode2))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3), Fødselsdato(30 november 1979))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val inspektør = utbetalingstidslinje.inspektør
@@ -177,7 +179,7 @@ internal class UtbetalingstidslinjeBuilderTest {
         val meldeperiode3 = Meldeperiode(5.A(arbeidstimer = 7.5) + 2.H + 5.A(arbeidstimer = 7.5) + 2.H)
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(meldeperiode1, meldeperiode2, meldeperiode3))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3), Fødselsdato(30 november 1979))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val inspektør = utbetalingstidslinje.inspektør
@@ -193,7 +195,7 @@ internal class UtbetalingstidslinjeBuilderTest {
         val meldeperiode3 = Meldeperiode(5.A(arbeidstimer = 0) + 2.H + 5.A(arbeidstimer = 0) + 2.H)
         val aktivitetstidslinje = Aktivitetstidslinje(listOf(meldeperiode1, meldeperiode2, meldeperiode3))
 
-        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3))
+        val utbetalingstidslinjeBuilder = UtbetalingstidslinjeBuilder(Grunnlagsfaktor(3), Fødselsdato(30 november 1979))
         val utbetalingstidslinje: Utbetalingstidslinje = utbetalingstidslinjeBuilder.build(aktivitetstidslinje)
 
         val inspektør = utbetalingstidslinje.inspektør
