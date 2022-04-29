@@ -1,6 +1,7 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
 import no.nav.aap.domene.utbetaling.Barnetillegg
+import no.nav.aap.domene.utbetaling.Oppdragshistorikk
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 
 internal class Utbetalingstidslinjehistorikk(
@@ -22,5 +23,9 @@ internal class Utbetalingstidslinjehistorikk(
         visitor.preVisitUtbetalingstidslinjehistorikk(this)
         utbetalingstidslinjer.forEach { it.accept(visitor) }
         visitor.postVisitUtbetalingstidslinjehistorikk(this)
+    }
+
+    internal fun byggOppdrag(oppdragshistorikk: Oppdragshistorikk) {
+        oppdragshistorikk.byggOppdrag(sisteUtbetalingstidslinje)
     }
 }

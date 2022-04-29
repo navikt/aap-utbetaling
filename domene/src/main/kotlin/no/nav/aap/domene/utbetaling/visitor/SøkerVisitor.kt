@@ -4,9 +4,10 @@ import no.nav.aap.domene.utbetaling.Vedtak
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Aktivitetstidslinje
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.DagVisitor
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Meldeperiode
+import no.nav.aap.domene.utbetaling.utbetalingslinjer.OppdragVisitor
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.UtbetalingstidslinjeVisitor
 
-internal interface SøkerVisitor : DagVisitor, UtbetalingstidslinjeVisitor {
+internal interface SøkerVisitor : DagVisitor, UtbetalingstidslinjeVisitor, OppdragVisitor {
 
     fun visitVedtakshistorikk(gjeldendeVedtak: Vedtak) {}
     fun visitVedtakshistorikk(vedtak: List<Vedtak>) {}

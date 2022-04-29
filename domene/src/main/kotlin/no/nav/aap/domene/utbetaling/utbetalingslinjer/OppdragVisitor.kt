@@ -59,4 +59,8 @@ internal interface OppdragVisitor {
         overføringstidspunkt: LocalDateTime?
     ) {
     }
+
+    fun preVisitOppdragshistorikk() {}
+
+    fun postVisitOppdragshistorikk() {}
 }

@@ -13,6 +13,7 @@ class Søker {
     private val utbetalingstidslinjehistorikk = Utbetalingstidslinjehistorikk()
     private val vedtakshistorikk = Vedtakshistorikk()
     private val barnetillegg = Barnetillegg(emptyList())
+    private val oppdragshistorikk = Oppdragshistorikk()
 
     internal fun håndterVedtak(vedtak: Vedtakshendelse) {
         vedtakshistorikk.leggTilNyttVedtak(vedtak)
@@ -33,6 +34,8 @@ class Søker {
         løsning.leggTilBarn(barnetillegg)
 
         utbetalingstidslinjehistorikk.barnetillegg(barnetillegg)
+
+        utbetalingstidslinjehistorikk.byggOppdrag(oppdragshistorikk)
     }
 
     internal fun håndterLøsning(løsningInstitusjon: LøsningInstitusjon) {
@@ -43,5 +46,6 @@ class Søker {
         aktivitetstidslinje.accept(visitor)
         utbetalingstidslinjehistorikk.accept(visitor)
         vedtakshistorikk.accept(visitor)
+        oppdragshistorikk.accept(visitor)
     }
 }
