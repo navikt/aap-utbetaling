@@ -18,6 +18,7 @@ import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingsdag
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -348,6 +349,66 @@ internal class SøkerTest {
         assertEquals(10, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
         assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
         assertEquals(6820, søker.inspektør.totalBeløp[0])
+    }
+
+    @Disabled("Ikke fikset enda")
+    @Test
+    fun `Endringsvedtak om endret grunnlag endrer utbetaling`() {
+        val søker = Søker()
+
+        søker.håndterVedtak(
+            Vedtakshendelse(
+                vedtaksid = UUID.randomUUID(),
+                innvilget = true,
+                grunnlagsfaktor = Grunnlagsfaktor(4),
+                vedtaksdato = 2 mai 2022,
+                virkningsdato = 2 mai 2022,
+                fødselsdato = Fødselsdato(30 november 1979)
+            )
+        )
+        søker.håndterMeldeplikt(
+            Meldepliktshendelse(
+                brukersAktivitet = listOf(
+                    BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, true), // Mandag
+                    BrukeraktivitetPerDag(3 mai 2022, 0.arbeidstimer, true),
+                    BrukeraktivitetPerDag(4 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(5 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(6 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(7 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(8 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(9 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(10 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(11 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(12 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(13 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(14 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(15 mai 2022, 0.arbeidstimer, false),
+                )
+            )
+        )
+
+        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+
+        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(8856, søker.inspektør.totalBeløp[0])
+
+        søker.håndterVedtak(
+            Vedtakshendelse(
+                vedtaksid = UUID.randomUUID(),
+                innvilget = true,
+                grunnlagsfaktor = Grunnlagsfaktor(5),
+                vedtaksdato = 2 mai 2022,
+                virkningsdato = 2 mai 2022,
+                fødselsdato = Fødselsdato(30 november 1979)
+            )
+        )
+
+        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(10804, søker.inspektør.totalBeløp[1])
     }
 
     private val Søker.inspektør get() = TestVisitor(this)
