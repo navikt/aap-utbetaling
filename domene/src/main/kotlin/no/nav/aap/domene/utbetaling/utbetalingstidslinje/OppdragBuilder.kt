@@ -30,6 +30,8 @@ internal class OppdragBuilder : UtbetalingstidslinjeVisitor {
             this.tom = dato
         }
 
+        fun harSammeBeløp(beløp: Beløp) = this.beløp == beløp
+
         companion object {
             fun Iterable<Linje>.toOppdragLinjer() = map {
                 Utbetalingslinje(
@@ -69,7 +71,12 @@ internal class OppdragBuilder : UtbetalingstidslinjeVisitor {
 
         object SammenhengendeLinje : Tilstand {
             override fun arbeidsdag(builder: OppdragBuilder, dagbeløp: Beløp, dato: LocalDate) {
-                builder.linje.oppdaterTom(dato)
+                if (builder.linje.harSammeBeløp(dagbeløp)) {
+                    builder.linje.oppdaterTom(dato)
+                } else {
+                    builder.linje = Linje(dato, dato, dagbeløp)
+                    builder.linjer.add(builder.linje)
+                }
             }
 
             override fun fraværsdag(builder: OppdragBuilder, dato: LocalDate) {

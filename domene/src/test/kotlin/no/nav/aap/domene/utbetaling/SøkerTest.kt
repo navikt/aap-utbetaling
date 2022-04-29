@@ -307,6 +307,49 @@ internal class SøkerTest {
         assertEquals(6640, søker.inspektør.totalBeløp[0])
     }
 
+    @Test
+    fun `Fyller 25 midt i meldeperioden, grunnlag skal justeres opp`() {
+        val søker = Søker()
+
+        søker.håndterVedtak(
+            Vedtakshendelse(
+                vedtaksid = UUID.randomUUID(),
+                innvilget = true,
+                grunnlagsfaktor = Grunnlagsfaktor(1),
+                vedtaksdato = 2 mai 2022,
+                virkningsdato = 2 mai 2022,
+                fødselsdato = Fødselsdato(8 mai 1997)
+            )
+        )
+        søker.håndterMeldeplikt(
+            Meldepliktshendelse(
+                brukersAktivitet = listOf(
+                    BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, false), // Mandag
+                    BrukeraktivitetPerDag(3 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(4 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(5 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(6 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(7 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(8 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(9 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(10 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(11 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(12 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(13 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(14 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(15 mai 2022, 0.arbeidstimer, false),
+                )
+            )
+        )
+
+        søker.håndterLøsning(LøsningBarn(listOf()))
+
+        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(10, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(6820, søker.inspektør.totalBeløp[0])
+    }
+
     private val Søker.inspektør get() = TestVisitor(this)
 
     private class TestVisitor(søker: Søker) : SøkerVisitor {
