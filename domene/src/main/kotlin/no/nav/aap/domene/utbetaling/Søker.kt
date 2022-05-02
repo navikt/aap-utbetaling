@@ -12,7 +12,7 @@ class Søker {
     private val aktivitetstidslinje = Aktivitetstidslinje()
     private val utbetalingstidslinjehistorikk = Utbetalingstidslinjehistorikk()
     private val vedtakshistorikk = Vedtakshistorikk()
-    private val barnetillegg = Barnetillegg(emptyList())
+    private val barnetillegg = Barnetillegg()
     private val oppdragshistorikk = Oppdragshistorikk()
 
     private var tilstand: Tilstand = Tilstand.Start

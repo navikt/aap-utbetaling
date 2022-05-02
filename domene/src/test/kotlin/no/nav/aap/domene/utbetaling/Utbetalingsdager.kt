@@ -20,7 +20,11 @@ object Utbetalingsdager {
     internal fun Int.U(grunnlagsfaktor: Number = 3, arbeidsprosent: Number = 1, barn: List<Barnetillegg.Barn> = emptyList()) = (1..this)
         .map {
             val dato = seed
-            Utbetalingstidslinjedag.Utbetalingsdag(dato, Grunnlagsfaktor(grunnlagsfaktor), Barnetillegg(barn).barnetilleggForDag(dato)).apply {
+            Utbetalingstidslinjedag.Utbetalingsdag(
+                dato,
+                Grunnlagsfaktor(grunnlagsfaktor),
+                Barnetillegg().apply { leggTilBarn(barn) }.barnetilleggForDag(dato)
+            ).apply {
                 arbeidsprosent(arbeidsprosent.toDouble())
             }
         }

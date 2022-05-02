@@ -1,22 +1,26 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.Barnetillegg.Barn.Companion.antallBarnUnder18År
+import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import java.time.LocalDate
 
-class Barnetillegg(barn: List<Barn>) {
-    private val barn = mutableListOf(Barna(barn))
-    private val nyesteInnslag get() = barn.last()
+class Barnetillegg {
+    private val historikk = mutableListOf<Barna>()
+    private val nyesteInnslag get() = historikk.last()
 
     private companion object {
         private val BARNETILLEGG = 27.beløp
     }
 
-    internal fun barnetilleggForDag(dato: LocalDate) = BARNETILLEGG * nyesteInnslag.antallBarnUnder18År(dato)
+    internal fun barnetilleggForDag(dato: LocalDate): Beløp {
+        if (historikk.isEmpty()) throw RuntimeException("Har ingen informasjon om barn")
+        return BARNETILLEGG * nyesteInnslag.antallBarnUnder18År(dato)
+    }
 
     internal fun leggTilBarn(barna: List<Barn>) {
-        barn.add(Barna(barna))
+        historikk.add(Barna(barna))
     }
 
     class Barna(
