@@ -42,7 +42,5 @@ internal class Vedtak(
         return true
     }
 
-    override fun hashCode(): Int {
-        return vedtaksid.hashCode()
-    }
+    override fun hashCode() = vedtaksid.hashCode()
 }

@@ -18,7 +18,6 @@ import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingsdag
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -69,32 +68,6 @@ internal class SøkerTest {
     }
 
     @Test
-    fun `Ny melding oppdaterer tidslinje`() {
-        val søker = Søker()
-        søker.håndterVedtak(
-            Vedtakshendelse(
-                vedtaksid = UUID.randomUUID(),
-                innvilget = true,
-                grunnlagsfaktor = Grunnlagsfaktor(3),
-                vedtaksdato = 2 mai 2022,
-                virkningsdato = 2 mai 2022,
-                fødselsdato = Fødselsdato(30 november 1979)
-            )
-        )
-        søker.håndterMeldeplikt(
-            Meldepliktshendelse(
-                brukersAktivitet = listOf(
-                    BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, false)
-                )
-            )
-        )
-
-        assertEquals(1, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(1, søker.inspektør.antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje[0])
-        assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-    }
-
-    @Test
     fun `uavhengige innmeldte brukeraktiviteter aggregeres`() {
         val søker = Søker()
 
@@ -120,10 +93,6 @@ internal class SøkerTest {
         )
 
         assertEquals(2, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(1, søker.inspektør.antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje[0])
-        assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(2, søker.inspektør.antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje[1])
-        assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
     }
 
     @Test
@@ -155,10 +124,6 @@ internal class SøkerTest {
         )
 
         assertEquals(3, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(2, søker.inspektør.antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje[0])
-        assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(3, søker.inspektør.antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje[1])
-        assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
     }
 
     @Test
@@ -351,7 +316,6 @@ internal class SøkerTest {
         assertEquals(6820, søker.inspektør.totalBeløp[0])
     }
 
-    @Disabled("Ikke fikset enda")
     @Test
     fun `Endringsvedtak om endret grunnlag endrer utbetaling`() {
         val søker = Søker()
@@ -406,9 +370,9 @@ internal class SøkerTest {
         )
 
         assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(10804, søker.inspektør.totalBeløp[1])
+        assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertEquals(11016, søker.inspektør.totalBeløp[1])
     }
 
     private val Søker.inspektør get() = TestVisitor(this)

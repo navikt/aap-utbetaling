@@ -15,7 +15,7 @@ internal class Oppdragshistorikk {
 
     internal fun accept(oppdragVisitor: OppdragVisitor) {
         oppdragVisitor.preVisitOppdragshistorikk()
-        sisteOppdrag?.accept(oppdragVisitor)
+        oppdragshistorikk.forEach { it.accept(oppdragVisitor) }
         oppdragVisitor.postVisitOppdragshistorikk()
     }
 }

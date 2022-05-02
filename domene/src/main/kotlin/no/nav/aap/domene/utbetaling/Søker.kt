@@ -15,31 +15,80 @@ class Søker {
     private val barnetillegg = Barnetillegg(emptyList())
     private val oppdragshistorikk = Oppdragshistorikk()
 
+    private var tilstand: Tilstand = Tilstand.Start
+
     internal fun håndterVedtak(vedtak: Vedtakshendelse) {
-        vedtakshistorikk.leggTilNyttVedtak(vedtak)
+        tilstand.håndterVedtak(this, vedtak)
     }
 
     internal fun håndterMeldeplikt(melding: Meldepliktshendelse) {
-        aktivitetstidslinje.håndterMeldepliktshendelse(melding)
-
-        val builder = vedtakshistorikk.utbetalingstidslinjeBuilder()
-        val utbetalingstidslinje = builder.build(aktivitetstidslinje)
-        utbetalingstidslinjehistorikk.add(utbetalingstidslinje)
-
+        tilstand.håndterMeldeplikt(this, melding)
 
         // behov -> slå opp barn og institusjon
     }
 
     internal fun håndterLøsning(løsning: LøsningBarn) {
-        løsning.leggTilBarn(barnetillegg)
-
-        utbetalingstidslinjehistorikk.barnetillegg(barnetillegg)
-
-        utbetalingstidslinjehistorikk.byggOppdrag(oppdragshistorikk)
+        tilstand.håndterLøsning(this, løsning)
     }
 
     internal fun håndterLøsning(løsningInstitusjon: LøsningInstitusjon) {
 
+    }
+
+    private fun beregn() {
+        val builder = vedtakshistorikk.utbetalingstidslinjeBuilder()
+        val utbetalingstidslinje = builder.build(aktivitetstidslinje)
+        utbetalingstidslinjehistorikk.add(utbetalingstidslinje)
+        utbetalingstidslinjehistorikk.barnetillegg(barnetillegg)
+        utbetalingstidslinjehistorikk.byggOppdrag(oppdragshistorikk)
+    }
+
+    private sealed interface Tilstand {
+        fun håndterVedtak(søker: Søker, vedtak: Vedtakshendelse) {}
+        fun håndterMeldeplikt(søker: Søker, melding: Meldepliktshendelse) {}
+        fun håndterLøsning(søker: Søker, løsning: LøsningBarn) {}
+
+        object Start : Tilstand {
+            override fun håndterVedtak(søker: Søker, vedtak: Vedtakshendelse) {
+                søker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
+                søker.tilstand = VedtakMottatt
+            }
+        }
+
+        object VedtakMottatt : Tilstand {
+
+            override fun håndterMeldeplikt(søker: Søker, melding: Meldepliktshendelse) {
+                søker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
+                søker.tilstand = MeldepliktshendelseMottatt
+            }
+
+            override fun håndterVedtak(søker: Søker, vedtak: Vedtakshendelse) {
+                søker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
+            }
+        }
+
+        object MeldepliktshendelseMottatt : Tilstand {
+
+            override fun håndterLøsning(søker: Søker, løsning: LøsningBarn) {
+                løsning.leggTilBarn(søker.barnetillegg)
+
+                søker.beregn()
+
+                søker.tilstand = SisteKompletteGreie
+            }
+
+            override fun håndterMeldeplikt(søker: Søker, melding: Meldepliktshendelse) {
+                søker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
+            }
+        }
+
+        object SisteKompletteGreie : Tilstand {
+
+            override fun håndterVedtak(søker: Søker, vedtak: Vedtakshendelse) {
+                søker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
+                søker.beregn()
+            }
+        }
     }
 
     internal fun accept(visitor: SøkerVisitor) {

@@ -49,22 +49,22 @@ class KStreamsMock : Kafka {
                 inputAvroTopic<SpecificRecord>(topic.name).pipeInput(record.key(), record.value() as SpecificRecord)
                 return object : Future<RecordMetadata> {
                     override fun cancel(mayInterruptIfRunning: Boolean): Boolean {
-                        TODO("Not yet implemented")
+                        error("Ikke i bruk")
                     }
 
                     override fun isCancelled(): Boolean {
-                        TODO("Not yet implemented")
+                        error("Ikke i bruk")
                     }
 
                     override fun isDone(): Boolean {
-                        TODO("Not yet implemented")
+                        error("Ikke i bruk")
                     }
 
                     override fun get() =
                         RecordMetadata(TopicPartition(topic.name, 0), 0, 0, 0, 0, 0)
 
                     override fun get(timeout: Long, unit: TimeUnit): RecordMetadata {
-                        TODO("Not yet implemented")
+                        error("Ikke i bruk")
                     }
                 }
             }
