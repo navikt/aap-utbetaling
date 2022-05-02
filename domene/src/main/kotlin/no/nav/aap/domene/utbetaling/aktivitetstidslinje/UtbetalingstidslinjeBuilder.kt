@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
+import no.nav.aap.domene.utbetaling.Barnetillegg
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.NORMAL_ARBEIDSTIMER
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
@@ -12,7 +13,8 @@ import java.time.LocalDate
 
 internal class UtbetalingstidslinjeBuilder(
     private val grunnlagsfaktor: Grunnlagsfaktor,
-    private val fødselsdato: Fødselsdato
+    private val fødselsdato: Fødselsdato,
+    private val barnetillegg: Barnetillegg
 ) : SøkerVisitor {
 
     private var utbetalingstidslinje = Utbetalingstidslinje(emptyList())
@@ -77,7 +79,8 @@ internal class UtbetalingstidslinjeBuilder(
 
     private fun opprettUtbetaling(dato: LocalDate) = Utbetalingsdag.Utbetaling(
         dato = dato,
-        grunnlagsfaktor = fødselsdato.justerGrunnlagsfaktorForAlder(dato, grunnlagsfaktor)
+        grunnlagsfaktor = fødselsdato.justerGrunnlagsfaktorForAlder(dato, grunnlagsfaktor),
+        barnetillegg = barnetillegg.barnetilleggForDag(dato)
     )
 
     private sealed interface Tilstand {

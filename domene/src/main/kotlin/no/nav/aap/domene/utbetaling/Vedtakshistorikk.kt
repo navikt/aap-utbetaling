@@ -15,7 +15,8 @@ internal class Vedtakshistorikk {
 
     private fun finnGjeldendeVedtak() = vedtakshistorikk.sortertPåDato().last()
 
-    internal fun utbetalingstidslinjeBuilder() = finnGjeldendeVedtak().utbetalingstidslinjeBuilder()
+    internal fun utbetalingstidslinjeBuilder(barnetillegg: Barnetillegg) =
+        finnGjeldendeVedtak().utbetalingstidslinjeBuilder(barnetillegg)
 
     internal fun accept(visitor: SøkerVisitor) {
         visitor.visitVedtakshistorikk(vedtakshistorikk.toList())

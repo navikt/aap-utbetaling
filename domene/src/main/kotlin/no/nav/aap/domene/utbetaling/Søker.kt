@@ -34,7 +34,7 @@ class Søker {
     }
 
     private fun beregn() {
-        val builder = vedtakshistorikk.utbetalingstidslinjeBuilder()
+        val builder = vedtakshistorikk.utbetalingstidslinjeBuilder(barnetillegg)
         val utbetalingstidslinje = builder.build(aktivitetstidslinje)
         utbetalingstidslinjehistorikk.add(utbetalingstidslinje)
         utbetalingstidslinjehistorikk.barnetillegg(barnetillegg)

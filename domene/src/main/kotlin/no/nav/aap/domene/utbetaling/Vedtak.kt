@@ -29,7 +29,8 @@ internal class Vedtak(
         internal fun Iterable<Vedtak>.sortertPåDato() = this.sortedBy { it.vedtaksdato }
     }
 
-    internal fun utbetalingstidslinjeBuilder() = UtbetalingstidslinjeBuilder(grunnlagsfaktor, fødselsdato)
+    internal fun utbetalingstidslinjeBuilder(barnetillegg: Barnetillegg) =
+        UtbetalingstidslinjeBuilder(grunnlagsfaktor, fødselsdato, barnetillegg)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
