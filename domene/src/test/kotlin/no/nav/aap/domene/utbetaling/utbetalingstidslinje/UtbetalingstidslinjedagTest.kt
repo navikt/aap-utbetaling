@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
-internal class UtbetalingsdagTest {
+internal class UtbetalingstidslinjedagTest {
 
     @BeforeEach
     fun beforeEach() {
@@ -61,11 +61,11 @@ internal class UtbetalingsdagTest {
     private class TestDagVisitor : UtbetalingsdagVisitor {
         lateinit var dagbeløp: Beløp
 
-        override fun visitUtbetalingMedBeløp(dag: Utbetalingsdag.Utbetaling, dato: LocalDate, beløp: Beløp) {
+        override fun visitUtbetalingMedBeløp(dag: Utbetalingstidslinjedag.Utbetalingsdag, dato: LocalDate, beløp: Beløp) {
             this.dagbeløp = beløp
         }
 
-        override fun visitIkkeUtbetaling(dag: Utbetalingsdag.IkkeUtbetaling, dato: LocalDate) {
+        override fun visitIkkeUtbetaling(dag: Utbetalingstidslinjedag.IkkeUtbetalingsdag, dato: LocalDate) {
             this.dagbeløp = 0.beløp
         }
     }

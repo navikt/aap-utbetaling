@@ -48,11 +48,11 @@ internal class OppdragBuilder : UtbetalingstidslinjeVisitor {
     private lateinit var linje: Linje
     private val linjer = mutableListOf<Linje>()
 
-    override fun visitUtbetalingMedBeløp(dag: Utbetalingsdag.Utbetaling, dato: LocalDate, beløp: Beløp) {
+    override fun visitUtbetalingMedBeløp(dag: Utbetalingstidslinjedag.Utbetalingsdag, dato: LocalDate, beløp: Beløp) {
         tilstand.arbeidsdag(this, beløp, dato)
     }
 
-    override fun visitIkkeUtbetaling(dag: Utbetalingsdag.IkkeUtbetaling, dato: LocalDate) {
+    override fun visitIkkeUtbetaling(dag: Utbetalingstidslinjedag.IkkeUtbetalingsdag, dato: LocalDate) {
         tilstand.fraværsdag(this, dato)
     }
 

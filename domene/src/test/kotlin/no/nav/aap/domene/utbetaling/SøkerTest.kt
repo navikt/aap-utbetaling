@@ -14,8 +14,8 @@ import no.nav.aap.domene.utbetaling.utbetalingslinjer.Endringskode
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Fagområde
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdrag
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdragstatus
-import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingsdag
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
+import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjedag
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -618,15 +618,15 @@ internal class SøkerTest {
             antallIkkeUtbetalingsdagerIUtbetalingstidslinje[utbetalingstidslinjeIndex] = 0
         }
 
-        override fun visitUtbetaling(dag: Utbetalingsdag.Utbetaling, dato: LocalDate) {
+        override fun visitUtbetaling(dag: Utbetalingstidslinjedag.Utbetalingsdag, dato: LocalDate) {
             antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje.computeIfPresent(utbetalingstidslinjeIndex) { _, old -> old + 1 }
         }
 
-        override fun visitUtbetalingMedBeløp(dag: Utbetalingsdag.Utbetaling, dato: LocalDate, beløp: Beløp) {
+        override fun visitUtbetalingMedBeløp(dag: Utbetalingstidslinjedag.Utbetalingsdag, dato: LocalDate, beløp: Beløp) {
             antallUtbetalingsdagerIUtbetalingstidslinje.computeIfPresent(utbetalingstidslinjeIndex) { _, old -> old + 1 }
         }
 
-        override fun visitIkkeUtbetaling(dag: Utbetalingsdag.IkkeUtbetaling, dato: LocalDate) {
+        override fun visitIkkeUtbetaling(dag: Utbetalingstidslinjedag.IkkeUtbetalingsdag, dato: LocalDate) {
             antallIkkeUtbetalingsdagerIUtbetalingstidslinje.computeIfPresent(utbetalingstidslinjeIndex) { _, old -> old + 1 }
         }
 

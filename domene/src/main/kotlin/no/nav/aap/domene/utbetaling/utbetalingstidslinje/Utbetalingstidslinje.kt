@@ -3,7 +3,7 @@ package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 import no.nav.aap.domene.utbetaling.Barnetillegg
 
 internal class Utbetalingstidslinje(
-    dager: List<Utbetalingsdag>
+    dager: List<Utbetalingstidslinjedag>
 ) {
     private val dager = dager.toMutableList()
 
@@ -15,7 +15,7 @@ internal class Utbetalingstidslinje(
         dager.forEach { it.barnetillegg(barnetillegg) }
     }
 
-    internal operator fun plus(dag: Utbetalingsdag) = Utbetalingstidslinje(this.dager + dag)
+    internal operator fun plus(dag: Utbetalingstidslinjedag) = Utbetalingstidslinje(this.dager + dag)
     internal operator fun plus(other: Utbetalingstidslinje) = Utbetalingstidslinje(this.dager + other.dager)
 
     internal fun accept(visitor: UtbetalingstidslinjeVisitor) {

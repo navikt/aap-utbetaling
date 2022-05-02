@@ -7,12 +7,12 @@ import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import java.time.LocalDate
 
 internal interface UtbetalingsdagVisitor {
-    fun visitUtbetaling(dag: Utbetalingsdag.Utbetaling, dato: LocalDate) {}
-    fun visitUtbetalingMedBeløp(dag: Utbetalingsdag.Utbetaling, dato: LocalDate, beløp: Beløp) {}
-    fun visitIkkeUtbetaling(dag: Utbetalingsdag.IkkeUtbetaling, dato: LocalDate) {}
+    fun visitUtbetaling(dag: Utbetalingstidslinjedag.Utbetalingsdag, dato: LocalDate) {}
+    fun visitUtbetalingMedBeløp(dag: Utbetalingstidslinjedag.Utbetalingsdag, dato: LocalDate, beløp: Beløp) {}
+    fun visitIkkeUtbetaling(dag: Utbetalingstidslinjedag.IkkeUtbetalingsdag, dato: LocalDate) {}
 }
 
-internal sealed class Utbetalingsdag(
+internal sealed class Utbetalingstidslinjedag(
     protected val dato: LocalDate
 ) {
 
@@ -23,11 +23,11 @@ internal sealed class Utbetalingsdag(
 
     internal abstract fun accept(visitor: UtbetalingsdagVisitor)
 
-    internal class Utbetaling(
+    internal class Utbetalingsdag(
         dato: LocalDate,
         private val grunnlagsfaktor: Grunnlagsfaktor,
         private val barnetillegg: Beløp
-    ) : Utbetalingsdag(dato) {
+    ) : Utbetalingstidslinjedag(dato) {
 
         internal companion object {
             private const val FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG = 0.66
@@ -53,7 +53,7 @@ internal sealed class Utbetalingsdag(
         }
     }
 
-    internal class IkkeUtbetaling(dato: LocalDate) : Utbetalingsdag(dato) {
+    internal class IkkeUtbetalingsdag(dato: LocalDate) : Utbetalingstidslinjedag(dato) {
 
         override fun arbeidsprosent(arbeidsprosent: Double) {
             this.arbeidsprosent = arbeidsprosent

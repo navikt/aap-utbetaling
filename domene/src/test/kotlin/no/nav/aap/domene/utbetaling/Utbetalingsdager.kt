@@ -1,7 +1,7 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
-import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingsdag
+import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjedag
 import java.time.LocalDate
 
 object Utbetalingsdager {
@@ -20,16 +20,16 @@ object Utbetalingsdager {
     internal fun Int.U(grunnlagsfaktor: Number = 3, arbeidsprosent: Number = 1, barn: List<Barnetillegg.Barn> = emptyList()) = (1..this)
         .map {
             val dato = seed
-            Utbetalingsdag.Utbetaling(dato, Grunnlagsfaktor(grunnlagsfaktor), Barnetillegg(barn).barnetilleggForDag(dato)).apply {
+            Utbetalingstidslinjedag.Utbetalingsdag(dato, Grunnlagsfaktor(grunnlagsfaktor), Barnetillegg(barn).barnetilleggForDag(dato)).apply {
                 arbeidsprosent(arbeidsprosent.toDouble())
             }
         }
 
     internal val Int.I
         get() = (1..this)
-            .map { Utbetalingsdag.IkkeUtbetaling(seed) }
+            .map { Utbetalingstidslinjedag.IkkeUtbetalingsdag(seed) }
 
-    internal val Int.S: List<Utbetalingsdag>
+    internal val Int.S: List<Utbetalingstidslinjedag>
         get() {
             resetSeed(seed.plusDays(this.toLong()))
             return emptyList()
