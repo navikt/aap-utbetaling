@@ -18,6 +18,7 @@ import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingsdag
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -373,6 +374,200 @@ internal class SøkerTest {
         assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
         assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
         assertEquals(11016, søker.inspektør.totalBeløp[1])
+    }
+
+    @Test
+    fun `Ny meldepliktshendelse mottatt etter første beregning - trigger ikke ny beregning fordi venter på løsning`() {
+        val søker = Søker()
+
+        søker.håndterVedtak(
+            Vedtakshendelse(
+                vedtaksid = UUID.randomUUID(),
+                innvilget = true,
+                grunnlagsfaktor = Grunnlagsfaktor(4),
+                vedtaksdato = 2 mai 2022,
+                virkningsdato = 2 mai 2022,
+                fødselsdato = Fødselsdato(30 november 1979)
+            )
+        )
+        søker.håndterMeldeplikt(
+            Meldepliktshendelse(
+                brukersAktivitet = listOf(
+                    BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, true), // Mandag
+                    BrukeraktivitetPerDag(3 mai 2022, 0.arbeidstimer, true),
+                    BrukeraktivitetPerDag(4 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(5 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(6 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(7 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(8 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(9 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(10 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(11 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(12 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(13 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(14 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(15 mai 2022, 0.arbeidstimer, false),
+                )
+            )
+        )
+
+        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+
+        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(8856, søker.inspektør.totalBeløp[0])
+
+        søker.håndterMeldeplikt(
+            Meldepliktshendelse(
+                brukersAktivitet = listOf(
+                    BrukeraktivitetPerDag(16 mai 2022, 0.arbeidstimer, true), // Mandag
+                    BrukeraktivitetPerDag(17 mai 2022, 0.arbeidstimer, true),
+                    BrukeraktivitetPerDag(18 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(19 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(20 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(21 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(22 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(23 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(24 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(25 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(26 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(27 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(28 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(29 mai 2022, 0.arbeidstimer, false),
+                )
+            )
+        )
+
+        assertEquals(28, søker.inspektør.antallDagerIAktivitetstidslinje)
+        assertNull(søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertNull(søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertNull(søker.inspektør.totalBeløp.getOrNull(1))
+    }
+
+    @Test
+    fun `Ny meldepliktshendelse og løsning mottatt etter første beregning - trigger ny beregning`() {
+        val søker = Søker()
+
+        søker.håndterVedtak(
+            Vedtakshendelse(
+                vedtaksid = UUID.randomUUID(),
+                innvilget = true,
+                grunnlagsfaktor = Grunnlagsfaktor(4),
+                vedtaksdato = 2 mai 2022,
+                virkningsdato = 2 mai 2022,
+                fødselsdato = Fødselsdato(30 november 1979)
+            )
+        )
+        søker.håndterMeldeplikt(
+            Meldepliktshendelse(
+                brukersAktivitet = listOf(
+                    BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, true), // Mandag
+                    BrukeraktivitetPerDag(3 mai 2022, 0.arbeidstimer, true),
+                    BrukeraktivitetPerDag(4 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(5 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(6 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(7 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(8 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(9 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(10 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(11 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(12 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(13 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(14 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(15 mai 2022, 0.arbeidstimer, false),
+                )
+            )
+        )
+
+        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+
+        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(8856, søker.inspektør.totalBeløp[0])
+
+        søker.håndterMeldeplikt(
+            Meldepliktshendelse(
+                brukersAktivitet = listOf(
+                    BrukeraktivitetPerDag(16 mai 2022, 0.arbeidstimer, true), // Mandag
+                    BrukeraktivitetPerDag(17 mai 2022, 0.arbeidstimer, true),
+                    BrukeraktivitetPerDag(18 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(19 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(20 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(21 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(22 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(23 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(24 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(25 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(26 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(27 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(28 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(29 mai 2022, 0.arbeidstimer, false),
+                )
+            )
+        )
+
+        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+
+        assertEquals(28, søker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(16, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertEquals(4, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertEquals(17712, søker.inspektør.totalBeløp[1])
+    }
+
+    @Test
+    fun `Endringsvedtak om endret grunnlag etter meldepliktshendelse, men før løsning er mottatt`() {
+        val søker = Søker()
+
+        søker.håndterVedtak(
+            Vedtakshendelse(
+                vedtaksid = UUID.randomUUID(),
+                innvilget = true,
+                grunnlagsfaktor = Grunnlagsfaktor(4),
+                vedtaksdato = 2 mai 2022,
+                virkningsdato = 2 mai 2022,
+                fødselsdato = Fødselsdato(30 november 1979)
+            )
+        )
+        søker.håndterMeldeplikt(
+            Meldepliktshendelse(
+                brukersAktivitet = listOf(
+                    BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, true), // Mandag
+                    BrukeraktivitetPerDag(3 mai 2022, 0.arbeidstimer, true),
+                    BrukeraktivitetPerDag(4 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(5 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(6 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(7 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(8 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(9 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(10 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(11 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(12 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(13 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(14 mai 2022, 0.arbeidstimer, false),
+                    BrukeraktivitetPerDag(15 mai 2022, 0.arbeidstimer, false),
+                )
+            )
+        )
+
+        søker.håndterVedtak(
+            Vedtakshendelse(
+                vedtaksid = UUID.randomUUID(),
+                innvilget = true,
+                grunnlagsfaktor = Grunnlagsfaktor(5),
+                vedtaksdato = 2 mai 2022,
+                virkningsdato = 2 mai 2022,
+                fødselsdato = Fødselsdato(30 november 1979)
+            )
+        )
+
+        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+
+        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(11016, søker.inspektør.totalBeløp[0])
     }
 
     private val Søker.inspektør get() = TestVisitor(this)

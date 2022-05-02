@@ -6,16 +6,23 @@ import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import java.time.LocalDate
 
 class Barnetillegg(barn: List<Barn>) {
-    private val barn = barn.toMutableList()
+    private val barn = mutableListOf(Barna(barn))
+    private val nyesteInnslag get() = barn.last()
 
     private companion object {
         private val BARNETILLEGG = 27.beløp
     }
 
-    internal fun barnetilleggForDag(dato: LocalDate) = BARNETILLEGG * barn.antallBarnUnder18År(dato)
+    internal fun barnetilleggForDag(dato: LocalDate) = BARNETILLEGG * nyesteInnslag.antallBarnUnder18År(dato)
 
     internal fun leggTilBarn(barna: List<Barn>) {
-        barn.addAll(barna)
+        barn.add(Barna(barna))
+    }
+
+    class Barna(
+        private val barn: List<Barn>
+    ) {
+        internal fun antallBarnUnder18År(dato: LocalDate) = barn.antallBarnUnder18År(dato)
     }
 
     class Barn(

@@ -8,5 +8,6 @@ fun AvroVedtak.toDto() = DtoVedtak(
     innvilget = this.innvilget,
     grunnlagsfaktor = this.grunnlagsfaktor,
     vedtaksdato = this.vedtaksdato,
-    virkningsdato = this.virkningsdato
+    virkningsdato = this.virkningsdato,
+    fødselsdato = this.fødselsdato
 )

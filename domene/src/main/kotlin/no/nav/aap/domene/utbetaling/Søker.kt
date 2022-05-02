@@ -23,8 +23,6 @@ class Søker {
 
     internal fun håndterMeldeplikt(melding: Meldepliktshendelse) {
         tilstand.håndterMeldeplikt(this, melding)
-
-        // behov -> slå opp barn og institusjon
     }
 
     internal fun håndterLøsning(løsning: LøsningBarn) {
@@ -57,17 +55,27 @@ class Søker {
 
         object VedtakMottatt : Tilstand {
 
+            override fun håndterVedtak(søker: Søker, vedtak: Vedtakshendelse) {
+                søker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
+            }
+
             override fun håndterMeldeplikt(søker: Søker, melding: Meldepliktshendelse) {
                 søker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
                 søker.tilstand = MeldepliktshendelseMottatt
             }
+        }
+
+        object MeldepliktshendelseMottatt : Tilstand {
+
+            //TODO on entry: behov -> slå opp barn og institusjon
 
             override fun håndterVedtak(søker: Søker, vedtak: Vedtakshendelse) {
                 søker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
             }
-        }
 
-        object MeldepliktshendelseMottatt : Tilstand {
+            override fun håndterMeldeplikt(søker: Søker, melding: Meldepliktshendelse) {
+                søker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
+            }
 
             override fun håndterLøsning(søker: Søker, løsning: LøsningBarn) {
                 løsning.leggTilBarn(søker.barnetillegg)
@@ -76,17 +84,18 @@ class Søker {
 
                 søker.tilstand = SisteKompletteGreie
             }
-
-            override fun håndterMeldeplikt(søker: Søker, melding: Meldepliktshendelse) {
-                søker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
-            }
         }
 
-        object SisteKompletteGreie : Tilstand {
+        object SisteKompletteGreie : Tilstand { //FIXME: Trenger et bedre navn
 
             override fun håndterVedtak(søker: Søker, vedtak: Vedtakshendelse) {
                 søker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
                 søker.beregn()
+            }
+
+            override fun håndterMeldeplikt(søker: Søker, melding: Meldepliktshendelse) {
+                søker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
+                søker.tilstand = MeldepliktshendelseMottatt
             }
         }
     }

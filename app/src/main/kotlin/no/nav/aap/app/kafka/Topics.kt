@@ -42,7 +42,8 @@ data class AvroVedtak(
     val innvilget: Boolean,
     val grunnlagsfaktor: Double,
     val vedtaksdato: LocalDate,
-    val virkningsdato: LocalDate
+    val virkningsdato: LocalDate,
+    val fødselsdato: LocalDate
 )
 
 data class AvroBarna(
