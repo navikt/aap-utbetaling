@@ -101,6 +101,29 @@ internal class AktivitetstidslinjeTest {
         assertEquals(16 januar 2022, visitor.sisteDatoIMeldeperiode)
     }
 
+    @Test
+    fun `Meldepliktshendelse som overlapper med en tidligere innsendt periode erstatter dagene`() {
+        val aktivitetstidslinje = Aktivitetstidslinje()
+        val hendelse1 = Meldepliktshendelse((0 until 14L).map {
+            BrukeraktivitetPerDag((3 januar 2022).plusDays(it), 0.arbeidstimer, false)
+        })
+
+        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse1)
+
+        val hendelse2 = Meldepliktshendelse((0 until 14L).map {
+            BrukeraktivitetPerDag((3 januar 2022).plusDays(it), 4.arbeidstimer, false)
+        })
+
+        aktivitetstidslinje.håndterMeldepliktshendelse(hendelse2)
+
+        val visitor = TidslinjeVisitor()
+        aktivitetstidslinje.accept(visitor)
+
+        assertEquals(1, visitor.antallMeldeperioder)
+        assertEquals(4, visitor.antallHelgedager)
+        assertEquals(10, visitor.antallArbeidsdager)
+    }
+
     private class TidslinjeVisitor : SøkerVisitor {
         var antallMeldeperioder = 0
         var antallDager = 0

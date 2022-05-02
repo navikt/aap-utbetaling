@@ -11,6 +11,8 @@ internal sealed class Dag(
     protected val dato: LocalDate,
 ) {
 
+    internal fun sammenfallerMed(other: Dag) = this.dato == other.dato
+
     internal abstract fun arbeidstimer(): Arbeidstimer
     internal open fun normalArbeidstimer(): Arbeidstimer = NORMAL_ARBEIDSTIMER
 
