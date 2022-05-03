@@ -22,10 +22,10 @@ data class Topic<K, V>(
 }
 
 class Topics(private val config: KafkaConfig) {
-    val vedtak = Topic("aap.aap-vedtak-fattet.v1", Serdes.StringSerde(), jsonSerde<AvroVedtak>()) // FIXME endre til avroserde etterhvert
-    val barn = Topic("aap.barn.v1", Serdes.StringSerde(), jsonSerde<AvroBarna>()) // FIXME endre til avroserde etterhvert
-    val institusjon = Topic("aap.barn.v1", Serdes.StringSerde(), jsonSerde<AvroInstitusjon>()) // FIXME endre til avroserde etterhvert
-    val meldeplikt = Topic("aap.meldeplikt.v1", Serdes.StringSerde(), jsonSerde<AvroMeldeplikt>()) // FIXME endre til avroserde etterhvert
+    val vedtak = Topic("aap.aap-vedtak-fattet.v1", Serdes.StringSerde(), jsonSerde<KafkaVedtak>())
+    val barn = Topic("aap.barn.v1", Serdes.StringSerde(), jsonSerde<KafkaBarna>())
+    val institusjon = Topic("aap.barn.v1", Serdes.StringSerde(), jsonSerde<KafkaInstitusjon>())
+    val meldeplikt = Topic("aap.meldeplikt.v1", Serdes.StringSerde(), jsonSerde<KafkaMeldeplikt>())
 
     private inline fun <reified V : Any> jsonSerde(): Serde<V> = JsonSerde(V::class)
 
@@ -36,8 +36,7 @@ class Topics(private val config: KafkaConfig) {
     }
 }
 
-/** Midlertidig Avro objekter så vi kan justere mens vi utvikler **/
-data class AvroVedtak(
+data class KafkaVedtak(
     val vedtaksid: UUID,
     val innvilget: Boolean,
     val grunnlagsfaktor: Double,
@@ -46,28 +45,28 @@ data class AvroVedtak(
     val fødselsdato: LocalDate
 )
 
-data class AvroBarna(
-    val barn: List<AvroBarn>
+data class KafkaBarna(
+    val barn: List<KafkaBarn>
 )
 
-data class AvroBarn(
+data class KafkaBarn(
     val fødselsnummer: String,
     val fødselsdato: LocalDate,
     // Hvor mye inntekt?
 )
 
 // 11-25
-data class AvroInstitusjon(
+data class KafkaInstitusjon(
     val institusjonsnavn: String,
     val periodeFom: LocalDate,
     val periodeTom: LocalDate
     // Forsørgeransvar her?
 )
 
-data class AvroMeldeplikt(
-    val aktivitetPerDag: List<AvroBrukersAktivitetPerDag>
+data class KafkaMeldeplikt(
+    val aktivitetPerDag: List<KafkaBrukersAktivitetPerDag>
 )
 
-data class AvroBrukersAktivitetPerDag(
+data class KafkaBrukersAktivitetPerDag(
     val dato: LocalDate
 )

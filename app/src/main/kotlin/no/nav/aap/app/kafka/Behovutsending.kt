@@ -28,15 +28,15 @@ private interface ToAvro<out AVROVALUE> {
     fun toAvro(): AVROVALUE
 }
 
-private class ToAvroBarn : Lytter, ToAvro<AvroBarna> {
+private class ToAvroBarn : Lytter, ToAvro<KafkaBarna> {
     private lateinit var ident: String
-    override fun toAvro(): AvroBarna {
+    override fun toAvro(): KafkaBarna {
         TODO("Not yet implemented")
     }
 }
 
-private class ToAvroInstitusjon : Lytter, ToAvro<AvroInstitusjon> {
-    override fun toAvro(): AvroInstitusjon {
+private class ToAvroInstitusjon : Lytter, ToAvro<KafkaInstitusjon> {
+    override fun toAvro(): KafkaInstitusjon {
         TODO("Not yet implemented")
     }
 }
