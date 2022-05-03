@@ -1,6 +1,7 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
 import no.nav.aap.domene.utbetaling.Barnetillegg
+import no.nav.aap.domene.utbetaling.visitor.UtbetalingstidslinjeVisitor
 
 internal class Utbetalingstidslinje(
     dager: List<Utbetalingstidslinjedag>
@@ -23,11 +24,4 @@ internal class Utbetalingstidslinje(
         dager.forEach { it.accept(visitor) }
         visitor.postVisitUtbetalingstidslinje(this)
     }
-}
-
-internal interface UtbetalingstidslinjeVisitor : UtbetalingsdagVisitor {
-    fun preVisitUtbetalingstidslinjehistorikk(historikk: Utbetalingstidslinjehistorikk) {}
-    fun preVisitUtbetalingstidslinje(tidslinje: Utbetalingstidslinje) {}
-    fun postVisitUtbetalingstidslinje(tidslinje: Utbetalingstidslinje) {}
-    fun postVisitUtbetalingstidslinjehistorikk(historikk: Utbetalingstidslinjehistorikk) {}
 }

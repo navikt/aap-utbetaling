@@ -1,5 +1,12 @@
-package no.nav.aap.domene.utbetaling.utbetalingslinjer
+package no.nav.aap.domene.utbetaling.visitor
 
+import no.nav.aap.domene.utbetaling.utbetalingslinjer.*
+import no.nav.aap.domene.utbetaling.utbetalingslinjer.Endringskode
+import no.nav.aap.domene.utbetaling.utbetalingslinjer.Fagområde
+import no.nav.aap.domene.utbetaling.utbetalingslinjer.Klassekode
+import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdrag
+import no.nav.aap.domene.utbetaling.utbetalingslinjer.Satstype
+import no.nav.aap.domene.utbetaling.utbetalingslinjer.Utbetalingslinje
 import java.time.LocalDate
 import java.time.LocalDateTime
 

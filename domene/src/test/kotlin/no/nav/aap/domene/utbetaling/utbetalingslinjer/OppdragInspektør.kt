@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling.utbetalingslinjer
 
+import no.nav.aap.domene.utbetaling.visitor.OppdragVisitor
 import java.time.LocalDate
 import java.time.LocalDateTime
 

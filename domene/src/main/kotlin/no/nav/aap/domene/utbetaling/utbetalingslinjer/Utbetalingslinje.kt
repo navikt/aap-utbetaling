@@ -1,6 +1,7 @@
 package no.nav.aap.domene.utbetaling.utbetalingslinjer
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.erHelg
+import no.nav.aap.domene.utbetaling.visitor.OppdragVisitor
 import java.time.LocalDate
 
 internal class Utbetalingslinje internal constructor(

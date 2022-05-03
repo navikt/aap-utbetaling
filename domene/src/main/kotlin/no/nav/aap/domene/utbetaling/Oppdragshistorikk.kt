@@ -1,7 +1,7 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdrag
-import no.nav.aap.domene.utbetaling.utbetalingslinjer.OppdragVisitor
+import no.nav.aap.domene.utbetaling.visitor.OppdragVisitor
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.OppdragBuilder
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
 

@@ -4,6 +4,7 @@ import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.NORMAL_ARBEIDSTIMER
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.summer
+import no.nav.aap.domene.utbetaling.visitor.DagVisitor
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -74,10 +75,3 @@ internal sealed class Dag(
 }
 
 internal fun LocalDate.erHelg() = this.dayOfWeek in arrayOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
-
-internal interface DagVisitor {
-    fun visitHelgedag(helgedag: Dag.Helg, dato: LocalDate, arbeidstimer: Arbeidstimer) {}
-    fun visitArbeidsdag(dato: LocalDate, arbeidstimer: Arbeidstimer) {}
-    fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dato: LocalDate) {}
-    fun visitVentedag(dato: LocalDate) {}
-}

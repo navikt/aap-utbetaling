@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling.utbetalingslinjer
 
+import no.nav.aap.domene.utbetaling.visitor.OppdragVisitor
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.time.LocalDate.MIN

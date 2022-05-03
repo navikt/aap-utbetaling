@@ -5,6 +5,7 @@ import no.nav.aap.domene.utbetaling.utbetalingslinjer.Fagområde
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdrag
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Utbetalingslinje
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.OppdragBuilder.Linje.Companion.toOppdragLinjer
+import no.nav.aap.domene.utbetaling.visitor.UtbetalingstidslinjeVisitor
 import java.time.LocalDate
 import kotlin.math.roundToInt
 
