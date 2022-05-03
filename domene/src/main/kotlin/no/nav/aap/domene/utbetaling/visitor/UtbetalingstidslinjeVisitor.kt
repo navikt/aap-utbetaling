@@ -1,6 +1,5 @@
 package no.nav.aap.domene.utbetaling.visitor
 
-import no.nav.aap.domene.utbetaling.utbetalingstidslinje.UtbetalingsdagVisitor
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjehistorikk
 

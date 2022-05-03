@@ -4,13 +4,8 @@ import no.nav.aap.domene.utbetaling.Barnetillegg
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnbeløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
+import no.nav.aap.domene.utbetaling.visitor.UtbetalingsdagVisitor
 import java.time.LocalDate
-
-internal interface UtbetalingsdagVisitor {
-    fun visitUtbetaling(dag: Utbetalingstidslinjedag.Utbetalingsdag, dato: LocalDate) {}
-    fun visitUtbetalingMedBeløp(dag: Utbetalingstidslinjedag.Utbetalingsdag, dato: LocalDate, beløp: Beløp) {}
-    fun visitIkkeUtbetaling(dag: Utbetalingstidslinjedag.IkkeUtbetalingsdag, dato: LocalDate) {}
-}
 
 internal sealed class Utbetalingstidslinjedag(
     protected val dato: LocalDate

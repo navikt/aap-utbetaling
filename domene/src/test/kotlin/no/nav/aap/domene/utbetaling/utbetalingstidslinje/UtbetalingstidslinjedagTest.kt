@@ -8,6 +8,7 @@ import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.januar
+import no.nav.aap.domene.utbetaling.visitor.UtbetalingsdagVisitor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
