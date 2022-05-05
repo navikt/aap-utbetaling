@@ -9,14 +9,11 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
-import no.nav.aap.app.config.Config
-import no.nav.aap.app.config.loadConfig
-import no.nav.aap.app.kafka.KStreams
-import no.nav.aap.app.kafka.Kafka
-import no.nav.aap.app.kafka.Topics
-import org.apache.kafka.streams.KafkaStreams.State
+import no.nav.aap.kafka.KafkaConfig
+import no.nav.aap.kafka.streams.KStreams
+import no.nav.aap.kafka.streams.KafkaStreams
+import no.nav.aap.ktor.config.loadConfig
 import org.apache.kafka.streams.StreamsBuilder
-import org.apache.kafka.streams.Topology
 import org.slf4j.LoggerFactory
 
 private val secureLog = LoggerFactory.getLogger("secureLog")
@@ -25,7 +22,11 @@ fun main() {
     embeddedServer(Netty, port = 8080, module = Application::server).start(wait = true)
 }
 
-internal fun Application.server(kafka: Kafka = KStreams()) {
+data class Config(
+    val kafka: KafkaConfig
+)
+
+internal fun Application.server(kafka: KStreams = KafkaStreams) {
     val prometheus = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
     val config = loadConfig<Config>()
 
@@ -34,32 +35,31 @@ internal fun Application.server(kafka: Kafka = KStreams()) {
     Thread.currentThread().setUncaughtExceptionHandler { _, e -> log.error("Uhåndtert feil", e) }
     environment.monitor.subscribe(ApplicationStopping) { kafka.close() }
 
-    val topics = Topics(config.kafka)
-    val topology = createTopology(topics)
-    kafka.start(topology, config.kafka, prometheus)
+    kafka.start(config.kafka, prometheus) {
+        createTopology()
+    }
 
     routing {
         actuator(prometheus, kafka)
     }
 }
 
-internal fun createTopology(topics: Topics): Topology = StreamsBuilder().apply {
+internal fun createTopology(): StreamsBuilder = StreamsBuilder().apply {
 
-}.build()
+}
 
-private fun Routing.actuator(prometheus: PrometheusMeterRegistry, kafka: Kafka) {
+private fun Routing.actuator(prometheus: PrometheusMeterRegistry, kafka: KStreams) {
     route("/actuator") {
-        get("/metrics") { call.respond(prometheus.scrape()) }
+        get("/metrics") {
+            call.respond(prometheus.scrape())
+        }
         get("/live") {
-            val status = if (kafka.state() == State.ERROR) HttpStatusCode.InternalServerError else HttpStatusCode.OK
-            call.respond(status, "vedtak")
+            val status = if (kafka.isLive()) HttpStatusCode.OK else HttpStatusCode.InternalServerError
+            call.respond(status, "utbetaling")
         }
         get("/ready") {
-            val healthy = kafka.state() in listOf(State.CREATED, State.RUNNING, State.REBALANCING)
-            when (healthy && kafka.started()) {
-                true -> call.respond(HttpStatusCode.OK, "vedtak")
-                false -> call.respond(HttpStatusCode.InternalServerError, "vedtak")
-            }
+            val status = if (kafka.isReady()) HttpStatusCode.OK else HttpStatusCode.InternalServerError
+            call.respond(status, "utbetaling")
         }
     }
 }
