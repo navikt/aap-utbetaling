@@ -41,14 +41,24 @@ internal fun Application.server(kafka: KStreams = KafkaStreams) {
     environment.monitor.subscribe(ApplicationStopping) { kafka.close() }
 
     kafka.start(config.kafka, prometheus) {
-        createTopology()
+        val mottakerKtable = consume(Topics.mottakere).filterNotNull { "filter-mottakere-tombstone" }.produce(Tables.mottakere)
+
+        consume(Topics.vedtak)
+            .filterNotNull { "filter-vedtak-tombstone" }
+            .leftJoin(Topics.vedtak with Topics.mottakere, mottakerKtable, ::VedtakOgMottak)
+            .mapValues { _, value ->
+                val mottaker = value.mottaker?.let { Mottaker.gjenopprett(it) } ?: Mottaker()
+                mottaker.håndterVedtak(Vedtakshendelse.gjenopprett(value.vedtak))
+                mottaker.toDto()
+            }
+            .produce(Topics.mottakere) {"produced-mottakere"}
     }
 
     routing {
         actuator(prometheus, kafka)
     }
 }
-
+/*
 internal fun createTopology(): StreamsBuilder = StreamsBuilder().apply {
     val mottakerKtable = consume(Topics.mottakere).filterNotNull { "filter-mottakere-tombstone" }.produce(Tables.mottakere)
 
@@ -61,7 +71,7 @@ internal fun createTopology(): StreamsBuilder = StreamsBuilder().apply {
             mottaker.toDto()
         }
         .produce(Topics.mottakere) {"produced-mottakere"}
-}
+}*/
 
 data class VedtakOgMottak(
     val vedtak: DtoVedtak,

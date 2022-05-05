@@ -1,6 +1,7 @@
 package no.nav.aap.app
 
 import io.ktor.server.testing.*
+import kotlinx.coroutines.runBlocking
 import no.nav.aap.app.kafka.Topics
 import no.nav.aap.domene.utbetaling.dto.DtoVedtak
 import no.nav.aap.kafka.streams.test.readAndAssert
@@ -17,7 +18,8 @@ class AppTest {
     fun `Innsendt vedtak oppretter en mottaker`() {
         withTestApp { mocks ->
             val vedtakTopic = mocks.kafka.inputTopic(Topics.vedtak)
-            val mottakInputTopic = mocks.kafka.inputTopic(Topics.mottakere)
+            mocks.kafka.outputTopic(Topics.vedtak)
+            mocks.kafka.inputTopic(Topics.mottakere)
             val mottakTopic = mocks.kafka.outputTopic(Topics.mottakere)
 
             vedtakTopic.produce("123") {
@@ -44,7 +46,7 @@ private fun withTestApp(test: ApplicationTestBuilder.(mocks: Mocks) -> Unit) = M
         testApplication {
             application {
                 server(mocks.kafka)
-                this@testApplication.test(mocks)
+                runBlocking { this@testApplication.test(mocks) }
             }
         }
     }
