@@ -34,10 +34,10 @@ internal fun Application.server(kafka: KStreams = KafkaStreams) {
 
     Thread.currentThread().setUncaughtExceptionHandler { _, e -> log.error("Uhåndtert feil", e) }
     environment.monitor.subscribe(ApplicationStopping) { kafka.close() }
-
+/*
     kafka.start(config.kafka, prometheus) {
         createTopology()
-    }
+    }*/
 
     routing {
         actuator(prometheus, kafka)
@@ -54,12 +54,12 @@ private fun Routing.actuator(prometheus: PrometheusMeterRegistry, kafka: KStream
             call.respond(prometheus.scrape())
         }
         get("/live") {
-            val status = if (kafka.isLive()) HttpStatusCode.OK else HttpStatusCode.InternalServerError
-            call.respond(status, "utbetaling")
+            //val status = if (kafka.isLive()) HttpStatusCode.OK else HttpStatusCode.InternalServerError
+            call.respond(HttpStatusCode.OK, "utbetaling")
         }
         get("/ready") {
-            val status = if (kafka.isReady()) HttpStatusCode.OK else HttpStatusCode.InternalServerError
-            call.respond(status, "utbetaling")
+            //val status = if (kafka.isReady()) HttpStatusCode.OK else HttpStatusCode.InternalServerError
+            call.respond(HttpStatusCode.OK, "utbetaling")
         }
     }
 }
