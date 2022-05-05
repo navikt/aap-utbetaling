@@ -24,11 +24,11 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
-internal class SøkerTest {
+internal class MottakerTest {
 
     @Test
     fun `Nytt vedtak oppdaterer vedtakshistorikk`() {
-        val søker = Søker()
+        val søker = Mottaker()
         søker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
@@ -44,7 +44,7 @@ internal class SøkerTest {
 
     @Test
     fun `Nytt vedtak setter gjeldende vedtak i vedtakshistorikk`() {
-        val søker = Søker()
+        val søker = Mottaker()
         val vedtak1 = Vedtakshendelse(
             vedtaksid = UUID.randomUUID(),
             innvilget = true,
@@ -70,7 +70,7 @@ internal class SøkerTest {
 
     @Test
     fun `uavhengige innmeldte brukeraktiviteter aggregeres`() {
-        val søker = Søker()
+        val søker = Mottaker()
 
         søker.håndterVedtak(
             Vedtakshendelse(
@@ -98,7 +98,7 @@ internal class SøkerTest {
 
     @Test
     fun `Flere uavhengige innmeldte brukeraktiviteter aggregeres`() {
-        val søker = Søker()
+        val søker = Mottaker()
 
         søker.håndterVedtak(
             Vedtakshendelse(
@@ -129,7 +129,7 @@ internal class SøkerTest {
 
     @Test
     fun `Utbetalingsdager beregner beløp ved håndtering av barnetillegg`() {
-        val søker = Søker()
+        val søker = Mottaker()
 
         søker.håndterVedtak(
             Vedtakshendelse(
@@ -159,7 +159,7 @@ internal class SøkerTest {
 
     @Test
     fun `Utbetalingsdager lager oppdrag ved håndtering av barnetillegg`() {
-        val søker = Søker()
+        val søker = Mottaker()
 
         søker.håndterVedtak(
             Vedtakshendelse(
@@ -190,7 +190,7 @@ internal class SøkerTest {
 
     @Test
     fun `Utbetalingsdager med to fraværsdager trekkes`() {
-        val søker = Søker()
+        val søker = Mottaker()
 
         søker.håndterVedtak(
             Vedtakshendelse(
@@ -233,7 +233,7 @@ internal class SøkerTest {
 
     @Test
     fun `Utbetalingsdager med arbeid i helg gir 60 prosent utbetaling`() {
-        val søker = Søker()
+        val søker = Mottaker()
 
         søker.håndterVedtak(
             Vedtakshendelse(
@@ -276,7 +276,7 @@ internal class SøkerTest {
 
     @Test
     fun `Fyller 25 midt i meldeperioden, grunnlag skal justeres opp`() {
-        val søker = Søker()
+        val søker = Mottaker()
 
         søker.håndterVedtak(
             Vedtakshendelse(
@@ -319,7 +319,7 @@ internal class SøkerTest {
 
     @Test
     fun `Endringsvedtak om endret grunnlag endrer utbetaling`() {
-        val søker = Søker()
+        val søker = Mottaker()
 
         søker.håndterVedtak(
             Vedtakshendelse(
@@ -378,7 +378,7 @@ internal class SøkerTest {
 
     @Test
     fun `Ny meldepliktshendelse mottatt etter første beregning - trigger ikke ny beregning fordi venter på løsning`() {
-        val søker = Søker()
+        val søker = Mottaker()
 
         søker.håndterVedtak(
             Vedtakshendelse(
@@ -447,7 +447,7 @@ internal class SøkerTest {
 
     @Test
     fun `Ny meldepliktshendelse og løsning mottatt etter første beregning - trigger ny beregning`() {
-        val søker = Søker()
+        val søker = Mottaker()
 
         søker.håndterVedtak(
             Vedtakshendelse(
@@ -518,7 +518,7 @@ internal class SøkerTest {
 
     @Test
     fun `Endringsvedtak om endret grunnlag etter meldepliktshendelse, men før løsning er mottatt`() {
-        val søker = Søker()
+        val søker = Mottaker()
 
         søker.håndterVedtak(
             Vedtakshendelse(
@@ -572,7 +572,7 @@ internal class SøkerTest {
 
     @Test
     fun `Endring av tidligere innsendt meldeplikt trigger ny beregning`() {
-        val søker = Søker()
+        val søker = Mottaker()
 
         søker.håndterVedtak(
             Vedtakshendelse(
@@ -642,9 +642,9 @@ internal class SøkerTest {
         assertEquals(11070, søker.inspektør.totalBeløp[1])
     }
 
-    private val Søker.inspektør get() = TestVisitor(this)
+    private val Mottaker.inspektør get() = TestVisitor(this)
 
-    private class TestVisitor(søker: Søker) : SøkerVisitor {
+    private class TestVisitor(mottaker: Mottaker) : SøkerVisitor {
 
         var vedtakListeSize: Int = -1
         var antallDagerIAktivitetstidslinje: Int = 0
@@ -656,7 +656,7 @@ internal class SøkerTest {
         val totalBeløp = mutableListOf<Int>()
 
         init {
-            søker.accept(this)
+            mottaker.accept(this)
         }
 
         override fun visitVedtakshistorikk(vedtak: List<Vedtak>) {

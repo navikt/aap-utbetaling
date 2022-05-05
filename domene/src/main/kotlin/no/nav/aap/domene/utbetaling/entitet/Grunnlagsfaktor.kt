@@ -2,7 +2,7 @@ package no.nav.aap.domene.utbetaling.entitet
 
 import kotlin.math.round
 
-internal class Grunnlagsfaktor(verdi: Number) : Comparable<Grunnlagsfaktor> {
+class Grunnlagsfaktor(verdi: Number) : Comparable<Grunnlagsfaktor> {
 
     private val verdi: Double = round(verdi.toDouble() * 1_000_000) / 1_000_000
 

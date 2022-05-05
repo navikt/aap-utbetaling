@@ -1,6 +1,6 @@
 package no.nav.aap.domene.utbetaling.dto
 
-import no.nav.aap.domene.utbetaling.Søker
+import no.nav.aap.domene.utbetaling.Mottaker
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
@@ -15,7 +15,7 @@ data class DtoVedtak(
     val virkningsdato: LocalDate,
     val fødselsdato: LocalDate
 ) {
-    fun håndter(søker: Søker) {
+    fun håndter(søker: Mottaker) {
         søker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = vedtaksid,

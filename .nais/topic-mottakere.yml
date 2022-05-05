@@ -1,0 +1,20 @@
+apiVersion: kafka.nais.io/v1
+kind: Topic
+metadata:
+  name: mottakere.v1
+  namespace: aap
+  labels:
+    team: aap
+  annotations:
+    kafka.nais.io/removeDataWhenResourceIsDeleted: "true"
+    githubUrl: "https://github.com/navikt/aap-utbetaling"
+spec:
+  pool: {{kafka-pool}}
+  config:
+    cleanupPolicy: compact,delete
+    partitions: 12
+    retentionHours: 1
+  acl:
+    - team: aap
+      application: utbetaling
+      access: readwrite

@@ -1,14 +1,16 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Aktivitetstidslinje
+import no.nav.aap.domene.utbetaling.dto.DtoMottaker
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningBarn
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningInstitusjon
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjehistorikk
 import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
+import java.time.LocalDate
 
-class Søker {
+class Mottaker {
     private val aktivitetstidslinje = Aktivitetstidslinje()
     private val utbetalingstidslinjehistorikk = Utbetalingstidslinjehistorikk()
     private val vedtakshistorikk = Vedtakshistorikk()
@@ -17,7 +19,11 @@ class Søker {
 
     private var tilstand: Tilstand = Tilstand.Start
 
-    internal fun håndterVedtak(vedtak: Vedtakshendelse) {
+    companion object {
+        fun gjenopprett(dtoMottaker: DtoMottaker) = Mottaker()
+    }
+
+    fun håndterVedtak(vedtak: Vedtakshendelse) {
         tilstand.håndterVedtak(this, vedtak)
     }
 
@@ -33,6 +39,11 @@ class Søker {
 
     }
 
+    fun toDto() = DtoMottaker(
+        personident = "",
+        fødselsdato = LocalDate.now()
+    )
+
     private fun beregn() {
         val builder = vedtakshistorikk.utbetalingstidslinjeBuilder(barnetillegg)
         val utbetalingstidslinje = builder.build(aktivitetstidslinje)
@@ -42,12 +53,12 @@ class Søker {
     }
 
     private sealed interface Tilstand {
-        fun håndterVedtak(søker: Søker, vedtak: Vedtakshendelse) {}
-        fun håndterMeldeplikt(søker: Søker, melding: Meldepliktshendelse) {}
-        fun håndterLøsning(søker: Søker, løsning: LøsningBarn) {}
+        fun håndterVedtak(søker: Mottaker, vedtak: Vedtakshendelse) {}
+        fun håndterMeldeplikt(søker: Mottaker, melding: Meldepliktshendelse) {}
+        fun håndterLøsning(søker: Mottaker, løsning: LøsningBarn) {}
 
         object Start : Tilstand {
-            override fun håndterVedtak(søker: Søker, vedtak: Vedtakshendelse) {
+            override fun håndterVedtak(søker: Mottaker, vedtak: Vedtakshendelse) {
                 søker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
                 søker.tilstand = VedtakMottatt
             }
@@ -55,11 +66,11 @@ class Søker {
 
         object VedtakMottatt : Tilstand {
 
-            override fun håndterVedtak(søker: Søker, vedtak: Vedtakshendelse) {
+            override fun håndterVedtak(søker: Mottaker, vedtak: Vedtakshendelse) {
                 søker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
             }
 
-            override fun håndterMeldeplikt(søker: Søker, melding: Meldepliktshendelse) {
+            override fun håndterMeldeplikt(søker: Mottaker, melding: Meldepliktshendelse) {
                 søker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
                 søker.tilstand = MeldepliktshendelseMottatt
             }
@@ -69,15 +80,15 @@ class Søker {
 
             //TODO on entry: behov -> slå opp barn og institusjon
 
-            override fun håndterVedtak(søker: Søker, vedtak: Vedtakshendelse) {
+            override fun håndterVedtak(søker: Mottaker, vedtak: Vedtakshendelse) {
                 søker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
             }
 
-            override fun håndterMeldeplikt(søker: Søker, melding: Meldepliktshendelse) {
+            override fun håndterMeldeplikt(søker: Mottaker, melding: Meldepliktshendelse) {
                 søker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
             }
 
-            override fun håndterLøsning(søker: Søker, løsning: LøsningBarn) {
+            override fun håndterLøsning(søker: Mottaker, løsning: LøsningBarn) {
                 løsning.leggTilBarn(søker.barnetillegg)
 
                 søker.beregn()
@@ -88,12 +99,12 @@ class Søker {
 
         object SisteKompletteGreie : Tilstand { //FIXME: Trenger et bedre navn
 
-            override fun håndterVedtak(søker: Søker, vedtak: Vedtakshendelse) {
+            override fun håndterVedtak(søker: Mottaker, vedtak: Vedtakshendelse) {
                 søker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
                 søker.beregn()
             }
 
-            override fun håndterMeldeplikt(søker: Søker, melding: Meldepliktshendelse) {
+            override fun håndterMeldeplikt(søker: Mottaker, melding: Meldepliktshendelse) {
                 søker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
                 søker.tilstand = MeldepliktshendelseMottatt
             }

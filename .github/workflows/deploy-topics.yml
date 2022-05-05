@@ -1,0 +1,24 @@
+name: Deploy Topic
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.nais/topic-mottakere.yml'
+      - '.github/workflows/deploy-topics.yml'
+
+jobs:
+  deploy-mottakere:
+    name: Deploy mottakere
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy aap.mottakere.v1 to dev
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/topic-mottakere.yml
+          VARS: .nais/dev.yml
+          PRINT_PAYLOAD: true
