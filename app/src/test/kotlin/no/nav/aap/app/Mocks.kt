@@ -7,6 +7,7 @@ class Mocks : AutoCloseable {
     val kafka = KafkaStreamsMock()
 
     override fun close() {
+        kafka.close()
     }
 }
 
