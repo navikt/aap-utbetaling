@@ -22,6 +22,13 @@ internal sealed class Dag(
 
     internal abstract fun toDto(): DtoDag
 
+    private enum class Dagtype {
+        HELG,
+        ARBEIDSDAG,
+        FRAVÆRSDAG,
+        VENTEDAG
+    }
+
     internal class Helg(
         dato: LocalDate,
         private val arbeidstimer: Arbeidstimer
@@ -36,7 +43,7 @@ internal sealed class Dag(
         override fun toDto() = DtoDag(
             dato = dato,
             arbeidstimer = arbeidstimer.toDto(),
-            type = "Helg"
+            type = Dagtype.HELG.name
         )
     }
 
@@ -51,7 +58,7 @@ internal sealed class Dag(
         override fun toDto() = DtoDag(
             dato = dato,
             arbeidstimer = arbeidstimer.toDto(),
-            type = "Arbeidsdag"
+            type = Dagtype.ARBEIDSDAG.name
         )
     }
 
@@ -68,7 +75,7 @@ internal sealed class Dag(
         override fun toDto() = DtoDag(
             dato = dato,
             arbeidstimer = null,
-            type = "Fraværsdag"
+            type = Dagtype.FRAVÆRSDAG.name
         )
     }
 
@@ -84,7 +91,7 @@ internal sealed class Dag(
         override fun toDto() = DtoDag(
             dato = dato,
             arbeidstimer = null,
-            type = "Ventedag"
+            type = Dagtype.VENTEDAG.name
         )
     }
 
@@ -98,6 +105,13 @@ internal sealed class Dag(
 
         internal fun fraværsdag(dato: LocalDate) =
             Fraværsdag(dato)
+
+        internal fun gjenopprett(dtoDag: DtoDag) = when (enumValueOf<Dagtype>(dtoDag.type)) {
+            Dagtype.HELG -> Helg(dtoDag.dato, Arbeidstimer(requireNotNull(dtoDag.arbeidstimer)))
+            Dagtype.ARBEIDSDAG -> Arbeidsdag(dtoDag.dato, Arbeidstimer(requireNotNull(dtoDag.arbeidstimer)))
+            Dagtype.FRAVÆRSDAG -> Fraværsdag(dtoDag.dato)
+            Dagtype.VENTEDAG -> Ventedag(dtoDag.dato)
+        }
     }
 }
 

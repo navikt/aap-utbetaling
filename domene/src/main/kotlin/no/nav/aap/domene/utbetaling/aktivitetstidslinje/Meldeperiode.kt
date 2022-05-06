@@ -30,5 +30,9 @@ internal class Meldeperiode(dager: List<Dag> = emptyList()) {
 
             return this.mapIndexed { i, meldeperiode -> if (i == index) other else meldeperiode }
         }
+
+        internal fun gjenopprett(dtoMeldeperiode: DtoMeldeperiode) = Meldeperiode(
+            dager = dtoMeldeperiode.dager.map { Dag.gjenopprett(it) }
+        )
     }
 }

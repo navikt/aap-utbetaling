@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling.utbetalingslinjer
 
+import no.nav.aap.domene.utbetaling.dto.DtoOppdrag
 import no.nav.aap.domene.utbetaling.visitor.OppdragVisitor
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
@@ -348,4 +349,6 @@ internal class Oppdrag private constructor(
             linkTo = nåværende
         }
     }
+
+    internal fun toDto()= DtoOppdrag()
 }

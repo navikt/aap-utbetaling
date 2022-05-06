@@ -40,7 +40,7 @@ class Mottaker private constructor(
             personident = Personident(dtoMottaker.personident),
             fødselsdato = Fødselsdato(dtoMottaker.fødselsdato),
             vedtakshistorikk = Vedtakshistorikk.gjenopprett(dtoMottaker.vedtakshistorikk),
-            aktivitetstidslinje = Aktivitetstidslinje(),
+            aktivitetstidslinje = Aktivitetstidslinje.gjenopprett(dtoMottaker.aktivitetstidslinje),
             utbetalingstidslinjehistorikk = Utbetalingstidslinjehistorikk(),
             barnetillegg = Barnetillegg(),
             oppdragshistorikk = Oppdragshistorikk(),
@@ -56,7 +56,7 @@ class Mottaker private constructor(
         tilstand.håndterMeldeplikt(this, melding)
     }
 
-    internal fun håndterLøsning(løsning: LøsningBarn) {
+    fun håndterLøsning(løsning: LøsningBarn) {
         tilstand.håndterLøsning(this, løsning)
     }
 
@@ -69,6 +69,8 @@ class Mottaker private constructor(
         fødselsdato = fødselsdato.toDto(),
         vedtakshistorikk = vedtakshistorikk.toDto(),
         aktivitetstidslinje = aktivitetstidslinje.toDto(),
+        utbetalingstidslinjehistorikk = utbetalingstidslinjehistorikk.toDto(),
+        oppdragshistorikk = oppdragshistorikk.toDto(),
         tilstand = tilstand.toDto()
     )
 

@@ -1,11 +1,8 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag
-import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
+import no.nav.aap.domene.utbetaling.entitet.*
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
-import no.nav.aap.domene.utbetaling.entitet.Beløp
-import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
-import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.BrukeraktivitetPerDag
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
@@ -28,7 +25,7 @@ internal class MottakerTest {
 
     @Test
     fun `Nytt vedtak oppdaterer vedtakshistorikk`() {
-        val mottaker = Mottaker()
+        val mottaker = Mottaker(Personident("12345678910"), Fødselsdato(30 november 1979))
         mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
@@ -44,7 +41,7 @@ internal class MottakerTest {
 
     @Test
     fun `Nytt vedtak setter gjeldende vedtak i vedtakshistorikk`() {
-        val mottaker = Mottaker()
+        val mottaker = Mottaker(Personident("12345678910"), Fødselsdato(30 november 1979))
         val vedtak1 = Vedtakshendelse(
             vedtaksid = UUID.randomUUID(),
             innvilget = true,
@@ -70,7 +67,7 @@ internal class MottakerTest {
 
     @Test
     fun `uavhengige innmeldte brukeraktiviteter aggregeres`() {
-        val mottaker = Mottaker()
+        val mottaker = Mottaker(Personident("12345678910"), Fødselsdato(30 november 1979))
 
         mottaker.håndterVedtak(
             Vedtakshendelse(
@@ -98,7 +95,7 @@ internal class MottakerTest {
 
     @Test
     fun `Flere uavhengige innmeldte brukeraktiviteter aggregeres`() {
-        val mottaker = Mottaker()
+        val mottaker = Mottaker(Personident("12345678910"), Fødselsdato(30 november 1979))
 
         mottaker.håndterVedtak(
             Vedtakshendelse(
@@ -129,7 +126,7 @@ internal class MottakerTest {
 
     @Test
     fun `Utbetalingsdager beregner beløp ved håndtering av barnetillegg`() {
-        val mottaker = Mottaker()
+        val mottaker = Mottaker(Personident("12345678910"), Fødselsdato(30 november 1979))
 
         mottaker.håndterVedtak(
             Vedtakshendelse(
@@ -159,7 +156,7 @@ internal class MottakerTest {
 
     @Test
     fun `Utbetalingsdager lager oppdrag ved håndtering av barnetillegg`() {
-        val mottaker = Mottaker()
+        val mottaker = Mottaker(Personident("12345678910"), Fødselsdato(30 november 1979))
 
         mottaker.håndterVedtak(
             Vedtakshendelse(
@@ -190,7 +187,7 @@ internal class MottakerTest {
 
     @Test
     fun `Utbetalingsdager med to fraværsdager trekkes`() {
-        val mottaker = Mottaker()
+        val mottaker = Mottaker(Personident("12345678910"), Fødselsdato(30 november 1979))
 
         mottaker.håndterVedtak(
             Vedtakshendelse(
@@ -233,7 +230,7 @@ internal class MottakerTest {
 
     @Test
     fun `Utbetalingsdager med arbeid i helg gir 60 prosent utbetaling`() {
-        val mottaker = Mottaker()
+        val mottaker = Mottaker(Personident("12345678910"), Fødselsdato(30 november 1979))
 
         mottaker.håndterVedtak(
             Vedtakshendelse(
@@ -276,7 +273,7 @@ internal class MottakerTest {
 
     @Test
     fun `Fyller 25 midt i meldeperioden, grunnlag skal justeres opp`() {
-        val mottaker = Mottaker()
+        val mottaker = Mottaker(Personident("12345678910"), Fødselsdato(8 mai 1997))
 
         mottaker.håndterVedtak(
             Vedtakshendelse(
@@ -319,7 +316,7 @@ internal class MottakerTest {
 
     @Test
     fun `Endringsvedtak om endret grunnlag endrer utbetaling`() {
-        val mottaker = Mottaker()
+        val mottaker = Mottaker(Personident("12345678910"), Fødselsdato(30 november 1979))
 
         mottaker.håndterVedtak(
             Vedtakshendelse(
@@ -378,7 +375,7 @@ internal class MottakerTest {
 
     @Test
     fun `Ny meldepliktshendelse mottatt etter første beregning - trigger ikke ny beregning fordi venter på løsning`() {
-        val mottaker = Mottaker()
+        val mottaker = Mottaker(Personident("12345678910"), Fødselsdato(30 november 1979))
 
         mottaker.håndterVedtak(
             Vedtakshendelse(
@@ -447,7 +444,7 @@ internal class MottakerTest {
 
     @Test
     fun `Ny meldepliktshendelse og løsning mottatt etter første beregning - trigger ny beregning`() {
-        val mottaker = Mottaker()
+        val mottaker = Mottaker(Personident("12345678910"), Fødselsdato(30 november 1979))
 
         mottaker.håndterVedtak(
             Vedtakshendelse(
@@ -518,7 +515,7 @@ internal class MottakerTest {
 
     @Test
     fun `Endringsvedtak om endret grunnlag etter meldepliktshendelse, men før løsning er mottatt`() {
-        val mottaker = Mottaker()
+        val mottaker = Mottaker(Personident("12345678910"), Fødselsdato(30 november 1979))
 
         mottaker.håndterVedtak(
             Vedtakshendelse(
@@ -572,7 +569,7 @@ internal class MottakerTest {
 
     @Test
     fun `Endring av tidligere innsendt meldeplikt trigger ny beregning`() {
-        val mottaker = Mottaker()
+        val mottaker = Mottaker(Personident("12345678910"), Fødselsdato(30 november 1979))
 
         mottaker.håndterVedtak(
             Vedtakshendelse(
@@ -694,7 +691,11 @@ internal class MottakerTest {
             antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje.computeIfPresent(utbetalingstidslinjeIndex) { _, old -> old + 1 }
         }
 
-        override fun visitUtbetalingMedBeløp(dag: Utbetalingstidslinjedag.Utbetalingsdag, dato: LocalDate, beløp: Beløp) {
+        override fun visitUtbetalingMedBeløp(
+            dag: Utbetalingstidslinjedag.Utbetalingsdag,
+            dato: LocalDate,
+            beløp: Beløp
+        ) {
             antallUtbetalingsdagerIUtbetalingstidslinje.computeIfPresent(utbetalingstidslinjeIndex) { _, old -> old + 1 }
         }
 

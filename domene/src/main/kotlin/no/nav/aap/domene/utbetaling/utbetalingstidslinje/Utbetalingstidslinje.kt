@@ -1,6 +1,7 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
 import no.nav.aap.domene.utbetaling.Barnetillegg
+import no.nav.aap.domene.utbetaling.dto.DtoUtbetalingstidslinje
 import no.nav.aap.domene.utbetaling.visitor.UtbetalingstidslinjeVisitor
 
 internal class Utbetalingstidslinje(
@@ -24,4 +25,6 @@ internal class Utbetalingstidslinje(
         dager.forEach { it.accept(visitor) }
         visitor.postVisitUtbetalingstidslinje(this)
     }
+
+    internal fun toDto() = DtoUtbetalingstidslinje(dager.map { it.toDto() })
 }

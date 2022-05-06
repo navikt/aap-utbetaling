@@ -11,6 +11,7 @@ import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.aap.app.kafka.Tables
 import no.nav.aap.app.kafka.Topics
+import no.nav.aap.app.stream.løsningStream
 import no.nav.aap.app.stream.meldepliktStream
 import no.nav.aap.app.stream.vedtakStream
 import no.nav.aap.kafka.streams.*
@@ -47,6 +48,7 @@ internal fun StreamsBuilder.createTopology(){
 
     vedtakStream(mottakerKtable)
     meldepliktStream(mottakerKtable)
+    løsningStream(mottakerKtable)
 }
 
 private fun Routing.actuator(prometheus: PrometheusMeterRegistry, kafka: KStreams) {

@@ -3,9 +3,7 @@ package no.nav.aap.app
 import io.ktor.server.testing.*
 import kotlinx.coroutines.runBlocking
 import no.nav.aap.app.kafka.Topics
-import no.nav.aap.domene.utbetaling.dto.DtoAkivitetPerDag
-import no.nav.aap.domene.utbetaling.dto.DtoMeldepliktshendelse
-import no.nav.aap.domene.utbetaling.dto.DtoVedtakshendelse
+import no.nav.aap.domene.utbetaling.dto.*
 import no.nav.aap.kafka.streams.test.readAndAssert
 import org.junit.jupiter.api.Test
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables
@@ -35,7 +33,6 @@ class AppTest {
         }
     }
 
-
     @Test
     fun `Innsendt vedtak oppretter en mottaker med vedtakshistorikk`() = withTestApp { mocks ->
         val vedtakTopic = mocks.kafka.inputTopic(Topics.vedtak)
@@ -56,7 +53,6 @@ class AppTest {
             it.vedtakshistorikk.size == 1 && it.vedtakshistorikk[0].vedtaksid == vedtaksid
         }
     }
-
 
     @Test
     fun `Innsendt meldepliktshendelse oppretter en periode i aktivitetstidslinja`() = withTestApp { mocks ->
@@ -92,7 +88,46 @@ class AppTest {
         }
     }
 
+    @Test
+    fun `Innsendt løsning beregner en utbetaling`() = withTestApp { mocks ->
+        val vedtakTopic = mocks.kafka.inputTopic(Topics.vedtak)
+        val mottakTopic = mocks.kafka.outputTopic(Topics.mottakere)
+        val meldepliktTopic = mocks.kafka.inputTopic(Topics.meldeplikt)
+        val løsningTopic = mocks.kafka.inputTopic(Topics.løsning)
+        val vedtaksid = UUID.randomUUID()
+        vedtakTopic.produce("123") {
+            DtoVedtakshendelse(
+                vedtaksid = vedtaksid,
+                innvilget = true,
+                grunnlagsfaktor = 3.0,
+                vedtaksdato = LocalDate.now(),
+                virkningsdato = LocalDate.now(),
+                fødselsdato = LocalDate.now()
+            )
+        }
 
+        meldepliktTopic.produce("123") {
+            DtoMeldepliktshendelse(
+                aktivitetPerDag = listOf(
+                    DtoAkivitetPerDag(
+                        dato = LocalDate.now(),
+                        arbeidstimer = 0.0,
+                        fraværsdag = true
+                    )
+                )
+            )
+        }
+
+        løsningTopic.produce("123") {
+            DtoLøsning(
+                barn = listOf(DtoLøsningBarn(LocalDate.now()))
+            )
+        }
+
+        mottakTopic.readAndAssert().hasValuesForPredicate("123", 1) {
+            it.utbetalingstidslinjehistorikk.size == 1 && it.oppdragshistorikk.size == 1
+        }
+    }
 }
 
 private fun withTestApp(test: ApplicationTestBuilder.(mocks: Mocks) -> Unit) = Mocks().use { mocks ->

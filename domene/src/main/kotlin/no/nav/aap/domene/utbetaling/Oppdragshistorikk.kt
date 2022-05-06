@@ -1,9 +1,9 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdrag
-import no.nav.aap.domene.utbetaling.visitor.OppdragVisitor
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.OppdragBuilder
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
+import no.nav.aap.domene.utbetaling.visitor.OppdragVisitor
 
 internal class Oppdragshistorikk {
     private val oppdragshistorikk: MutableList<Oppdrag> = mutableListOf()
@@ -18,4 +18,6 @@ internal class Oppdragshistorikk {
         oppdragshistorikk.forEach { it.accept(oppdragVisitor) }
         oppdragVisitor.postVisitOppdragshistorikk()
     }
+
+    internal fun toDto() = oppdragshistorikk.map { it.toDto() }
 }

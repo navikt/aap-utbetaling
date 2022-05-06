@@ -8,6 +8,8 @@ data class DtoMottaker(
     val fødselsdato: LocalDate,
     val vedtakshistorikk: List<DtoVedtak>,
     val aktivitetstidslinje: List<DtoMeldeperiode>,
+    val utbetalingstidslinjehistorikk:List<DtoUtbetalingstidslinje>,
+    val oppdragshistorikk: List<DtoOppdrag>,
     val tilstand: String
 )
 

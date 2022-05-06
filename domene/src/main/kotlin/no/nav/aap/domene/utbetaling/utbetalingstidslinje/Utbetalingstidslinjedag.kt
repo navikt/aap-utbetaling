@@ -1,6 +1,7 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
 import no.nav.aap.domene.utbetaling.Barnetillegg
+import no.nav.aap.domene.utbetaling.dto.DtoUtbetalingstidslinjedag
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnbeløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
@@ -17,6 +18,7 @@ internal sealed class Utbetalingstidslinjedag(
     internal open fun barnetillegg(barnetillegg: Barnetillegg) {}
 
     internal abstract fun accept(visitor: UtbetalingsdagVisitor)
+    internal abstract fun toDto(): DtoUtbetalingstidslinjedag
 
     internal class Utbetalingsdag(
         dato: LocalDate,
@@ -46,6 +48,18 @@ internal sealed class Utbetalingstidslinjedag(
         override fun accept(visitor: UtbetalingsdagVisitor) {
             visitor.visitUtbetalingMedBeløp(this, dato, beløp)
         }
+
+        override fun toDto() = DtoUtbetalingstidslinjedag(
+            dato = dato,
+            grunnlagsfaktor = grunnlagsfaktor.toDto(),
+            barnetillegg = barnetillegg.toDto(),
+            grunnlag = grunnlag.toDto(),
+            dagsats = dagsats.toDto(),
+            høyestebeløpMedBarnetillegg = høyestebeløpMedBarnetillegg.toDto(),
+            beløpMedBarnetillegg = beløpMedBarnetillegg.toDto(),
+            beløp = beløp.toDto(),
+            arbeidsprosent = arbeidsprosent
+        )
     }
 
     internal class IkkeUtbetalingsdag(dato: LocalDate) : Utbetalingstidslinjedag(dato) {
@@ -57,5 +71,17 @@ internal sealed class Utbetalingstidslinjedag(
         override fun accept(visitor: UtbetalingsdagVisitor) {
             visitor.visitIkkeUtbetaling(this, dato)
         }
+
+        override fun toDto() = DtoUtbetalingstidslinjedag(
+            dato = dato,
+            grunnlagsfaktor = null,
+            barnetillegg = null,
+            grunnlag = null,
+            dagsats = null,
+            høyestebeløpMedBarnetillegg = null,
+            beløpMedBarnetillegg = null,
+            beløp = null,
+            arbeidsprosent = arbeidsprosent
+        )
     }
 }

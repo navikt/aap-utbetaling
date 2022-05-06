@@ -9,6 +9,12 @@ internal class Aktivitetstidslinje(meldeperioder: List<Meldeperiode> = emptyList
 
     private var meldeperioder: List<Meldeperiode> = meldeperioder.toMutableList()
 
+    internal companion object{
+        internal fun gjenopprett(dtoMeldeperioder: List<DtoMeldeperiode>)=Aktivitetstidslinje(
+            meldeperioder = dtoMeldeperioder.map { Meldeperiode.gjenopprett(it) }
+        )
+    }
+
     internal fun merge(other: Meldeperiode) {
         meldeperioder = this.meldeperioder.merge(other)
     }
