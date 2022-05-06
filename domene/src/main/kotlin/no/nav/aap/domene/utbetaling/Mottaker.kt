@@ -40,7 +40,7 @@ class Mottaker {
     }
 
     fun toDto() = DtoMottaker(
-        personident = "",
+        personident = "123",
         fødselsdato = LocalDate.now()
     )
 

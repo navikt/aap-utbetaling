@@ -5,7 +5,6 @@ import kotlinx.coroutines.runBlocking
 import no.nav.aap.app.kafka.Topics
 import no.nav.aap.domene.utbetaling.dto.DtoVedtak
 import no.nav.aap.kafka.streams.test.readAndAssert
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables
 import java.time.LocalDate
@@ -13,13 +12,10 @@ import java.util.*
 
 class AppTest {
 
-    @Disabled("Disablet på grunn av feil på Unknown topic, prøver å finne ut grunnen")
     @Test
     fun `Innsendt vedtak oppretter en mottaker`() {
         withTestApp { mocks ->
             val vedtakTopic = mocks.kafka.inputTopic(Topics.vedtak)
-            mocks.kafka.outputTopic(Topics.vedtak)
-            mocks.kafka.inputTopic(Topics.mottakere)
             val mottakTopic = mocks.kafka.outputTopic(Topics.mottakere)
 
             vedtakTopic.produce("123") {
