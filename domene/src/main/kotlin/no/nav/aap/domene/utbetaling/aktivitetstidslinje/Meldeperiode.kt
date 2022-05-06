@@ -1,6 +1,6 @@
 package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
-import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
+import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 
 internal class Meldeperiode(dager: List<Dag> = emptyList()) {
     private val dager: MutableList<Dag> = dager.toMutableList()
@@ -9,7 +9,7 @@ internal class Meldeperiode(dager: List<Dag> = emptyList()) {
         dager.add(dag)
     }
 
-    internal fun accept(visitor: SøkerVisitor) {
+    internal fun accept(visitor: MottakerVisitor) {
         visitor.preVisitMeldeperiode(this)
         dager.forEach { it.accept(visitor) }
         visitor.postVisitMeldeperiode(this)

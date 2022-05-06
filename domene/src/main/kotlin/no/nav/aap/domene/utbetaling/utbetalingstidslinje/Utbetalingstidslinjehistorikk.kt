@@ -2,7 +2,7 @@ package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
 import no.nav.aap.domene.utbetaling.Barnetillegg
 import no.nav.aap.domene.utbetaling.Oppdragshistorikk
-import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
+import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 
 internal class Utbetalingstidslinjehistorikk(
     utbetalingstidslinjer: List<Utbetalingstidslinje> = emptyList()
@@ -19,7 +19,7 @@ internal class Utbetalingstidslinjehistorikk(
         sisteUtbetalingstidslinje.barnetillegg(barnetillegg)
     }
 
-    internal fun accept(visitor: SøkerVisitor) {
+    internal fun accept(visitor: MottakerVisitor) {
         visitor.preVisitUtbetalingstidslinjehistorikk(this)
         utbetalingstidslinjer.forEach { it.accept(visitor) }
         visitor.postVisitUtbetalingstidslinjehistorikk(this)

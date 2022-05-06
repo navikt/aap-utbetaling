@@ -2,7 +2,7 @@ package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.Vedtak.Companion.sortertPåDato
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
-import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
+import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 
 internal class Vedtakshistorikk {
 
@@ -18,7 +18,7 @@ internal class Vedtakshistorikk {
     internal fun utbetalingstidslinjeBuilder(barnetillegg: Barnetillegg) =
         finnGjeldendeVedtak().utbetalingstidslinjeBuilder(barnetillegg)
 
-    internal fun accept(visitor: SøkerVisitor) {
+    internal fun accept(visitor: MottakerVisitor) {
         visitor.visitVedtakshistorikk(vedtakshistorikk.toList())
         visitor.visitVedtakshistorikk(finnGjeldendeVedtak())
     }

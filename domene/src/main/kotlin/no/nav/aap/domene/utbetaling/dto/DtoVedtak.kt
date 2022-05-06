@@ -15,8 +15,8 @@ data class DtoVedtak(
     val virkningsdato: LocalDate,
     val fødselsdato: LocalDate
 ) {
-    fun håndter(søker: Mottaker) {
-        søker.håndterVedtak(
+    fun håndter(mottaker: Mottaker) {
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = vedtaksid,
                 innvilget = innvilget,

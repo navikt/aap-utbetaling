@@ -7,7 +7,7 @@ import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningBarn
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningInstitusjon
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjehistorikk
-import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
+import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 import java.time.LocalDate
 
 class Mottaker {
@@ -53,26 +53,26 @@ class Mottaker {
     }
 
     private sealed interface Tilstand {
-        fun håndterVedtak(søker: Mottaker, vedtak: Vedtakshendelse) {}
-        fun håndterMeldeplikt(søker: Mottaker, melding: Meldepliktshendelse) {}
-        fun håndterLøsning(søker: Mottaker, løsning: LøsningBarn) {}
+        fun håndterVedtak(mottaker: Mottaker, vedtak: Vedtakshendelse) {}
+        fun håndterMeldeplikt(mottaker: Mottaker, melding: Meldepliktshendelse) {}
+        fun håndterLøsning(mottaker: Mottaker, løsning: LøsningBarn) {}
 
         object Start : Tilstand {
-            override fun håndterVedtak(søker: Mottaker, vedtak: Vedtakshendelse) {
-                søker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
-                søker.tilstand = VedtakMottatt
+            override fun håndterVedtak(mottaker: Mottaker, vedtak: Vedtakshendelse) {
+                mottaker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
+                mottaker.tilstand = VedtakMottatt
             }
         }
 
         object VedtakMottatt : Tilstand {
 
-            override fun håndterVedtak(søker: Mottaker, vedtak: Vedtakshendelse) {
-                søker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
+            override fun håndterVedtak(mottaker: Mottaker, vedtak: Vedtakshendelse) {
+                mottaker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
             }
 
-            override fun håndterMeldeplikt(søker: Mottaker, melding: Meldepliktshendelse) {
-                søker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
-                søker.tilstand = MeldepliktshendelseMottatt
+            override fun håndterMeldeplikt(mottaker: Mottaker, melding: Meldepliktshendelse) {
+                mottaker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
+                mottaker.tilstand = MeldepliktshendelseMottatt
             }
         }
 
@@ -80,38 +80,38 @@ class Mottaker {
 
             //TODO on entry: behov -> slå opp barn og institusjon
 
-            override fun håndterVedtak(søker: Mottaker, vedtak: Vedtakshendelse) {
-                søker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
+            override fun håndterVedtak(mottaker: Mottaker, vedtak: Vedtakshendelse) {
+                mottaker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
             }
 
-            override fun håndterMeldeplikt(søker: Mottaker, melding: Meldepliktshendelse) {
-                søker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
+            override fun håndterMeldeplikt(mottaker: Mottaker, melding: Meldepliktshendelse) {
+                mottaker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
             }
 
-            override fun håndterLøsning(søker: Mottaker, løsning: LøsningBarn) {
-                løsning.leggTilBarn(søker.barnetillegg)
+            override fun håndterLøsning(mottaker: Mottaker, løsning: LøsningBarn) {
+                løsning.leggTilBarn(mottaker.barnetillegg)
 
-                søker.beregn()
+                mottaker.beregn()
 
-                søker.tilstand = SisteKompletteGreie
+                mottaker.tilstand = SisteKompletteGreie
             }
         }
 
         object SisteKompletteGreie : Tilstand { //FIXME: Trenger et bedre navn
 
-            override fun håndterVedtak(søker: Mottaker, vedtak: Vedtakshendelse) {
-                søker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
-                søker.beregn()
+            override fun håndterVedtak(mottaker: Mottaker, vedtak: Vedtakshendelse) {
+                mottaker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
+                mottaker.beregn()
             }
 
-            override fun håndterMeldeplikt(søker: Mottaker, melding: Meldepliktshendelse) {
-                søker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
-                søker.tilstand = MeldepliktshendelseMottatt
+            override fun håndterMeldeplikt(mottaker: Mottaker, melding: Meldepliktshendelse) {
+                mottaker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
+                mottaker.tilstand = MeldepliktshendelseMottatt
             }
         }
     }
 
-    internal fun accept(visitor: SøkerVisitor) {
+    internal fun accept(visitor: MottakerVisitor) {
         aktivitetstidslinje.accept(visitor)
         utbetalingstidslinjehistorikk.accept(visitor)
         vedtakshistorikk.accept(visitor)

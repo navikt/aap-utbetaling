@@ -16,7 +16,7 @@ import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdrag
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdragstatus
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjedag
-import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
+import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
@@ -28,8 +28,8 @@ internal class MottakerTest {
 
     @Test
     fun `Nytt vedtak oppdaterer vedtakshistorikk`() {
-        val søker = Mottaker()
-        søker.håndterVedtak(
+        val mottaker = Mottaker()
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
@@ -39,12 +39,12 @@ internal class MottakerTest {
                 fødselsdato = Fødselsdato(30 november 1979)
             )
         )
-        assertEquals(1, søker.inspektør.vedtakListeSize)
+        assertEquals(1, mottaker.inspektør.vedtakListeSize)
     }
 
     @Test
     fun `Nytt vedtak setter gjeldende vedtak i vedtakshistorikk`() {
-        val søker = Mottaker()
+        val mottaker = Mottaker()
         val vedtak1 = Vedtakshendelse(
             vedtaksid = UUID.randomUUID(),
             innvilget = true,
@@ -53,8 +53,8 @@ internal class MottakerTest {
             virkningsdato = 2 mai 2022,
             fødselsdato = Fødselsdato(30 november 1979)
         )
-        søker.håndterVedtak(vedtak1)
-        assertEquals(Vedtak.opprettFraVedtakshendelse(vedtak1), søker.inspektør.gjeldendeVedtak)
+        mottaker.håndterVedtak(vedtak1)
+        assertEquals(Vedtak.opprettFraVedtakshendelse(vedtak1), mottaker.inspektør.gjeldendeVedtak)
 
         val vedtak2 = Vedtakshendelse(
             vedtaksid = UUID.randomUUID(),
@@ -64,15 +64,15 @@ internal class MottakerTest {
             virkningsdato = 4 mai 2022,
             fødselsdato = Fødselsdato(30 november 1979)
         )
-        søker.håndterVedtak(vedtak2)
-        assertEquals(Vedtak.opprettFraVedtakshendelse(vedtak2), søker.inspektør.gjeldendeVedtak)
+        mottaker.håndterVedtak(vedtak2)
+        assertEquals(Vedtak.opprettFraVedtakshendelse(vedtak2), mottaker.inspektør.gjeldendeVedtak)
     }
 
     @Test
     fun `uavhengige innmeldte brukeraktiviteter aggregeres`() {
-        val søker = Mottaker()
+        val mottaker = Mottaker()
 
-        søker.håndterVedtak(
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
@@ -82,25 +82,25 @@ internal class MottakerTest {
                 fødselsdato = Fødselsdato(30 november 1979)
             )
         )
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, false))
             )
         )
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(BrukeraktivitetPerDag(3 mai 2022, 0.arbeidstimer, false))
             )
         )
 
-        assertEquals(2, søker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(2, mottaker.inspektør.antallDagerIAktivitetstidslinje)
     }
 
     @Test
     fun `Flere uavhengige innmeldte brukeraktiviteter aggregeres`() {
-        val søker = Mottaker()
+        val mottaker = Mottaker()
 
-        søker.håndterVedtak(
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
@@ -110,7 +110,7 @@ internal class MottakerTest {
                 fødselsdato = Fødselsdato(30 november 1979)
             )
         )
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
                     BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, false),
@@ -118,20 +118,20 @@ internal class MottakerTest {
                 )
             )
         )
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(BrukeraktivitetPerDag(4 mai 2022, 0.arbeidstimer, false))
             )
         )
 
-        assertEquals(3, søker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(3, mottaker.inspektør.antallDagerIAktivitetstidslinje)
     }
 
     @Test
     fun `Utbetalingsdager beregner beløp ved håndtering av barnetillegg`() {
-        val søker = Mottaker()
+        val mottaker = Mottaker()
 
-        søker.håndterVedtak(
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
@@ -141,7 +141,7 @@ internal class MottakerTest {
                 fødselsdato = Fødselsdato(30 november 1979)
             )
         )
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
                     BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, false),
@@ -150,18 +150,18 @@ internal class MottakerTest {
             )
         )
 
-        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+        mottaker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
 
-        assertEquals(2, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(2, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(2, mottaker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(2, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(0, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
     }
 
     @Test
     fun `Utbetalingsdager lager oppdrag ved håndtering av barnetillegg`() {
-        val søker = Mottaker()
+        val mottaker = Mottaker()
 
-        søker.håndterVedtak(
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
@@ -171,7 +171,7 @@ internal class MottakerTest {
                 fødselsdato = Fødselsdato(30 november 1979)
             )
         )
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
                     BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, false),
@@ -180,19 +180,19 @@ internal class MottakerTest {
             )
         )
 
-        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+        mottaker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
 
-        assertEquals(2, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(2, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(2214, søker.inspektør.totalBeløp[0])
+        assertEquals(2, mottaker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(2, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(0, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(2214, mottaker.inspektør.totalBeløp[0])
     }
 
     @Test
     fun `Utbetalingsdager med to fraværsdager trekkes`() {
-        val søker = Mottaker()
+        val mottaker = Mottaker()
 
-        søker.håndterVedtak(
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
@@ -202,7 +202,7 @@ internal class MottakerTest {
                 fødselsdato = Fødselsdato(30 november 1979)
             )
         )
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
                     BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, true), // Mandag
@@ -223,19 +223,19 @@ internal class MottakerTest {
             )
         )
 
-        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+        mottaker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
 
-        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(8856, søker.inspektør.totalBeløp[0])
+        assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(8, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(2, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(8856, mottaker.inspektør.totalBeløp[0])
     }
 
     @Test
     fun `Utbetalingsdager med arbeid i helg gir 60 prosent utbetaling`() {
-        val søker = Mottaker()
+        val mottaker = Mottaker()
 
-        søker.håndterVedtak(
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
@@ -245,7 +245,7 @@ internal class MottakerTest {
                 fødselsdato = Fødselsdato(30 november 1979)
             )
         )
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
                     BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, false), // Mandag
@@ -266,19 +266,19 @@ internal class MottakerTest {
             )
         )
 
-        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+        mottaker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
 
-        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(10, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(6640, søker.inspektør.totalBeløp[0])
+        assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(10, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(0, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(6640, mottaker.inspektør.totalBeløp[0])
     }
 
     @Test
     fun `Fyller 25 midt i meldeperioden, grunnlag skal justeres opp`() {
-        val søker = Mottaker()
+        val mottaker = Mottaker()
 
-        søker.håndterVedtak(
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
@@ -288,7 +288,7 @@ internal class MottakerTest {
                 fødselsdato = Fødselsdato(8 mai 1997)
             )
         )
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
                     BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, false), // Mandag
@@ -309,19 +309,19 @@ internal class MottakerTest {
             )
         )
 
-        søker.håndterLøsning(LøsningBarn(listOf()))
+        mottaker.håndterLøsning(LøsningBarn(listOf()))
 
-        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(10, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(6820, søker.inspektør.totalBeløp[0])
+        assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(10, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(0, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(6820, mottaker.inspektør.totalBeløp[0])
     }
 
     @Test
     fun `Endringsvedtak om endret grunnlag endrer utbetaling`() {
-        val søker = Mottaker()
+        val mottaker = Mottaker()
 
-        søker.håndterVedtak(
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
@@ -331,7 +331,7 @@ internal class MottakerTest {
                 fødselsdato = Fødselsdato(30 november 1979)
             )
         )
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
                     BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, true), // Mandag
@@ -352,14 +352,14 @@ internal class MottakerTest {
             )
         )
 
-        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+        mottaker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
 
-        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(8856, søker.inspektør.totalBeløp[0])
+        assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(8, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(2, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(8856, mottaker.inspektør.totalBeløp[0])
 
-        søker.håndterVedtak(
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
@@ -370,17 +370,17 @@ internal class MottakerTest {
             )
         )
 
-        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
-        assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
-        assertEquals(11016, søker.inspektør.totalBeløp[1])
+        assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(8, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertEquals(2, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertEquals(11016, mottaker.inspektør.totalBeløp[1])
     }
 
     @Test
     fun `Ny meldepliktshendelse mottatt etter første beregning - trigger ikke ny beregning fordi venter på løsning`() {
-        val søker = Mottaker()
+        val mottaker = Mottaker()
 
-        søker.håndterVedtak(
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
@@ -390,7 +390,7 @@ internal class MottakerTest {
                 fødselsdato = Fødselsdato(30 november 1979)
             )
         )
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
                     BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, true), // Mandag
@@ -411,14 +411,14 @@ internal class MottakerTest {
             )
         )
 
-        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+        mottaker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
 
-        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(8856, søker.inspektør.totalBeløp[0])
+        assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(8, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(2, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(8856, mottaker.inspektør.totalBeløp[0])
 
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
                     BrukeraktivitetPerDag(16 mai 2022, 0.arbeidstimer, true), // Mandag
@@ -439,17 +439,17 @@ internal class MottakerTest {
             )
         )
 
-        assertEquals(28, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertNull(søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
-        assertNull(søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
-        assertNull(søker.inspektør.totalBeløp.getOrNull(1))
+        assertEquals(28, mottaker.inspektør.antallDagerIAktivitetstidslinje)
+        assertNull(mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertNull(mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertNull(mottaker.inspektør.totalBeløp.getOrNull(1))
     }
 
     @Test
     fun `Ny meldepliktshendelse og løsning mottatt etter første beregning - trigger ny beregning`() {
-        val søker = Mottaker()
+        val mottaker = Mottaker()
 
-        søker.håndterVedtak(
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
@@ -459,7 +459,7 @@ internal class MottakerTest {
                 fødselsdato = Fødselsdato(30 november 1979)
             )
         )
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
                     BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, true), // Mandag
@@ -480,14 +480,14 @@ internal class MottakerTest {
             )
         )
 
-        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+        mottaker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
 
-        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(8856, søker.inspektør.totalBeløp[0])
+        assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(8, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(2, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(8856, mottaker.inspektør.totalBeløp[0])
 
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
                     BrukeraktivitetPerDag(16 mai 2022, 0.arbeidstimer, true), // Mandag
@@ -508,19 +508,19 @@ internal class MottakerTest {
             )
         )
 
-        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+        mottaker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
 
-        assertEquals(28, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(16, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
-        assertEquals(4, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
-        assertEquals(17712, søker.inspektør.totalBeløp[1])
+        assertEquals(28, mottaker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(16, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertEquals(4, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertEquals(17712, mottaker.inspektør.totalBeløp[1])
     }
 
     @Test
     fun `Endringsvedtak om endret grunnlag etter meldepliktshendelse, men før løsning er mottatt`() {
-        val søker = Mottaker()
+        val mottaker = Mottaker()
 
-        søker.håndterVedtak(
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
@@ -530,7 +530,7 @@ internal class MottakerTest {
                 fødselsdato = Fødselsdato(30 november 1979)
             )
         )
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
                     BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, true), // Mandag
@@ -551,7 +551,7 @@ internal class MottakerTest {
             )
         )
 
-        søker.håndterVedtak(
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
@@ -562,19 +562,19 @@ internal class MottakerTest {
             )
         )
 
-        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+        mottaker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
 
-        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(11016, søker.inspektør.totalBeløp[0])
+        assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(8, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(2, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(11016, mottaker.inspektør.totalBeløp[0])
     }
 
     @Test
     fun `Endring av tidligere innsendt meldeplikt trigger ny beregning`() {
-        val søker = Mottaker()
+        val mottaker = Mottaker()
 
-        søker.håndterVedtak(
+        mottaker.håndterVedtak(
             Vedtakshendelse(
                 vedtaksid = UUID.randomUUID(),
                 innvilget = true,
@@ -584,7 +584,7 @@ internal class MottakerTest {
                 fødselsdato = Fødselsdato(30 november 1979)
             )
         )
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
                     BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, true), // Mandag
@@ -605,15 +605,15 @@ internal class MottakerTest {
             )
         )
 
-        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+        mottaker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
 
-        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(8, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(2, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(8856, søker.inspektør.totalBeløp[0])
+        assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(8, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(2, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
+        assertEquals(8856, mottaker.inspektør.totalBeløp[0])
 
 
-        søker.håndterMeldeplikt(
+        mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
                 brukersAktivitet = listOf(
                     BrukeraktivitetPerDag(2 mai 2022, 0.arbeidstimer, false), // Mandag
@@ -634,17 +634,17 @@ internal class MottakerTest {
             )
         )
 
-        søker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
+        mottaker.håndterLøsning(LøsningBarn(listOf(Barnetillegg.Barn(Fødselsdato(5 juni 2010)))))
 
-        assertEquals(14, søker.inspektør.antallDagerIAktivitetstidslinje)
-        assertEquals(10, søker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
-        assertEquals(0, søker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
-        assertEquals(11070, søker.inspektør.totalBeløp[1])
+        assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
+        assertEquals(10, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertEquals(0, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
+        assertEquals(11070, mottaker.inspektør.totalBeløp[1])
     }
 
     private val Mottaker.inspektør get() = TestVisitor(this)
 
-    private class TestVisitor(mottaker: Mottaker) : SøkerVisitor {
+    private class TestVisitor(mottaker: Mottaker) : MottakerVisitor {
 
         var vedtakListeSize: Int = -1
         var antallDagerIAktivitetstidslinje: Int = 0

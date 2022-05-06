@@ -5,7 +5,7 @@ import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import no.nav.aap.domene.utbetaling.hendelse.BrukeraktivitetPerDag
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.januar
-import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
+import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -124,7 +124,7 @@ internal class AktivitetstidslinjeTest {
         assertEquals(10, visitor.antallArbeidsdager)
     }
 
-    private class TidslinjeVisitor : SøkerVisitor {
+    private class TidslinjeVisitor : MottakerVisitor {
         var antallMeldeperioder = 0
         var antallDager = 0
         var antallHelgedager = 0

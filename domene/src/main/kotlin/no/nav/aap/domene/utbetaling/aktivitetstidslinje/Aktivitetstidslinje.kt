@@ -2,7 +2,7 @@ package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Meldeperiode.Companion.merge
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
-import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
+import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 
 internal class Aktivitetstidslinje(meldeperioder: List<Meldeperiode> = emptyList()) {
 
@@ -20,7 +20,7 @@ internal class Aktivitetstidslinje(meldeperioder: List<Meldeperiode> = emptyList
         merge(meldeperiode)
     }
 
-    internal fun accept(visitor: SøkerVisitor) {
+    internal fun accept(visitor: MottakerVisitor) {
         visitor.preVisitTidslinje(this)
         meldeperioder.forEach { it.accept(visitor) }
         visitor.postVisitTidslinje(this)

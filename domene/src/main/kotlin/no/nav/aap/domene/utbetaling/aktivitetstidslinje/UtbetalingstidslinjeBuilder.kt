@@ -8,14 +8,14 @@ import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjedag
-import no.nav.aap.domene.utbetaling.visitor.SøkerVisitor
+import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 import java.time.LocalDate
 
 internal class UtbetalingstidslinjeBuilder(
     private val grunnlagsfaktor: Grunnlagsfaktor,
     private val fødselsdato: Fødselsdato,
     private val barnetillegg: Barnetillegg
-) : SøkerVisitor {
+) : MottakerVisitor {
 
     private var utbetalingstidslinje = Utbetalingstidslinje(emptyList())
 
