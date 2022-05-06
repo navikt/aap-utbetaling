@@ -3,7 +3,7 @@ package no.nav.aap.app
 import io.ktor.server.testing.*
 import kotlinx.coroutines.runBlocking
 import no.nav.aap.app.kafka.Topics
-import no.nav.aap.domene.utbetaling.dto.DtoVedtak
+import no.nav.aap.domene.utbetaling.dto.DtoVedtakshendelse
 import no.nav.aap.kafka.streams.test.readAndAssert
 import org.junit.jupiter.api.Test
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables
@@ -19,7 +19,7 @@ class AppTest {
             val mottakTopic = mocks.kafka.outputTopic(Topics.mottakere)
 
             vedtakTopic.produce("123") {
-                DtoVedtak(
+                DtoVedtakshendelse(
                     vedtaksid = UUID.randomUUID(),
                     innvilget = true,
                     grunnlagsfaktor = 3.0,
@@ -30,7 +30,8 @@ class AppTest {
             }
 
             mottakTopic.readAndAssert().hasValuesForPredicate("123", 1) {
-                it.personident == "123"
+                it.personident == "123" &&
+                it.vedtakshistorikk.size == 1
             }
         }
     }

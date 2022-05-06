@@ -1,6 +1,7 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.Vedtak.Companion.sortertPåDato
+import no.nav.aap.domene.utbetaling.dto.DtoVedtak
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 
@@ -22,5 +23,7 @@ internal class Vedtakshistorikk {
         visitor.visitVedtakshistorikk(vedtakshistorikk.toList())
         visitor.visitVedtakshistorikk(finnGjeldendeVedtak())
     }
+
+    internal fun toDto(): List<DtoVedtak> = vedtakshistorikk.map { it.toDto() }
 
 }

@@ -1,6 +1,7 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.UtbetalingstidslinjeBuilder
+import no.nav.aap.domene.utbetaling.dto.DtoVedtak
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
@@ -44,4 +45,13 @@ internal class Vedtak(
     }
 
     override fun hashCode() = vedtaksid.hashCode()
+
+    internal fun toDto() = DtoVedtak(
+        vedtaksid = vedtaksid,
+        innvilget = innvilget,
+        grunnlagsfaktor = grunnlagsfaktor.toDto(),
+        vedtaksdato = vedtaksdato,
+        virkningsdato = virkningsdato,
+        fødselsdato = fødselsdato.toDto()
+    )
 }

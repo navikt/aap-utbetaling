@@ -2,15 +2,19 @@ package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Aktivitetstidslinje
 import no.nav.aap.domene.utbetaling.dto.DtoMottaker
+import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
+import no.nav.aap.domene.utbetaling.entitet.Personident
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningBarn
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningInstitusjon
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjehistorikk
 import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
-import java.time.LocalDate
 
-class Mottaker {
+class Mottaker(
+    private val personident: Personident,
+    private val fødselsdato: Fødselsdato
+) {
     private val aktivitetstidslinje = Aktivitetstidslinje()
     private val utbetalingstidslinjehistorikk = Utbetalingstidslinjehistorikk()
     private val vedtakshistorikk = Vedtakshistorikk()
@@ -20,7 +24,10 @@ class Mottaker {
     private var tilstand: Tilstand = Tilstand.Start
 
     companion object {
-        fun gjenopprett(dtoMottaker: DtoMottaker) = Mottaker()
+        fun gjenopprett(dtoMottaker: DtoMottaker) = Mottaker(
+            personident = Personident(dtoMottaker.personident),
+            fødselsdato = Fødselsdato(dtoMottaker.fødselsdato)
+        )
     }
 
     fun håndterVedtak(vedtak: Vedtakshendelse) {
@@ -40,8 +47,9 @@ class Mottaker {
     }
 
     fun toDto() = DtoMottaker(
-        personident = "123",
-        fødselsdato = LocalDate.now()
+        personident = personident.toDto(),
+        fødselsdato = fødselsdato.toDto(),
+        vedtakshistorikk = vedtakshistorikk.toDto()
     )
 
     private fun beregn() {

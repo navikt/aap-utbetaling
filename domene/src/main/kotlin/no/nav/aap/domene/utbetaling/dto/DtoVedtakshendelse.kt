@@ -7,7 +7,7 @@ import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import java.time.LocalDate
 import java.util.*
 
-data class DtoVedtak(
+data class DtoVedtakshendelse(
     val vedtaksid: UUID,
     val innvilget: Boolean,
     val grunnlagsfaktor: Double,
