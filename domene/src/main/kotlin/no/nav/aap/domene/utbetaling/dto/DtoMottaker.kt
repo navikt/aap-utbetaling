@@ -6,7 +6,19 @@ import java.util.*
 data class DtoMottaker(
     val personident: String,
     val fødselsdato: LocalDate,
-    val vedtakshistorikk: List<DtoVedtak>
+    val vedtakshistorikk: List<DtoVedtak>,
+    val aktivitetstidslinje: List<DtoMeldeperiode>,
+    val tilstand: String
+)
+
+data class DtoMeldeperiode(
+    val dager: List<DtoDag>
+)
+
+data class DtoDag(
+    val dato: LocalDate,
+    val arbeidstimer: Double?,
+    val type: String
 )
 
 data class DtoVedtak (

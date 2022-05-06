@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
+import no.nav.aap.domene.utbetaling.dto.DtoDag
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.NORMAL_ARBEIDSTIMER
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
@@ -19,6 +20,8 @@ internal sealed class Dag(
 
     internal abstract fun accept(visitor: DagVisitor)
 
+    internal abstract fun toDto(): DtoDag
+
     internal class Helg(
         dato: LocalDate,
         private val arbeidstimer: Arbeidstimer
@@ -29,6 +32,12 @@ internal sealed class Dag(
         override fun accept(visitor: DagVisitor) {
             visitor.visitHelgedag(this, dato, arbeidstimer)
         }
+
+        override fun toDto() = DtoDag(
+            dato = dato,
+            arbeidstimer = arbeidstimer.toDto(),
+            type = "Helg"
+        )
     }
 
     internal class Arbeidsdag(
@@ -38,6 +47,12 @@ internal sealed class Dag(
         override fun arbeidstimer() = arbeidstimer
 
         override fun accept(visitor: DagVisitor) = visitor.visitArbeidsdag(dato, arbeidstimer)
+
+        override fun toDto() = DtoDag(
+            dato = dato,
+            arbeidstimer = arbeidstimer.toDto(),
+            type = "Arbeidsdag"
+        )
     }
 
     internal class Fraværsdag(
@@ -49,6 +64,12 @@ internal sealed class Dag(
         override fun accept(visitor: DagVisitor) {
             visitor.visitFraværsdag(this, dato)
         }
+
+        override fun toDto() = DtoDag(
+            dato = dato,
+            arbeidstimer = null,
+            type = "Fraværsdag"
+        )
     }
 
     internal class Ventedag(
@@ -59,6 +80,12 @@ internal sealed class Dag(
         override fun accept(visitor: DagVisitor) {
             visitor.visitVentedag(dato)
         }
+
+        override fun toDto() = DtoDag(
+            dato = dato,
+            arbeidstimer = null,
+            type = "Ventedag"
+        )
     }
 
     internal companion object {

@@ -11,6 +11,7 @@ import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.aap.app.kafka.Tables
 import no.nav.aap.app.kafka.Topics
+import no.nav.aap.app.stream.meldepliktStream
 import no.nav.aap.app.stream.vedtakStream
 import no.nav.aap.kafka.streams.*
 import no.nav.aap.ktor.config.loadConfig
@@ -45,6 +46,7 @@ internal fun StreamsBuilder.createTopology(){
     val mottakerKtable = consume(Topics.mottakere).filterNotNull { "filter-mottakere-tombstone" }.produce(Tables.mottakere)
 
     vedtakStream(mottakerKtable)
+    meldepliktStream(mottakerKtable)
 }
 
 private fun Routing.actuator(prometheus: PrometheusMeterRegistry, kafka: KStreams) {

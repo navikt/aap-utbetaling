@@ -3,6 +3,8 @@ package no.nav.aap.app
 import io.ktor.server.testing.*
 import kotlinx.coroutines.runBlocking
 import no.nav.aap.app.kafka.Topics
+import no.nav.aap.domene.utbetaling.dto.DtoAkivitetPerDag
+import no.nav.aap.domene.utbetaling.dto.DtoMeldepliktshendelse
 import no.nav.aap.domene.utbetaling.dto.DtoVedtakshendelse
 import no.nav.aap.kafka.streams.test.readAndAssert
 import org.junit.jupiter.api.Test
@@ -13,28 +15,83 @@ import java.util.*
 class AppTest {
 
     @Test
-    fun `Innsendt vedtak oppretter en mottaker`() {
-        withTestApp { mocks ->
-            val vedtakTopic = mocks.kafka.inputTopic(Topics.vedtak)
-            val mottakTopic = mocks.kafka.outputTopic(Topics.mottakere)
+    fun `Innsendt vedtak oppretter en mottaker`() = withTestApp { mocks ->
+        val vedtakTopic = mocks.kafka.inputTopic(Topics.vedtak)
+        val mottakTopic = mocks.kafka.outputTopic(Topics.mottakere)
 
-            vedtakTopic.produce("123") {
-                DtoVedtakshendelse(
-                    vedtaksid = UUID.randomUUID(),
-                    innvilget = true,
-                    grunnlagsfaktor = 3.0,
-                    vedtaksdato = LocalDate.now(),
-                    virkningsdato = LocalDate.now(),
-                    fødselsdato = LocalDate.now()
-                )
-            }
+        vedtakTopic.produce("123") {
+            DtoVedtakshendelse(
+                vedtaksid = UUID.randomUUID(),
+                innvilget = true,
+                grunnlagsfaktor = 3.0,
+                vedtaksdato = LocalDate.now(),
+                virkningsdato = LocalDate.now(),
+                fødselsdato = LocalDate.now()
+            )
+        }
 
-            mottakTopic.readAndAssert().hasValuesForPredicate("123", 1) {
-                it.personident == "123" &&
-                it.vedtakshistorikk.size == 1
-            }
+        mottakTopic.readAndAssert().hasValuesForPredicate("123", 1) {
+            it.personident == "123"
         }
     }
+
+
+    @Test
+    fun `Innsendt vedtak oppretter en mottaker med vedtakshistorikk`() = withTestApp { mocks ->
+        val vedtakTopic = mocks.kafka.inputTopic(Topics.vedtak)
+        val mottakTopic = mocks.kafka.outputTopic(Topics.mottakere)
+        val vedtaksid = UUID.randomUUID()
+        vedtakTopic.produce("123") {
+            DtoVedtakshendelse(
+                vedtaksid = vedtaksid,
+                innvilget = true,
+                grunnlagsfaktor = 3.0,
+                vedtaksdato = LocalDate.now(),
+                virkningsdato = LocalDate.now(),
+                fødselsdato = LocalDate.now()
+            )
+        }
+
+        mottakTopic.readAndAssert().hasValuesForPredicate("123", 1) {
+            it.vedtakshistorikk.size == 1 && it.vedtakshistorikk[0].vedtaksid == vedtaksid
+        }
+    }
+
+
+    @Test
+    fun `Innsendt meldepliktshendelse oppretter en periode i aktivitetstidslinja`() = withTestApp { mocks ->
+        val vedtakTopic = mocks.kafka.inputTopic(Topics.vedtak)
+        val mottakTopic = mocks.kafka.outputTopic(Topics.mottakere)
+        val meldepliktTopic = mocks.kafka.inputTopic(Topics.meldeplikt)
+        val vedtaksid = UUID.randomUUID()
+        vedtakTopic.produce("123") {
+            DtoVedtakshendelse(
+                vedtaksid = vedtaksid,
+                innvilget = true,
+                grunnlagsfaktor = 3.0,
+                vedtaksdato = LocalDate.now(),
+                virkningsdato = LocalDate.now(),
+                fødselsdato = LocalDate.now()
+            )
+        }
+
+        meldepliktTopic.produce("123") {
+            DtoMeldepliktshendelse(
+                aktivitetPerDag = listOf(
+                    DtoAkivitetPerDag(
+                        dato = LocalDate.now(),
+                        arbeidstimer = 0.0,
+                        fraværsdag = true
+                    )
+                )
+            )
+        }
+
+        mottakTopic.readAndAssert().hasValuesForPredicate("123", 1) {
+            it.aktivitetstidslinje.size == 1
+        }
+    }
+
 
 }
 
@@ -56,4 +113,5 @@ private fun containerProperties(): Map<String, String> = mapOf(
     "KAFKA_SECURITY_ENABLED" to "false",
     "KAFKA_KEYSTORE_PATH" to "",
     "KAFKA_CREDSTORE_PASSWORD" to "",
-    "KAFKA_CLIENT_ID" to "utbetaling")
+    "KAFKA_CLIENT_ID" to "utbetaling"
+)

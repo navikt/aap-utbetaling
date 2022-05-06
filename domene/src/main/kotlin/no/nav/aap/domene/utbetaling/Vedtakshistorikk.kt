@@ -5,9 +5,16 @@ import no.nav.aap.domene.utbetaling.dto.DtoVedtak
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 
-internal class Vedtakshistorikk {
+internal class Vedtakshistorikk private constructor(
+    private val vedtakshistorikk: MutableList<Vedtak>
+) {
+    internal constructor(): this(mutableListOf())
 
-    private val vedtakshistorikk = mutableListOf<Vedtak>()
+    companion object {
+        fun gjenopprett(dtoVedtak: List<DtoVedtak>) = Vedtakshistorikk(
+            vedtakshistorikk = dtoVedtak.map { Vedtak.gjenopprett(it) }.toMutableList()
+        )
+    }
 
     internal fun leggTilNyttVedtak(vedtakshendelse: Vedtakshendelse) {
         val vedtak = Vedtak.opprettFraVedtakshendelse(vedtakshendelse)

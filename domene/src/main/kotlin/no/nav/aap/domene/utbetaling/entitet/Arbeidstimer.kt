@@ -30,4 +30,5 @@ internal class Arbeidstimer(arbeidstimer: Number) : Comparable<Arbeidstimer> {
     }
 
     override fun hashCode() = arbeidstimer.hashCode()
+    internal fun toDto() = arbeidstimer
 }

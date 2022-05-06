@@ -2,10 +2,11 @@ package no.nav.aap.domene.utbetaling.hendelse
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Meldeperiode
+import no.nav.aap.domene.utbetaling.dto.DtoMeldepliktshendelse
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import java.time.LocalDate
 
-internal class Meldepliktshendelse(
+class Meldepliktshendelse internal constructor(
     private val brukersAktivitet: List<BrukeraktivitetPerDag>
 ) : Hendelse() {
 

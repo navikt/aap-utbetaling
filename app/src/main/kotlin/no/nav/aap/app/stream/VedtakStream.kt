@@ -20,7 +20,7 @@ fun StreamsBuilder.vedtakStream(mottakerKtable: KTable<String, DtoMottaker>) {
             mottaker.håndterVedtak(Vedtakshendelse.gjenopprett(dtoVedtakshendelse))
             mottaker.toDto()
         }
-        .produce(Topics.mottakere) { "produced-mottakere" }
+        .produce(Topics.mottakere) { "produced-mottakere-for-vedtak" }
 }
 
 private data class VedtakOgMottak(

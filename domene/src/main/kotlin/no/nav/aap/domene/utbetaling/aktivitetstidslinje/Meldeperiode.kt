@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
+import no.nav.aap.domene.utbetaling.dto.DtoMeldeperiode
 import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 
 internal class Meldeperiode(dager: List<Dag> = emptyList()) {
@@ -17,6 +18,10 @@ internal class Meldeperiode(dager: List<Dag> = emptyList()) {
 
     private fun sammenfallerMed(other: Meldeperiode) =
         this.dager.first().sammenfallerMed(other.dager.first())
+
+    internal fun toDto() = DtoMeldeperiode(
+        dager = dager.map { it.toDto() }
+    )
 
     internal companion object {
         internal fun Iterable<Meldeperiode>.merge(other: Meldeperiode): List<Meldeperiode> {

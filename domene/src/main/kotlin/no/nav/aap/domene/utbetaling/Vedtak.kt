@@ -27,6 +27,15 @@ internal class Vedtak(
             fødselsdato = vedtakshendelse.fødselsdato
         )
 
+        internal fun gjenopprett(dtoVedtak: DtoVedtak) = Vedtak(
+            vedtaksid = dtoVedtak.vedtaksid,
+            innvilget = dtoVedtak.innvilget,
+            grunnlagsfaktor = Grunnlagsfaktor(dtoVedtak.grunnlagsfaktor),
+            vedtaksdato = dtoVedtak.vedtaksdato,
+            virkningsdato = dtoVedtak.virkningsdato,
+            fødselsdato = Fødselsdato(dtoVedtak.fødselsdato)
+        )
+
         internal fun Iterable<Vedtak>.sortertPåDato() = this.sortedBy { it.vedtaksdato }
     }
 
