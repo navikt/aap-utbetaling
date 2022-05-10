@@ -3,7 +3,6 @@ package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.A
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.F
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.H
-import no.nav.aap.domene.utbetaling.Aktivitetsdager.V
 import no.nav.aap.domene.utbetaling.Aktivitetsdager.resetSeed
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag.Companion.summerArbeidstimer
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag.Companion.summerNormalArbeidstimer
@@ -35,13 +34,8 @@ internal class DagTest {
     }
 
     @Test
-    fun `En ventedag har ingen arbeidstimer`() {
-        assertEquals(0.arbeidstimer, 1.V.summerArbeidstimer())
-    }
-
-    @Test
     fun `Summer arbeidstimer over en periode`() {
-        val dager = 5.A(arbeidstimer = 5) + 2.H(arbeidstimer = 1) + 2.V + 3.A(arbeidstimer = 5)
+        val dager = 5.A(arbeidstimer = 5) + 2.H(arbeidstimer = 1) + 2.A(arbeidstimer = 0) + 3.A(arbeidstimer = 5)
         assertEquals(42.arbeidstimer, dager.summerArbeidstimer())
     }
 
@@ -58,10 +52,5 @@ internal class DagTest {
     @Test
     fun `En helgedag bidrar med 0 timer til summen av normalarbeidstid`() {
         assertEquals(0.arbeidstimer, 1.H.summerNormalArbeidstimer())
-    }
-
-    @Test
-    fun `En ventedag bidrar med 7,5 timer til summen av normalarbeidstid`() {
-        assertEquals(7.5.arbeidstimer, 1.V.summerNormalArbeidstimer())
     }
 }

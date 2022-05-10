@@ -676,10 +676,6 @@ internal class MottakerTest {
             antallDagerIAktivitetstidslinje++
         }
 
-        override fun visitVentedag(dato: LocalDate) {
-            antallDagerIAktivitetstidslinje++
-        }
-
         override fun preVisitUtbetalingstidslinje(tidslinje: Utbetalingstidslinje) {
             utbetalingstidslinjeIndex++
             antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje[utbetalingstidslinjeIndex] = 0

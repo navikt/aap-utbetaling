@@ -24,9 +24,6 @@ object Aktivitetsdager {
     internal fun Int.H(arbeidstimer: Number = 0) = (1..this)
         .map { Dag.Helg(seed, arbeidstimer.arbeidstimer) }
 
-    internal val Int.V get() = (1..this)
-        .map { Dag.Ventedag(seed) }
-
     internal val Int.F get() = (1..this)
         .map { Dag.Fraværsdag(seed) }
 }

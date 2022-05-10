@@ -25,8 +25,7 @@ internal sealed class Dag(
     private enum class Dagtype {
         HELG,
         ARBEIDSDAG,
-        FRAVÆRSDAG,
-        VENTEDAG
+        FRAVÆRSDAG
     }
 
     internal class Helg(
@@ -79,22 +78,6 @@ internal sealed class Dag(
         )
     }
 
-    internal class Ventedag(
-        dato: LocalDate
-    ) : Dag(dato) {
-        override fun arbeidstimer() = 0.arbeidstimer
-
-        override fun accept(visitor: DagVisitor) {
-            visitor.visitVentedag(dato)
-        }
-
-        override fun toDto() = DtoDag(
-            dato = dato,
-            arbeidstimer = null,
-            type = Dagtype.VENTEDAG.name
-        )
-    }
-
     internal companion object {
         internal fun Iterable<Dag>.summerArbeidstimer() = map(Dag::arbeidstimer).summer()
         internal fun Iterable<Dag>.summerNormalArbeidstimer() = map(Dag::normalArbeidstimer).summer()
@@ -110,7 +93,6 @@ internal sealed class Dag(
             Dagtype.HELG -> Helg(dtoDag.dato, Arbeidstimer(requireNotNull(dtoDag.arbeidstimer)))
             Dagtype.ARBEIDSDAG -> Arbeidsdag(dtoDag.dato, Arbeidstimer(requireNotNull(dtoDag.arbeidstimer)))
             Dagtype.FRAVÆRSDAG -> Fraværsdag(dtoDag.dato)
-            Dagtype.VENTEDAG -> Ventedag(dtoDag.dato)
         }
     }
 }

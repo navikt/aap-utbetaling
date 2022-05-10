@@ -8,5 +8,4 @@ internal interface DagVisitor {
     fun visitHelgedag(helgedag: Dag.Helg, dato: LocalDate, arbeidstimer: Arbeidstimer) {}
     fun visitArbeidsdag(dato: LocalDate, arbeidstimer: Arbeidstimer) {}
     fun visitFraværsdag(fraværsdag: Dag.Fraværsdag, dato: LocalDate) {}
-    fun visitVentedag(dato: LocalDate) {}
 }

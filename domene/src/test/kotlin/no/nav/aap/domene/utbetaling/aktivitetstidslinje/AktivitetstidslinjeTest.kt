@@ -157,11 +157,5 @@ internal class AktivitetstidslinjeTest {
             if (førsteDatoIMeldeperiode == null) førsteDatoIMeldeperiode = dato
             sisteDatoIMeldeperiode = dato
         }
-
-        override fun visitVentedag(dato: LocalDate) {
-            antallDager++
-            if (førsteDatoIMeldeperiode == null) førsteDatoIMeldeperiode = dato
-            sisteDatoIMeldeperiode = dato
-        }
     }
 }

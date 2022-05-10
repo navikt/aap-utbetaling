@@ -61,10 +61,6 @@ internal class UtbetalingstidslinjeBuilder(
         tilstand.fraværsdag(this, dato)
     }
 
-    override fun visitVentedag(dato: LocalDate) {
-
-    }
-
     override fun postVisitMeldeperiode(meldeperiode: Meldeperiode) {
         tilstand.fullførMeldeperiode(this)
     }

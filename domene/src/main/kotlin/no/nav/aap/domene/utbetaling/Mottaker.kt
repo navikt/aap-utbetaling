@@ -88,7 +88,7 @@ class Mottaker private constructor(
             START({ Start }),
             VEDTAK_MOTTATT({ VedtakMottatt }),
             MELDEPLIKTSHENDELSE_MOTTATT({ MeldepliktshendelseMottatt }),
-            SISTE_KOMPLETTE_GREIE({ SisteKompletteGreie })
+            UTBETALING_BEREGNET({ UtbetalingBeregnet })
         }
 
         fun toDto() = tilstandsnavn.name
@@ -133,11 +133,11 @@ class Mottaker private constructor(
 
                 mottaker.beregn()
 
-                mottaker.tilstand = SisteKompletteGreie
+                mottaker.tilstand = UtbetalingBeregnet
             }
         }
 
-        object SisteKompletteGreie : Tilstand(tilstandsnavn = Tilstandsnavn.SISTE_KOMPLETTE_GREIE) { //FIXME: Trenger et bedre navn
+        object UtbetalingBeregnet : Tilstand(tilstandsnavn = Tilstandsnavn.UTBETALING_BEREGNET) {
 
             override fun håndterVedtak(mottaker: Mottaker, vedtak: Vedtakshendelse) {
                 mottaker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
