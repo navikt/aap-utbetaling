@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - '.nais/topic-mottakere.yml'
+      - '.nais/topic-utbetalingsbehov.yml'
       - '.github/workflows/deploy-topics.yml'
 
 jobs:
@@ -20,5 +21,18 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: .nais/topic-mottakere.yml
+          VARS: .nais/dev.yml
+          PRINT_PAYLOAD: true
+  deploy-utbetalingsbehov:
+    name: Deploy utbetalingsbehov
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy aap.utbetalingsbehov.v1 to dev
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/topic-utbetalingsbehov.yml
           VARS: .nais/dev.yml
           PRINT_PAYLOAD: true

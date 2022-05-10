@@ -13,7 +13,7 @@ object Topics {
     val vedtak = Topic("aap.vedtak.v1", JsonSerde.jackson<DtoVedtakshendelse>())
     val meldeplikt = Topic("aap.meldeplikt.v1", JsonSerde.jackson<DtoMeldepliktshendelse>())
     // TODO Hvordan løser vi samlede løsninger
-    val løsning = Topic("aap.losning.v1", JsonSerde.jackson<DtoLøsning>())
+    val løsning = Topic("aap.utbetalingsbehov.v1", JsonSerde.jackson<DtoLøsning>())
 }
 
 object Tables {
