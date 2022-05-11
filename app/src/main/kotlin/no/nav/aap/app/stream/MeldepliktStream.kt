@@ -9,7 +9,7 @@ import org.apache.kafka.streams.kstream.KTable
 
 fun StreamsBuilder.meldepliktStream(mottakerKtable: KTable<String, DtoMottaker>) {
     val hendelseHåndtert = consume(Topics.meldeplikt)
-        .filterNotNull { "filter-meldepliktshendelse-tombstone" }
+        .filterNotNull("filter-meldepliktshendelse-tombstone")
         .join(Topics.meldeplikt with Topics.mottakere, mottakerKtable, ::Pair)
         .mapValues { ident, (dtoMeldepliktshendelse, dtoMottaker) ->
             val mottaker = Mottaker.gjenopprett(dtoMottaker)
@@ -19,10 +19,10 @@ fun StreamsBuilder.meldepliktStream(mottakerKtable: KTable<String, DtoMottaker>)
         }
 
     hendelseHåndtert
-        .mapValues(named("meldeplikt-hent-ut-mottaker")) { (_, mottaker) -> mottaker }
-        .produce(Topics.mottakere) { "produced-mottakere-for-meldeplikt" }
+        .mapValues("meldeplikt-hent-ut-mottaker") { (_, mottaker) -> mottaker }
+        .produce(Topics.mottakere, "produced-mottakere-for-meldeplikt")
 
     hendelseHåndtert
-        .flatMapValues(named("meldeplikt-hent-ut-behov")) { (behov, _) -> behov }
+        .flatMapValues("meldeplikt-hent-ut-behov") { (behov, _) -> behov }
         .sendBehov("meldeplikt")
 }

@@ -9,7 +9,7 @@ import org.apache.kafka.streams.kstream.KTable
 
 fun StreamsBuilder.løsningStream(mottakerKtable: KTable<String, DtoMottaker>) {
     consume(Topics.utbetalingsbehov)
-        .filterNotNull { "filter-losning-tombstone" }
+        .filterNotNull("filter-losning-tombstone")
         .filter("filter-losning-response") { _, løsning -> løsning.response != null }
         .join(Topics.utbetalingsbehov with Topics.mottakere, mottakerKtable, ::Pair)
         .mapValues { _, (løsning, dtoMottaker) ->
@@ -18,5 +18,5 @@ fun StreamsBuilder.løsningStream(mottakerKtable: KTable<String, DtoMottaker>) {
             mottaker.håndterLøsning(response.barn.opprettLøsning())
             mottaker.toDto()
         }
-        .produce(Topics.mottakere) { "produced-mottakere-for-losning" }
+        .produce(Topics.mottakere, "produced-mottakere-for-losning")
 }

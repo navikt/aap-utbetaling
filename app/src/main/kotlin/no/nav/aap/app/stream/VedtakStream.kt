@@ -7,20 +7,26 @@ import no.nav.aap.domene.utbetaling.dto.DtoVedtakshendelse
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Personident
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
-import no.nav.aap.kafka.streams.*
+import no.nav.aap.kafka.streams.consume
+import no.nav.aap.kafka.streams.filterNotNull
+import no.nav.aap.kafka.streams.leftJoin
+import no.nav.aap.kafka.streams.produce
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.KTable
 
 fun StreamsBuilder.vedtakStream(mottakerKtable: KTable<String, DtoMottaker>) {
     consume(Topics.vedtak)
-        .filterNotNull { "filter-vedtakshendelse-tombstone" }
+        .filterNotNull("filter-vedtakshendelse-tombstone")
         .leftJoin(Topics.vedtak with Topics.mottakere, mottakerKtable, ::VedtakOgMottak)
         .mapValues { key, (dtoVedtakshendelse, dtoMottaker) ->
-            val mottaker = dtoMottaker?.let { Mottaker.gjenopprett(it) } ?: Mottaker(Personident(key), Fødselsdato(dtoVedtakshendelse.fødselsdato))
+            val mottaker = dtoMottaker?.let { Mottaker.gjenopprett(it) } ?: Mottaker(
+                Personident(key),
+                Fødselsdato(dtoVedtakshendelse.fødselsdato)
+            )
             mottaker.håndterVedtak(Vedtakshendelse.gjenopprett(dtoVedtakshendelse))
             mottaker.toDto()
         }
-        .produce(Topics.mottakere) { "produced-mottakere-for-vedtak" }
+        .produce(Topics.mottakere, "produced-mottakere-for-vedtak")
 }
 
 private data class VedtakOgMottak(

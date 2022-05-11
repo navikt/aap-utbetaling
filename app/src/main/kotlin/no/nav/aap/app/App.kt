@@ -43,8 +43,8 @@ internal fun Application.server(kafka: KStreams = KafkaStreams) {
     }
 }
 
-internal fun StreamsBuilder.createTopology(){
-    val mottakerKtable = consume(Topics.mottakere).filterNotNull { "filter-mottakere-tombstone" }.produce(Tables.mottakere)
+internal fun StreamsBuilder.createTopology() {
+    val mottakerKtable = consume(Topics.mottakere).filterNotNull("filter-mottakere-tombstone").produce(Tables.mottakere)
 
     vedtakStream(mottakerKtable)
     meldepliktStream(mottakerKtable)

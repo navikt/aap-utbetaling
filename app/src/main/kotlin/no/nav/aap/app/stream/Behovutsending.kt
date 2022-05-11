@@ -5,6 +5,7 @@ import no.nav.aap.app.kafka.Topics
 import no.nav.aap.domene.utbetaling.dto.DtoBehov
 import no.nav.aap.domene.utbetaling.hendelse.Lytter
 import no.nav.aap.kafka.streams.Topic
+import no.nav.aap.kafka.streams.mapValues
 import no.nav.aap.kafka.streams.named
 import no.nav.aap.kafka.streams.produce
 import org.apache.kafka.streams.kstream.Branched
@@ -24,11 +25,8 @@ private fun <JSON : Any, MAPPER> BranchedKStream<String, DtoBehov>.branch(
 ) where MAPPER : ToKafka<JSON>, MAPPER : Lytter =
     branch({ _, value -> predicate(value) }, Branched.withConsumer<String?, DtoBehov?> { chain ->
         chain
-            .mapValues(
-                { key, value -> getMapper(key).also(value::accept).toJson() },
-                named("branch-$branchName-map-behov")
-            )
-            .produce(topic) { "branch-$branchName-produced-behov" }
+            .mapValues("branch-$branchName-map-behov") { key, value -> getMapper(key).also(value::accept).toJson() }
+            .produce(topic, "branch-$branchName-produced-behov")
     }.withName("-branch-$branchName"))
 
 private interface ToKafka<out JSON> {
