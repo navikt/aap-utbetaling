@@ -2,17 +2,21 @@ package no.nav.aap.domene.utbetaling.dto
 
 import no.nav.aap.domene.utbetaling.hendelse.Lytter
 
-sealed class DtoBehov {
-    open fun erBarn() = false
-    open fun erInstitusjon() = false
+interface DtoBehov {
+    fun erBarn() = false
+    fun erInstitusjon() = false
 
-    open fun accept(lytter: Lytter) {}
+    fun accept(lytter: Lytter) {}
 
-    class DtoBehovBarn : DtoBehov() {
+    class DtoBehovBarn : DtoBehov {
         override fun erBarn() = true
+
+        override fun accept(lytter: Lytter) {
+            lytter.barn()
+        }
     }
 
-    class DtoBehovInstitusjon : DtoBehov() {
+    class DtoBehovInstitusjon : DtoBehov {
         override fun erInstitusjon() = true
     }
 }

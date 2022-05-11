@@ -1,6 +1,5 @@
 package no.nav.aap.app.kafka
 
-import no.nav.aap.domene.utbetaling.dto.DtoLøsning
 import no.nav.aap.domene.utbetaling.dto.DtoMeldepliktshendelse
 import no.nav.aap.domene.utbetaling.dto.DtoMottaker
 import no.nav.aap.domene.utbetaling.dto.DtoVedtakshendelse
@@ -13,7 +12,7 @@ object Topics {
     val vedtak = Topic("aap.vedtak.v1", JsonSerde.jackson<DtoVedtakshendelse>())
     val meldeplikt = Topic("aap.meldeplikt.v1", JsonSerde.jackson<DtoMeldepliktshendelse>())
     // TODO Hvordan løser vi samlede løsninger
-    val løsning = Topic("aap.utbetalingsbehov.v1", JsonSerde.jackson<DtoLøsning>())
+    val utbetalingsbehov = Topic("aap.utbetalingsbehov.v1", JsonSerde.jackson<KafkaUtbetalingsbehov>())
 }
 
 object Tables {

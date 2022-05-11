@@ -2,6 +2,7 @@ package no.nav.aap.app
 
 import io.ktor.server.testing.*
 import kotlinx.coroutines.runBlocking
+import no.nav.aap.app.kafka.KafkaUtbetalingsbehov
 import no.nav.aap.app.kafka.Topics
 import no.nav.aap.domene.utbetaling.dto.*
 import no.nav.aap.kafka.streams.test.readAndAssert
@@ -90,10 +91,57 @@ class AppTest {
 
     @Test
     fun `Innsendt løsning beregner en utbetaling`() = withTestApp { mocks ->
+        val vedtakInputTopic = mocks.kafka.inputTopic(Topics.vedtak)
+        val mottakOutputTopic = mocks.kafka.outputTopic(Topics.mottakere)
+        val meldepliktInputTopic = mocks.kafka.inputTopic(Topics.meldeplikt)
+        val løsningInputTopic = mocks.kafka.inputTopic(Topics.utbetalingsbehov)
+        val løsningOutputTopic = mocks.kafka.outputTopic(Topics.utbetalingsbehov)
+        val vedtaksid = UUID.randomUUID()
+        vedtakInputTopic.produce("123") {
+            DtoVedtakshendelse(
+                vedtaksid = vedtaksid,
+                innvilget = true,
+                grunnlagsfaktor = 3.0,
+                vedtaksdato = LocalDate.now(),
+                virkningsdato = LocalDate.now(),
+                fødselsdato = LocalDate.now()
+            )
+        }
+
+        meldepliktInputTopic.produce("123") {
+            DtoMeldepliktshendelse(
+                aktivitetPerDag = listOf(
+                    DtoAkivitetPerDag(
+                        dato = LocalDate.now(),
+                        arbeidstimer = 0.0,
+                        fraværsdag = true
+                    )
+                )
+            )
+        }
+
+        val behov = løsningOutputTopic.readValue()
+        løsningInputTopic.produce("123") {
+            behov.copy(
+                response = KafkaUtbetalingsbehov.Response(
+                    DtoLøsning(
+                        barn = listOf(DtoLøsningBarn(LocalDate.now()))
+                    )
+                )
+            )
+        }
+
+        mottakOutputTopic.readAndAssert().hasValuesForPredicate("123", 1) {
+            it.utbetalingstidslinjehistorikk.size == 1 && it.oppdragshistorikk.size == 1
+        }
+    }
+
+    @Test
+    fun `Meldepliktshendelse trigger behov for barn`() = withTestApp { mocks ->
         val vedtakTopic = mocks.kafka.inputTopic(Topics.vedtak)
         val mottakTopic = mocks.kafka.outputTopic(Topics.mottakere)
         val meldepliktTopic = mocks.kafka.inputTopic(Topics.meldeplikt)
-        val løsningTopic = mocks.kafka.inputTopic(Topics.løsning)
+        val løsningOutputTopic = mocks.kafka.outputTopic(Topics.utbetalingsbehov)
         val vedtaksid = UUID.randomUUID()
         vedtakTopic.produce("123") {
             DtoVedtakshendelse(
@@ -118,14 +166,8 @@ class AppTest {
             )
         }
 
-        løsningTopic.produce("123") {
-            DtoLøsning(
-                barn = listOf(DtoLøsningBarn(LocalDate.now()))
-            )
-        }
-
-        mottakTopic.readAndAssert().hasValuesForPredicate("123", 1) {
-            it.utbetalingstidslinjehistorikk.size == 1 && it.oppdragshistorikk.size == 1
+        løsningOutputTopic.readAndAssert().hasValuesForPredicate("123", 1) {
+            it.request.ident == "123"
         }
     }
 }

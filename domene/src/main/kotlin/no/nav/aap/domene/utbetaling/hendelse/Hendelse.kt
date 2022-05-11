@@ -13,5 +13,5 @@ open class Hendelse {
 }
 
 interface Lytter {
-
+    fun barn() {}
 }

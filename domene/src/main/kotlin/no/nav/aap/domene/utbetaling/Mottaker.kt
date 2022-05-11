@@ -4,8 +4,10 @@ import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Aktivitetstidslinje
 import no.nav.aap.domene.utbetaling.dto.DtoMottaker
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Personident
+import no.nav.aap.domene.utbetaling.hendelse.Hendelse
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
+import no.nav.aap.domene.utbetaling.hendelse.behov.BehovBarn
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningBarn
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningInstitusjon
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjehistorikk
@@ -82,6 +84,12 @@ class Mottaker private constructor(
         utbetalingstidslinjehistorikk.byggOppdrag(oppdragshistorikk)
     }
 
+    private fun tilstand(hendelse: Hendelse, nyTilstand: Tilstand) {
+        this.tilstand.leaving(this, hendelse)
+        this.tilstand = nyTilstand
+        this.tilstand.entering(this, hendelse)
+    }
+
     private sealed class Tilstand(private val tilstandsnavn: Tilstandsnavn) {
 
         enum class Tilstandsnavn(internal val tilknyttetTilstand: () -> Tilstand) {
@@ -93,6 +101,9 @@ class Mottaker private constructor(
 
         fun toDto() = tilstandsnavn.name
 
+        open fun entering(mottaker: Mottaker, hendelse: Hendelse) {}
+        open fun leaving(mottaker: Mottaker, hendelse: Hendelse) {}
+
         open fun håndterVedtak(mottaker: Mottaker, vedtak: Vedtakshendelse) {}
         open fun håndterMeldeplikt(mottaker: Mottaker, melding: Meldepliktshendelse) {}
         open fun håndterLøsning(mottaker: Mottaker, løsning: LøsningBarn) {}
@@ -100,7 +111,7 @@ class Mottaker private constructor(
         object Start : Tilstand(tilstandsnavn = Tilstandsnavn.START) {
             override fun håndterVedtak(mottaker: Mottaker, vedtak: Vedtakshendelse) {
                 mottaker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
-                mottaker.tilstand = VedtakMottatt
+                mottaker.tilstand(vedtak, VedtakMottatt)
             }
         }
 
@@ -112,13 +123,16 @@ class Mottaker private constructor(
 
             override fun håndterMeldeplikt(mottaker: Mottaker, melding: Meldepliktshendelse) {
                 mottaker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
-                mottaker.tilstand = MeldepliktshendelseMottatt
+                mottaker.tilstand(melding, MeldepliktshendelseMottatt)
             }
         }
 
         object MeldepliktshendelseMottatt : Tilstand(tilstandsnavn = Tilstandsnavn.MELDEPLIKTSHENDELSE_MOTTATT) {
 
             //TODO on entry: behov -> slå opp barn og institusjon
+            override fun entering(mottaker: Mottaker, hendelse: Hendelse) {
+                hendelse.opprettBehov(BehovBarn())
+            }
 
             override fun håndterVedtak(mottaker: Mottaker, vedtak: Vedtakshendelse) {
                 mottaker.vedtakshistorikk.leggTilNyttVedtak(vedtak)
@@ -133,7 +147,7 @@ class Mottaker private constructor(
 
                 mottaker.beregn()
 
-                mottaker.tilstand = UtbetalingBeregnet
+                mottaker.tilstand(løsning, UtbetalingBeregnet)
             }
         }
 
@@ -146,7 +160,7 @@ class Mottaker private constructor(
 
             override fun håndterMeldeplikt(mottaker: Mottaker, melding: Meldepliktshendelse) {
                 mottaker.aktivitetstidslinje.håndterMeldepliktshendelse(melding)
-                mottaker.tilstand = MeldepliktshendelseMottatt
+                mottaker.tilstand(melding, MeldepliktshendelseMottatt)
             }
         }
     }

@@ -1,69 +1,86 @@
 @startuml
 !theme black-knight
+queue "aap.utbetalingsbehov.v1" <<topic>> as aap_utbetalingsbehov_v1
 queue "aap.mottakere.v1" <<topic>> as aap_mottakere_v1
 queue "aap.meldeplikt.v1" <<topic>> as aap_meldeplikt_v1
-queue "aap.utbetalingsbehov.v1" <<topic>> as aap_utbetalingsbehov_v1
 queue "aap.vedtak.v1" <<topic>> as aap_vedtak_v1
 package "Sub-topology: 0" {
 	database "mottakere-state-store" <<State Store>> as mottakere_state_store
 	agent "consume-aap.meldeplikt.v1" <<Source>> as consume_aap_meldeplikt_v1
+	agent "KSTREAM-PEEK-0000000013" <<Processor>> as KSTREAM_PEEK_0000000013
+	agent "filter-meldepliktshendelse-tombstone" <<Processor>> as filter_meldepliktshendelse_tombstone
+	agent "aap.meldeplikt.v1-joined-aap.mottakere.v1" <<Processor>> as aap_meldeplikt_v1_joined_aap_mottakere_v1
+	agent "KSTREAM-MAPVALUES-0000000016" <<Processor>> as KSTREAM_MAPVALUES_0000000016
 	agent "consume-aap.utbetalingsbehov.v1" <<Source>> as consume_aap_utbetalingsbehov_v1
+	agent "KSTREAM-PEEK-0000000027" <<Processor>> as KSTREAM_PEEK_0000000027
 	agent "consume-aap.vedtak.v1" <<Source>> as consume_aap_vedtak_v1
 	agent "KSTREAM-PEEK-0000000006" <<Processor>> as KSTREAM_PEEK_0000000006
-	agent "KSTREAM-PEEK-0000000013" <<Processor>> as KSTREAM_PEEK_0000000013
-	agent "KSTREAM-PEEK-0000000020" <<Processor>> as KSTREAM_PEEK_0000000020
-	agent "consume-aap.mottakere.v1" <<Source>> as consume_aap_mottakere_v1
 	agent "filter-losning-tombstone" <<Processor>> as filter_losning_tombstone
-	agent "filter-meldepliktshendelse-tombstone" <<Processor>> as filter_meldepliktshendelse_tombstone
+	agent "meldeplikt-hent-ut-behov" <<Processor>> as meldeplikt_hent_ut_behov
+	agent "consume-aap.mottakere.v1" <<Source>> as consume_aap_mottakere_v1
+	agent "filter-losning-response" <<Processor>> as filter_losning_response
 	agent "filter-vedtakshendelse-tombstone" <<Processor>> as filter_vedtakshendelse_tombstone
+	agent "meldeplikt-split-behov" <<Processor>> as meldeplikt_split_behov
 	agent "KSTREAM-PEEK-0000000001" <<Processor>> as KSTREAM_PEEK_0000000001
-	agent "aap.meldeplikt.v1-joined-aap.mottakere.v1" <<Processor>> as aap_meldeplikt_v1_joined_aap_mottakere_v1
 	agent "aap.utbetalingsbehov.v1-joined-aap.mottakere.v1" <<Processor>> as aap_utbetalingsbehov_v1_joined_aap_mottakere_v1
 	agent "aap.vedtak.v1-joined-aap.mottakere.v1" <<Processor>> as aap_vedtak_v1_joined_aap_mottakere_v1
+	agent "meldeplikt-split-behov-branch-meldeplikt-barn" <<Processor>> as meldeplikt_split_behov_branch_meldeplikt_barn
 	agent "KSTREAM-MAPVALUES-0000000009" <<Processor>> as KSTREAM_MAPVALUES_0000000009
-	agent "KSTREAM-MAPVALUES-0000000016" <<Processor>> as KSTREAM_MAPVALUES_0000000016
-	agent "KSTREAM-MAPVALUES-0000000023" <<Processor>> as KSTREAM_MAPVALUES_0000000023
+	agent "KSTREAM-MAPVALUES-0000000031" <<Processor>> as KSTREAM_MAPVALUES_0000000031
+	agent "branch-meldeplikt-barn-map-behov" <<Processor>> as branch_meldeplikt_barn_map_behov
 	agent "filter-mottakere-tombstone" <<Processor>> as filter_mottakere_tombstone
+	agent "meldeplikt-hent-ut-mottaker" <<Processor>> as meldeplikt_hent_ut_mottaker
 	agent "KSTREAM-PEEK-0000000003" <<Processor>> as KSTREAM_PEEK_0000000003
 	agent "KSTREAM-PEEK-0000000010" <<Processor>> as KSTREAM_PEEK_0000000010
-	agent "KSTREAM-PEEK-0000000017" <<Processor>> as KSTREAM_PEEK_0000000017
+	agent "KSTREAM-PEEK-0000000018" <<Processor>> as KSTREAM_PEEK_0000000018
 	agent "KSTREAM-PEEK-0000000024" <<Processor>> as KSTREAM_PEEK_0000000024
+	agent "KSTREAM-PEEK-0000000032" <<Processor>> as KSTREAM_PEEK_0000000032
+	agent "branch-meldeplikt-barn-produced-behov" <<Sink>> as branch_meldeplikt_barn_produced_behov
 	agent "mottakere-as-table" <<Processor>> as mottakere_as_table
 	agent "produced-mottakere-for-losning" <<Sink>> as produced_mottakere_for_losning
 	agent "produced-mottakere-for-meldeplikt" <<Sink>> as produced_mottakere_for_meldeplikt
 	agent "produced-mottakere-for-vedtak" <<Sink>> as produced_mottakere_for_vedtak
 	aap_meldeplikt_v1 --> consume_aap_meldeplikt_v1
+	mottakere_state_store -- aap_meldeplikt_v1_joined_aap_mottakere_v1
 	aap_utbetalingsbehov_v1 --> consume_aap_utbetalingsbehov_v1
 	aap_vedtak_v1 --> consume_aap_vedtak_v1
 	aap_mottakere_v1 --> consume_aap_mottakere_v1
-	mottakere_state_store -- aap_meldeplikt_v1_joined_aap_mottakere_v1
 	mottakere_state_store -- aap_utbetalingsbehov_v1_joined_aap_mottakere_v1
 	mottakere_state_store -- aap_vedtak_v1_joined_aap_mottakere_v1
+	aap_utbetalingsbehov_v1 <-- branch_meldeplikt_barn_produced_behov
 	mottakere_state_store -- mottakere_as_table
 	aap_mottakere_v1 <-- produced_mottakere_for_losning
 	aap_mottakere_v1 <-- produced_mottakere_for_meldeplikt
 	aap_mottakere_v1 <-- produced_mottakere_for_vedtak
 	consume_aap_meldeplikt_v1 --> KSTREAM_PEEK_0000000013
-	consume_aap_utbetalingsbehov_v1 --> KSTREAM_PEEK_0000000020
+	KSTREAM_PEEK_0000000013 --> filter_meldepliktshendelse_tombstone
+	filter_meldepliktshendelse_tombstone --> aap_meldeplikt_v1_joined_aap_mottakere_v1
+	aap_meldeplikt_v1_joined_aap_mottakere_v1 --> KSTREAM_MAPVALUES_0000000016
+	KSTREAM_MAPVALUES_0000000016 --> meldeplikt_hent_ut_behov
+	KSTREAM_MAPVALUES_0000000016 --> meldeplikt_hent_ut_mottaker
+	consume_aap_utbetalingsbehov_v1 --> KSTREAM_PEEK_0000000027
+	KSTREAM_PEEK_0000000027 --> filter_losning_tombstone
 	consume_aap_vedtak_v1 --> KSTREAM_PEEK_0000000006
 	KSTREAM_PEEK_0000000006 --> filter_vedtakshendelse_tombstone
-	KSTREAM_PEEK_0000000013 --> filter_meldepliktshendelse_tombstone
-	KSTREAM_PEEK_0000000020 --> filter_losning_tombstone
+	filter_losning_tombstone --> filter_losning_response
+	meldeplikt_hent_ut_behov --> meldeplikt_split_behov
 	consume_aap_mottakere_v1 --> KSTREAM_PEEK_0000000001
-	filter_losning_tombstone --> aap_utbetalingsbehov_v1_joined_aap_mottakere_v1
-	filter_meldepliktshendelse_tombstone --> aap_meldeplikt_v1_joined_aap_mottakere_v1
+	filter_losning_response --> aap_utbetalingsbehov_v1_joined_aap_mottakere_v1
 	filter_vedtakshendelse_tombstone --> aap_vedtak_v1_joined_aap_mottakere_v1
+	meldeplikt_split_behov --> meldeplikt_split_behov_branch_meldeplikt_barn
 	KSTREAM_PEEK_0000000001 --> filter_mottakere_tombstone
-	aap_meldeplikt_v1_joined_aap_mottakere_v1 --> KSTREAM_MAPVALUES_0000000016
-	aap_utbetalingsbehov_v1_joined_aap_mottakere_v1 --> KSTREAM_MAPVALUES_0000000023
+	aap_utbetalingsbehov_v1_joined_aap_mottakere_v1 --> KSTREAM_MAPVALUES_0000000031
 	aap_vedtak_v1_joined_aap_mottakere_v1 --> KSTREAM_MAPVALUES_0000000009
+	meldeplikt_split_behov_branch_meldeplikt_barn --> branch_meldeplikt_barn_map_behov
 	KSTREAM_MAPVALUES_0000000009 --> KSTREAM_PEEK_0000000010
-	KSTREAM_MAPVALUES_0000000016 --> KSTREAM_PEEK_0000000017
-	KSTREAM_MAPVALUES_0000000023 --> KSTREAM_PEEK_0000000024
+	KSTREAM_MAPVALUES_0000000031 --> KSTREAM_PEEK_0000000032
+	branch_meldeplikt_barn_map_behov --> KSTREAM_PEEK_0000000024
 	filter_mottakere_tombstone --> KSTREAM_PEEK_0000000003
+	meldeplikt_hent_ut_mottaker --> KSTREAM_PEEK_0000000018
 	KSTREAM_PEEK_0000000003 --> mottakere_as_table
 	KSTREAM_PEEK_0000000010 --> produced_mottakere_for_vedtak
-	KSTREAM_PEEK_0000000017 --> produced_mottakere_for_meldeplikt
-	KSTREAM_PEEK_0000000024 --> produced_mottakere_for_losning
+	KSTREAM_PEEK_0000000018 --> produced_mottakere_for_meldeplikt
+	KSTREAM_PEEK_0000000024 --> branch_meldeplikt_barn_produced_behov
+	KSTREAM_PEEK_0000000032 --> produced_mottakere_for_losning
 }
 @enduml
