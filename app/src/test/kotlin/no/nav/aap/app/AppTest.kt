@@ -139,9 +139,8 @@ class AppTest {
     @Test
     fun `Meldepliktshendelse trigger behov for barn`() = withTestApp { mocks ->
         val vedtakTopic = mocks.kafka.inputTopic(Topics.vedtak)
-        val mottakTopic = mocks.kafka.outputTopic(Topics.mottakere)
         val meldepliktTopic = mocks.kafka.inputTopic(Topics.meldeplikt)
-        val løsningOutputTopic = mocks.kafka.outputTopic(Topics.utbetalingsbehov)
+        val utbetalingsbehovOutputTopic = mocks.kafka.outputTopic(Topics.utbetalingsbehov)
         val vedtaksid = UUID.randomUUID()
         vedtakTopic.produce("123") {
             DtoVedtakshendelse(
@@ -166,7 +165,7 @@ class AppTest {
             )
         }
 
-        løsningOutputTopic.readAndAssert().hasValuesForPredicate("123", 1) {
+        utbetalingsbehovOutputTopic.readAndAssert().hasValuesForPredicate("123", 1) {
             it.request.ident == "123"
         }
     }
