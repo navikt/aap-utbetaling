@@ -13,6 +13,7 @@ import no.nav.aap.app.kafka.Tables
 import no.nav.aap.app.kafka.Topics
 import no.nav.aap.app.stream.løsningStream
 import no.nav.aap.app.stream.meldepliktStream
+import no.nav.aap.app.stream.mock.meldepliktStreamMock
 import no.nav.aap.app.stream.mock.utbetalingsbehovStreamMock
 import no.nav.aap.app.stream.vedtakStream
 import no.nav.aap.kafka.streams.*
@@ -51,6 +52,7 @@ internal fun StreamsBuilder.createTopology() {
     meldepliktStream(mottakerKtable)
     løsningStream(mottakerKtable)
 
+    meldepliktStreamMock()
     utbetalingsbehovStreamMock()
 }
 

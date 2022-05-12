@@ -13,7 +13,7 @@ fun StreamsBuilder.utbetalingsbehovStreamMock() {
     consume(Topics.utbetalingsbehov)
         .filterNotNull("mock-filter-utbetalingsbehov-tombstone")
         .filter("mock-filter-utbetalingsbehov-request") { _, løsning -> løsning.response == null }
-        .filter("mock-filter-for-test-ident") { _, løsning -> løsning.request.ident != "123" }
+        .filter("mock-utbetalingsbehov-filter-for-test-ident") { _, løsning -> løsning.request.ident != "123" }
         .mapValues { _, utbetalingsbehov ->
             utbetalingsbehov.copy(response = KafkaUtbetalingsbehov.Response(DtoLøsning(emptyList())))
         }
