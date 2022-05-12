@@ -18,3 +18,6 @@ spec:
     - team: aap
       application: utbetaling
       access: readwrite
+    - team: aap
+      application: oppgavestyring
+      access: read
