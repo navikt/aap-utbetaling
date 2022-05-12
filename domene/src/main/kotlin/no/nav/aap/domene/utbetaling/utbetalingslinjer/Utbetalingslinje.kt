@@ -1,6 +1,7 @@
 package no.nav.aap.domene.utbetaling.utbetalingslinjer
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.erHelg
+import no.nav.aap.domene.utbetaling.dto.DtoUtbetalingslinje
 import no.nav.aap.domene.utbetaling.visitor.OppdragVisitor
 import java.time.LocalDate
 
@@ -29,7 +30,24 @@ internal class Utbetalingslinje internal constructor(
                 .filterNot { it.erHelg() }
                 .size
         }
+
+        internal fun Iterable<Utbetalingslinje>.toDto() = map(Utbetalingslinje::toDto)
     }
+
+    private fun toDto() = DtoUtbetalingslinje(
+        fom = fom,
+        tom = tom,
+        satstype = satstype.toString(),
+        beløp = beløp,
+        aktuellDagsinntekt = aktuellDagsinntekt,
+        grad = grad,
+        refFagsystemId = refFagsystemId,
+        delytelseId = delytelseId,
+        refDelytelseId = refDelytelseId,
+        endringskode = endringskode.name,
+        klassekode = klassekode.name,
+        datoStatusFom = datoStatusFom,
+    )
 
     private val statuskode get() = datoStatusFom?.let { "OPPH" }
 
@@ -78,29 +96,29 @@ internal class Utbetalingslinje internal constructor(
 
     private fun equals(other: Utbetalingslinje) =
         this.fom == other.fom &&
-            this.tom == other.tom &&
-            this.beløp == other.beløp &&
-            this.grad == other.grad &&
-            this.datoStatusFom == other.datoStatusFom
+                this.tom == other.tom &&
+                this.beløp == other.beløp &&
+                this.grad == other.grad &&
+                this.datoStatusFom == other.datoStatusFom
 
     internal fun kanEndreEksisterendeLinje(other: Utbetalingslinje, sisteLinjeITidligereOppdrag: Utbetalingslinje) =
         other == sisteLinjeITidligereOppdrag &&
-        this.fom == other.fom &&
-            this.beløp == other.beløp &&
-            this.grad == other.grad &&
-            this.datoStatusFom == other.datoStatusFom
+                this.fom == other.fom &&
+                this.beløp == other.beløp &&
+                this.grad == other.grad &&
+                this.datoStatusFom == other.datoStatusFom
 
     internal fun skalOpphøreOgErstatte(other: Utbetalingslinje, sisteLinjeITidligereOppdrag: Utbetalingslinje) =
         other == sisteLinjeITidligereOppdrag &&
-        (this.fom > other.fom)
+                (this.fom > other.fom)
 
     override fun hashCode(): Int {
         return fom.hashCode() * 37 +
-            tom.hashCode() * 17 +
-            beløp.hashCode() * 41 +
-            grad.hashCode() * 61 +
-            endringskode.name.hashCode() * 59 +
-            datoStatusFom.hashCode() * 23
+                tom.hashCode() * 17 +
+                beløp.hashCode() * 41 +
+                grad.hashCode() * 61 +
+                endringskode.name.hashCode() * 59 +
+                datoStatusFom.hashCode() * 23
     }
 
     internal fun markerUendret(tidligere: Utbetalingslinje) = copyWith(Endringskode.UEND, tidligere)

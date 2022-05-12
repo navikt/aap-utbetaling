@@ -31,4 +31,3 @@ data class DtoVedtak (
     val virkningsdato: LocalDate,
     val fødselsdato: LocalDate
 )
-

@@ -1,6 +1,7 @@
 package no.nav.aap.domene.utbetaling.utbetalingslinjer
 
 import no.nav.aap.domene.utbetaling.dto.DtoOppdrag
+import no.nav.aap.domene.utbetaling.utbetalingslinjer.Utbetalingslinje.Companion.toDto
 import no.nav.aap.domene.utbetaling.visitor.OppdragVisitor
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
@@ -8,7 +9,8 @@ import java.time.LocalDate.MIN
 import java.time.LocalDateTime
 import java.util.*
 
-internal const val WARN_FORLENGER_OPPHØRT_OPPDRAG = "Utbetalingen forlenger et tidligere oppdrag som opphørte alle utbetalte dager. Sjekk simuleringen."
+internal const val WARN_FORLENGER_OPPHØRT_OPPDRAG =
+    "Utbetalingen forlenger et tidligere oppdrag som opphørte alle utbetalte dager. Sjekk simuleringen."
 internal const val WARN_OPPDRAG_FOM_ENDRET = "Utbetaling fra og med dato er endret. Kontroller simuleringen"
 
 internal class Oppdrag private constructor(
@@ -42,9 +44,13 @@ internal class Oppdrag private constructor(
             return endrede.all { it.status == endrede.first().status }
         }
 
-        internal fun ingenFeil(vararg oppdrag: Oppdrag) = oppdrag.none { it.status in listOf(Oppdragstatus.AVVIST,
-            Oppdragstatus.FEIL
-        ) }
+        internal fun ingenFeil(vararg oppdrag: Oppdrag) = oppdrag.none {
+            it.status in listOf(
+                Oppdragstatus.AVVIST,
+                Oppdragstatus.FEIL
+            )
+        }
+
         internal fun kanIkkeForsøkesPåNy(vararg oppdrag: Oppdrag) = oppdrag.any { it.status == Oppdragstatus.AVVIST }
     }
 
@@ -106,7 +112,8 @@ internal class Oppdrag private constructor(
     private operator fun contains(other: Oppdrag) = this.tilhører(other) || this.overlapperMed(other)
 
     internal fun tilhører(other: Oppdrag) = this.fagsystemId == other.fagsystemId && this.fagområde == other.fagområde
-    private fun overlapperMed(other: Oppdrag) = !erTomt() && maxOf(this.førstedato, other.førstedato) <= minOf(this.sistedato, other.sistedato)
+    private fun overlapperMed(other: Oppdrag) =
+        !erTomt() && maxOf(this.førstedato, other.førstedato) <= minOf(this.sistedato, other.sistedato)
 
     internal fun overfør(
         maksdato: LocalDate?,
@@ -221,6 +228,7 @@ internal class Oppdrag private constructor(
         nåværende.first().kobleTil(tidligere.last())
         nåværende.zipWithNext { a, b -> b.kobleTil(a) }
     }
+
     private lateinit var tilstand: Tilstand
     private lateinit var sisteLinjeITidligereOppdrag: Utbetalingslinje
 
@@ -294,8 +302,14 @@ internal class Oppdrag private constructor(
 
     private fun håndterUlikhet(nåværende: Utbetalingslinje, tidligere: Utbetalingslinje) {
         when {
-            nåværende.kanEndreEksisterendeLinje(tidligere, sisteLinjeITidligereOppdrag) -> nåværende.endreEksisterendeLinje(tidligere)
-            nåværende.skalOpphøreOgErstatte(tidligere, sisteLinjeITidligereOppdrag) -> opphørTidligereLinjeOgOpprettNy(nåværende, tidligere)
+            nåværende.kanEndreEksisterendeLinje(
+                tidligere,
+                sisteLinjeITidligereOppdrag
+            ) -> nåværende.endreEksisterendeLinje(tidligere)
+            nåværende.skalOpphøreOgErstatte(tidligere, sisteLinjeITidligereOppdrag) -> opphørTidligereLinjeOgOpprettNy(
+                nåværende,
+                tidligere
+            )
             else -> opprettNyLinje(nåværende)
         }
     }
@@ -350,5 +364,16 @@ internal class Oppdrag private constructor(
         }
     }
 
-    internal fun toDto()= DtoOppdrag()
+    internal fun toDto() = DtoOppdrag(
+        mottaker = mottaker,
+        fagområde = fagområde.name,
+        linjer = linjer.toDto(),
+        fagsystemId = fagsystemId,
+        endringskode = endringskode.name,
+        nettoBeløp = nettoBeløp,
+        overføringstidspunkt = overføringstidspunkt,
+        avstemmingsnøkkel = avstemmingsnøkkel,
+        status = status?.name,
+        tidsstempel = tidsstempel,
+    )
 }
