@@ -9,7 +9,7 @@ import no.nav.aap.kafka.streams.filterNotNull
 import no.nav.aap.kafka.streams.produce
 import org.apache.kafka.streams.StreamsBuilder
 
-fun StreamsBuilder.meldepliktStreamMock() {
+internal fun StreamsBuilder.meldepliktStreamMock() {
     consume(Topics.vedtak)
         .filterNotNull("mock-filter-meldeplikt-tombstone")
         .filter("mock-meldeplikt-filter-for-test-ident") { ident, _ -> ident != "123" }

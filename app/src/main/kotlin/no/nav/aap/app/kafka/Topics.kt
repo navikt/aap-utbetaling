@@ -7,14 +7,14 @@ import no.nav.aap.kafka.serde.json.JsonSerde
 import no.nav.aap.kafka.streams.Table
 import no.nav.aap.kafka.streams.Topic
 
-object Topics {
+internal object Topics {
     val mottakere = Topic("aap.mottakere.v1", JsonSerde.jackson<DtoMottaker>())
     val vedtak = Topic("aap.vedtak.v1", JsonSerde.jackson<DtoVedtakshendelse>())
     val meldeplikt = Topic("aap.meldeplikt.v1", JsonSerde.jackson<DtoMeldepliktshendelse>())
     // TODO Hvordan løser vi samlede løsninger
-    val utbetalingsbehov = Topic("aap.utbetalingsbehov.v1", JsonSerde.jackson<KafkaUtbetalingsbehov>())
+    val utbetalingsbehov = Topic("aap.utbetalingsbehov.v1", JsonSerde.jackson<KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov>())
 }
 
-object Tables {
+internal object Tables {
     val mottakere = Table("mottakere", Topics.mottakere)
 }

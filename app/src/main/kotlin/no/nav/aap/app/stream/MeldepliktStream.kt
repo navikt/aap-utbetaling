@@ -7,15 +7,17 @@ import no.nav.aap.kafka.streams.*
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.KTable
 
-fun StreamsBuilder.meldepliktStream(mottakerKtable: KTable<String, DtoMottaker>) {
+internal fun StreamsBuilder.meldepliktStream(mottakerKtable: KTable<String, DtoMottaker>) {
     val hendelseHåndtert = consume(Topics.meldeplikt)
         .filterNotNull("filter-meldepliktshendelse-tombstone")
         .join(Topics.meldeplikt with Topics.mottakere, mottakerKtable, ::Pair)
         .mapValues { ident, (dtoMeldepliktshendelse, dtoMottaker) ->
             val mottaker = Mottaker.gjenopprett(dtoMottaker)
+            val observer = BehovObserver(ident)
+            mottaker.registerObserver(observer)
             val meldepliktshendelse = dtoMeldepliktshendelse.opprettMeldepliktshendelse()
             mottaker.håndterMeldeplikt(meldepliktshendelse)
-            meldepliktshendelse.behov().map { it.toDto(ident) } to mottaker.toDto()
+            observer.behovene() to mottaker.toDto()
         }
 
     hendelseHåndtert

@@ -1,38 +1,49 @@
 package no.nav.aap.app.stream
 
-import no.nav.aap.app.kafka.KafkaUtbetalingsbehov
+import no.nav.aap.app.kafka.KafkaUtbetalingsbehovWrapper
 import no.nav.aap.app.kafka.Topics
-import no.nav.aap.domene.utbetaling.dto.DtoBehov
-import no.nav.aap.domene.utbetaling.hendelse.Lytter
-import no.nav.aap.kafka.streams.Topic
-import no.nav.aap.kafka.streams.mapValues
-import no.nav.aap.kafka.streams.named
-import no.nav.aap.kafka.streams.produce
-import org.apache.kafka.streams.kstream.Branched
-import org.apache.kafka.streams.kstream.BranchedKStream
+import no.nav.aap.domene.utbetaling.observer.MottakerObserver
+import no.nav.aap.kafka.streams.Behov
+import no.nav.aap.kafka.streams.BehovVisitor
+import no.nav.aap.kafka.streams.branch
+import no.nav.aap.kafka.streams.sendBehov
 import org.apache.kafka.streams.kstream.KStream
 
-internal fun KStream<String, DtoBehov>.sendBehov(name: String) {
-    split(named("$name-split-behov"))
-        .branch(Topics.utbetalingsbehov, "$name-barn", DtoBehov::erBarn, ::ToKafkaUtbetalingsbehov)
+internal fun KStream<String, BehovUtbetaling>.sendBehov(name: String): Unit = sendBehov(name) {
+    branch(Topics.utbetalingsbehov, "$name-barn", BehovUtbetaling::erUtbetalingsbehov, ::UtbetalingsbehovVisitor)
 }
 
-private fun <JSON : Any, MAPPER> BranchedKStream<String, DtoBehov>.branch(
-    topic: Topic<JSON>,
-    branchName: String,
-    predicate: (DtoBehov) -> Boolean,
-    getMapper: (String) -> MAPPER
-) where MAPPER : ToKafka<JSON>, MAPPER : Lytter =
-    branch({ _, value -> predicate(value) }, Branched.withConsumer<String?, DtoBehov?> { chain ->
-        chain
-            .mapValues("branch-$branchName-map-behov") { key, value -> getMapper(key).also(value::accept).toJson() }
-            .produce(topic, "branch-$branchName-produced-behov")
-    }.withName("-branch-$branchName"))
-
-private interface ToKafka<out JSON> {
-    fun toJson(): JSON
+internal interface BehovUtbetalingVisitor : BehovVisitor<KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov> {
+    fun utbetalingsbehov(kafkaUtbetalingsbehov: KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov) {}
 }
 
-private class ToKafkaUtbetalingsbehov(private val ident: String) : Lytter, ToKafka<KafkaUtbetalingsbehov> {
-    override fun toJson() = KafkaUtbetalingsbehov(KafkaUtbetalingsbehov.Request(ident), null)
+internal interface BehovUtbetaling : Behov<KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov, BehovUtbetalingVisitor> {
+    fun erUtbetalingsbehov() = false
+}
+
+private class UtbetalingsbehovVisitor : BehovUtbetalingVisitor {
+    private lateinit var utbetalingsbehov: KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov
+
+    override fun utbetalingsbehov(kafkaUtbetalingsbehov: KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov) {
+        this.utbetalingsbehov = kafkaUtbetalingsbehov
+    }
+
+    override fun toJson() = utbetalingsbehov
+}
+
+internal class BehovObserver(private val ident: String) : MottakerObserver {
+    private val behovUtbetaling = mutableListOf<BehovUtbetaling>()
+
+    fun behovene() = behovUtbetaling.toList()
+
+    override fun behovBarn() {
+        behovUtbetaling.add(
+            KafkaUtbetalingsbehovWrapper(
+                KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov(
+                    KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov.Request(ident),
+                    null
+                )
+            )
+        )
+    }
 }

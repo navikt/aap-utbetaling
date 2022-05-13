@@ -7,7 +7,7 @@ import no.nav.aap.kafka.streams.*
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.KTable
 
-fun StreamsBuilder.løsningStream(mottakerKtable: KTable<String, DtoMottaker>) {
+internal fun StreamsBuilder.løsningStream(mottakerKtable: KTable<String, DtoMottaker>) {
     consume(Topics.utbetalingsbehov)
         .filterNotNull("filter-losning-tombstone")
         .filter("filter-losning-response") { _, løsning -> løsning.response != null }

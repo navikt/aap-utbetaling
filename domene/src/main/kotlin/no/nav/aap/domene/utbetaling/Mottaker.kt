@@ -7,9 +7,9 @@ import no.nav.aap.domene.utbetaling.entitet.Personident
 import no.nav.aap.domene.utbetaling.hendelse.Hendelse
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
-import no.nav.aap.domene.utbetaling.hendelse.behov.BehovBarn
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningBarn
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningInstitusjon
+import no.nav.aap.domene.utbetaling.observer.MottakerObserver
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjehistorikk
 import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 
@@ -23,6 +23,7 @@ class Mottaker private constructor(
     private val oppdragshistorikk: Oppdragshistorikk,
     private var tilstand: Tilstand = Tilstand.Start
 ) {
+    private val observers = mutableListOf<MottakerObserver>()
 
     constructor(
         personident: Personident,
@@ -48,6 +49,14 @@ class Mottaker private constructor(
             oppdragshistorikk = Oppdragshistorikk(),
             tilstand = enumValueOf<Tilstand.Tilstandsnavn>(dtoMottaker.tilstand).tilknyttetTilstand()
         )
+    }
+
+    fun registerObserver(observer: MottakerObserver) {
+        observers.add(observer)
+    }
+
+    private fun notifyObservers(block: MottakerObserver.() -> Unit) {
+        observers.forEach { it.block() }
     }
 
     fun håndterVedtak(vedtak: Vedtakshendelse) {
@@ -131,7 +140,7 @@ class Mottaker private constructor(
 
             //TODO on entry: behov -> slå opp barn og institusjon
             override fun entering(mottaker: Mottaker, hendelse: Hendelse) {
-                hendelse.opprettBehov(BehovBarn())
+                mottaker.notifyObservers { behovBarn() }
             }
 
             override fun håndterVedtak(mottaker: Mottaker, vedtak: Vedtakshendelse) {

@@ -2,7 +2,7 @@ package no.nav.aap.app
 
 import io.ktor.server.testing.*
 import kotlinx.coroutines.runBlocking
-import no.nav.aap.app.kafka.KafkaUtbetalingsbehov
+import no.nav.aap.app.kafka.KafkaUtbetalingsbehovWrapper
 import no.nav.aap.app.kafka.Topics
 import no.nav.aap.domene.utbetaling.dto.*
 import no.nav.aap.kafka.streams.test.readAndAssert
@@ -123,7 +123,7 @@ class AppTest {
         val behov = løsningOutputTopic.readValue()
         løsningInputTopic.produce("123") {
             behov.copy(
-                response = KafkaUtbetalingsbehov.Response(
+                response = KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov.Response(
                     DtoLøsning(
                         barn = listOf(DtoLøsningBarn(LocalDate.now()))
                     )

@@ -13,7 +13,7 @@ import no.nav.aap.kafka.streams.produce
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.KTable
 
-fun StreamsBuilder.vedtakStream(mottakerKtable: KTable<String, DtoMottaker>) {
+internal fun StreamsBuilder.vedtakStream(mottakerKtable: KTable<String, DtoMottaker>) {
     consume(Topics.vedtak)
         .filterNotNull("filter-vedtakshendelse-tombstone")
         .leftJoin(Topics.vedtak with Topics.mottakere, mottakerKtable, ::Pair)
