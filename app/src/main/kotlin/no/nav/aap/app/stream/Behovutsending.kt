@@ -4,7 +4,7 @@ import no.nav.aap.app.kafka.KafkaUtbetalingsbehovWrapper
 import no.nav.aap.app.kafka.Topics
 import no.nav.aap.domene.utbetaling.observer.MottakerObserver
 import no.nav.aap.kafka.streams.Behov
-import no.nav.aap.kafka.streams.BehovVisitor
+import no.nav.aap.kafka.streams.BehovExtractor
 import no.nav.aap.kafka.streams.branch
 import no.nav.aap.kafka.streams.sendBehov
 import org.apache.kafka.streams.kstream.KStream
@@ -13,15 +13,16 @@ internal fun KStream<String, BehovUtbetaling>.sendBehov(name: String): Unit = se
     branch(Topics.utbetalingsbehov, "$name-barn", BehovUtbetaling::erUtbetalingsbehov, ::UtbetalingsbehovVisitor)
 }
 
-internal interface BehovUtbetalingVisitor : BehovVisitor<KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov> {
+internal interface BehovUtbetalingVisitor {
     fun utbetalingsbehov(kafkaUtbetalingsbehov: KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov) {}
 }
 
-internal interface BehovUtbetaling : Behov<KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov, BehovUtbetalingVisitor> {
+internal interface BehovUtbetaling : Behov<BehovUtbetalingVisitor> {
     fun erUtbetalingsbehov() = false
 }
 
-private class UtbetalingsbehovVisitor : BehovUtbetalingVisitor {
+private class UtbetalingsbehovVisitor : BehovUtbetalingVisitor,
+    BehovExtractor<KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov> {
     private lateinit var utbetalingsbehov: KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov
 
     override fun utbetalingsbehov(kafkaUtbetalingsbehov: KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov) {

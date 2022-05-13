@@ -10,8 +10,8 @@ application {
 dependencies {
     implementation(project(":domene"))
 
-    implementation("com.github.navikt.aap-libs:ktor-utils:0.1.1")
-    implementation("com.github.navikt.aap-libs:kafka:0.1.1")
+    implementation("com.github.navikt.aap-libs:ktor-utils:0.1.2")
+    implementation("com.github.navikt.aap-libs:kafka:0.1.2")
 
     implementation("io.ktor:ktor-server-core:2.0.1")
     implementation("io.ktor:ktor-server-netty:2.0.1")
@@ -32,7 +32,7 @@ dependencies {
     }
 
     testImplementation(kotlin("test"))
-    testImplementation("com.github.navikt.aap-libs:kafka-test:0.1.1")
+    testImplementation("com.github.navikt.aap-libs:kafka-test:0.1.2")
     testImplementation("io.ktor:ktor-server-test-host:2.0.1")
     testImplementation("uk.org.webcompere:system-stubs-jupiter:2.0.1")
 }
