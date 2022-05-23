@@ -6,6 +6,7 @@ import java.time.LocalDate
 
 internal object Grunnbeløp {
     private val grunnbeløp = listOf(
+        Element(2022, 5, 1, 111477, 109784),
         Element(2021, 5, 1, 106399, 104716),
         Element(2020, 5, 1, 101351, 100853),
         Element(2019, 5, 1, 99858, 98866),

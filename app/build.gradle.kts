@@ -20,7 +20,7 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus:1.9.0")
 
     implementation("ch.qos.logback:logback-classic:1.2.11")
-    runtimeOnly("net.logstash.logback:logstash-logback-encoder:7.1.1")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:7.2")
 
     implementation("com.fasterxml.jackson.core:jackson-core:2.13.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")

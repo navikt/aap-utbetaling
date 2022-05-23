@@ -182,7 +182,7 @@ internal class MottakerTest {
         assertEquals(2, mottaker.inspektør.antallDagerIAktivitetstidslinje)
         assertEquals(2, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
         assertEquals(0, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(2214, mottaker.inspektør.totalBeløp[0])
+        assertEquals(2318, mottaker.inspektør.totalBeløp[0])
     }
 
     @Test
@@ -225,7 +225,7 @@ internal class MottakerTest {
         assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
         assertEquals(8, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
         assertEquals(2, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(8856, mottaker.inspektør.totalBeløp[0])
+        assertEquals(9272, mottaker.inspektør.totalBeløp[0])
     }
 
     @Test
@@ -268,7 +268,8 @@ internal class MottakerTest {
         assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
         assertEquals(10, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
         assertEquals(0, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(6640, mottaker.inspektør.totalBeløp[0])
+        //TODO: Skal barnetillegg reduseres tilsvarende arbeidsprosenten?
+        assertEquals(6950, mottaker.inspektør.totalBeløp[0])
     }
 
     @Test
@@ -311,7 +312,7 @@ internal class MottakerTest {
         assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
         assertEquals(10, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
         assertEquals(0, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(6820, mottaker.inspektør.totalBeløp[0])
+        assertEquals(7150, mottaker.inspektør.totalBeløp[0])
     }
 
     @Test
@@ -354,7 +355,7 @@ internal class MottakerTest {
         assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
         assertEquals(8, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
         assertEquals(2, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(8856, mottaker.inspektør.totalBeløp[0])
+        assertEquals(9272, mottaker.inspektør.totalBeløp[0])
 
         mottaker.håndterVedtak(
             Vedtakshendelse(
@@ -370,7 +371,7 @@ internal class MottakerTest {
         assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
         assertEquals(8, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
         assertEquals(2, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
-        assertEquals(11016, mottaker.inspektør.totalBeløp[1])
+        assertEquals(11536, mottaker.inspektør.totalBeløp[1])
     }
 
     @Test
@@ -413,7 +414,7 @@ internal class MottakerTest {
         assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
         assertEquals(8, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
         assertEquals(2, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(8856, mottaker.inspektør.totalBeløp[0])
+        assertEquals(9272, mottaker.inspektør.totalBeløp[0])
 
         mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
@@ -482,7 +483,7 @@ internal class MottakerTest {
         assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
         assertEquals(8, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
         assertEquals(2, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(8856, mottaker.inspektør.totalBeløp[0])
+        assertEquals(9272, mottaker.inspektør.totalBeløp[0])
 
         mottaker.håndterMeldeplikt(
             Meldepliktshendelse(
@@ -510,7 +511,7 @@ internal class MottakerTest {
         assertEquals(28, mottaker.inspektør.antallDagerIAktivitetstidslinje)
         assertEquals(16, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
         assertEquals(4, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
-        assertEquals(17712, mottaker.inspektør.totalBeløp[1])
+        assertEquals(18544, mottaker.inspektør.totalBeløp[1])
     }
 
     @Test
@@ -564,7 +565,7 @@ internal class MottakerTest {
         assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
         assertEquals(8, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
         assertEquals(2, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(11016, mottaker.inspektør.totalBeløp[0])
+        assertEquals(11536, mottaker.inspektør.totalBeløp[0])
     }
 
     @Test
@@ -607,7 +608,7 @@ internal class MottakerTest {
         assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
         assertEquals(8, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[0])
         assertEquals(2, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[0])
-        assertEquals(8856, mottaker.inspektør.totalBeløp[0])
+        assertEquals(9272, mottaker.inspektør.totalBeløp[0])
 
 
         mottaker.håndterMeldeplikt(
@@ -636,7 +637,7 @@ internal class MottakerTest {
         assertEquals(14, mottaker.inspektør.antallDagerIAktivitetstidslinje)
         assertEquals(10, mottaker.inspektør.antallUtbetalingsdagerIUtbetalingstidslinje[1])
         assertEquals(0, mottaker.inspektør.antallIkkeUtbetalingsdagerIUtbetalingstidslinje[1])
-        assertEquals(11070, mottaker.inspektør.totalBeløp[1])
+        assertEquals(11590, mottaker.inspektør.totalBeløp[1])
     }
 
     private val Mottaker.inspektør get() = TestVisitor(this)
