@@ -14,7 +14,7 @@ dependencies {
     implementation("com.github.navikt.aap-libs:kafka:0.1.4")
 
     implementation("io.ktor:ktor-server-core:2.0.1")
-    implementation("io.ktor:ktor-server-netty:2.0.1")
+    implementation("io.ktor:ktor-server-netty:2.0.2")
 
     implementation("io.ktor:ktor-server-metrics-micrometer:2.0.1")
     implementation("io.micrometer:micrometer-registry-prometheus:1.9.0")
