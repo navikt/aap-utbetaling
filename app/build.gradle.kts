@@ -28,7 +28,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation("com.github.navikt.aap-libs:kafka-test:0.1.4")
-    testImplementation("io.ktor:ktor-server-test-host:2.0.1")
+    testImplementation("io.ktor:ktor-server-test-host:2.0.2")
     testImplementation("uk.org.webcompere:system-stubs-jupiter:2.0.1")
 }
 
