@@ -5,8 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '.nais/topic-mottakere.yml'
-      - '.nais/topic-utbetalingsbehov.yml'
+      - '.nais/topic-*.yml'
       - '.github/workflows/deploy-topics.yml'
 
 jobs:
