@@ -10,8 +10,8 @@ application {
 dependencies {
     implementation(project(":domene"))
 
-    implementation("com.github.navikt.aap-libs:ktor-utils:0.1.9")
-    implementation("com.github.navikt.aap-libs:kafka:0.1.9")
+    implementation("com.github.navikt.aap-libs:ktor-utils:2.0.1")
+    implementation("com.github.navikt.aap-libs:kafka:2.0.1")
 
     implementation("io.ktor:ktor-server-core:2.0.2")
     implementation("io.ktor:ktor-server-netty:2.0.2")
@@ -27,7 +27,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3")
 
     testImplementation(kotlin("test"))
-    testImplementation("com.github.navikt.aap-libs:kafka-test:0.1.9")
+    testImplementation("com.github.navikt.aap-libs:kafka-test:2.0.1")
     testImplementation("io.ktor:ktor-server-test-host:2.0.2")
 }
 
