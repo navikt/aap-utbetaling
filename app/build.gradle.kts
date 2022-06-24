@@ -27,7 +27,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3")
 
     testImplementation(kotlin("test"))
-    testImplementation("com.github.navikt.aap-libs:kafka-test:2.0.6")
+    testImplementation("com.github.navikt.aap-libs:kafka-test:2.0.12")
     testImplementation("io.ktor:ktor-server-test-host:2.0.2")
 }
 
