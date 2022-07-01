@@ -25,7 +25,6 @@ class MockEnvironment : AutoCloseable {
         "KAFKA_STREAMS_APPLICATION_ID" to "utbetaling",
         "KAFKA_BROKERS" to "mock://kafka",
         "KAFKA_TRUSTSTORE_PATH" to "",
-        "KAFKA_SECURITY_ENABLED" to "false",
         "KAFKA_KEYSTORE_PATH" to "",
         "KAFKA_CREDSTORE_PASSWORD" to "",
         "KAFKA_CLIENT_ID" to "utbetaling"
