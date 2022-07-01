@@ -6,10 +6,10 @@ import no.nav.aap.domene.utbetaling.dto.DtoMottaker
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Personident
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
-import no.nav.aap.kafka.streams.consume
-import no.nav.aap.kafka.streams.filterNotNull
-import no.nav.aap.kafka.streams.leftJoin
-import no.nav.aap.kafka.streams.produce
+import no.nav.aap.kafka.streams.extension.consume
+import no.nav.aap.kafka.streams.extension.filterNotNull
+import no.nav.aap.kafka.streams.extension.leftJoin
+import no.nav.aap.kafka.streams.extension.produce
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.KTable
 

@@ -3,9 +3,9 @@ package no.nav.aap.app.stream.mock
 import no.nav.aap.app.kafka.Topics
 import no.nav.aap.domene.utbetaling.dto.DtoAkivitetPerDag
 import no.nav.aap.domene.utbetaling.dto.DtoMeldepliktshendelse
-import no.nav.aap.kafka.streams.filter
-import no.nav.aap.kafka.streams.filterNotNull
-import no.nav.aap.kafka.streams.produce
+import no.nav.aap.kafka.streams.extension.filter
+import no.nav.aap.kafka.streams.extension.filterNotNull
+import no.nav.aap.kafka.streams.extension.produce
 import org.apache.kafka.streams.StreamsBuilder
 
 internal fun StreamsBuilder.meldepliktStreamMock() {

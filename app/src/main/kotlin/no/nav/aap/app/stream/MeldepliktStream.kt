@@ -3,7 +3,7 @@ package no.nav.aap.app.stream
 import no.nav.aap.app.kafka.Topics
 import no.nav.aap.domene.utbetaling.Mottaker
 import no.nav.aap.domene.utbetaling.dto.DtoMottaker
-import no.nav.aap.kafka.streams.*
+import no.nav.aap.kafka.streams.extension.*
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.KTable
 

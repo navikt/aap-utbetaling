@@ -17,15 +17,15 @@ import no.nav.aap.app.stream.meldepliktStream
 import no.nav.aap.app.stream.mock.meldepliktStreamMock
 import no.nav.aap.app.stream.mock.utbetalingsbehovStreamMock
 import no.nav.aap.app.stream.vedtakStream
-import no.nav.aap.kafka.streams.*
+import no.nav.aap.kafka.streams.KStreams
+import no.nav.aap.kafka.streams.KafkaStreams
+import no.nav.aap.kafka.streams.extension.consume
+import no.nav.aap.kafka.streams.extension.produce
 import no.nav.aap.kafka.streams.store.scheduleMetrics
 import no.nav.aap.ktor.config.loadConfig
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
-import org.slf4j.LoggerFactory
 import kotlin.time.Duration.Companion.minutes
-
-private val secureLog = LoggerFactory.getLogger("secureLog")
 
 fun main() {
     embeddedServer(Netty, port = 8080, module = Application::server).start(wait = true)
@@ -53,7 +53,6 @@ internal fun Application.server(kafka: KStreams = KafkaStreams) {
 
 internal fun topology(registry: MeterRegistry): Topology = StreamsBuilder().apply {
     val mottakerKtable = consume(Topics.mottakere)
-        .filterNotNull("filter-mottakere-tombstone")
         .produce(Tables.mottakere)
 
     mottakerKtable.scheduleMetrics(Tables.mottakere, 2.minutes, registry)
