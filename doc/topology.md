@@ -7,8 +7,8 @@ graph LR
 
 subgraph Utbetaling
     %% TOPICS
-    aap.utbetalingsbehov.v1([aap.utbetalingsbehov.v1])
-	aap.meldeplikt.v1([aap.meldeplikt.v1])
+    aap.meldeplikt.v1([aap.meldeplikt.v1])
+	aap.utbetalingsbehov.v1([aap.utbetalingsbehov.v1])
 	aap.vedtak.v1([aap.vedtak.v1])
 	aap.mottakere.v1([aap.mottakere.v1])
     
@@ -50,8 +50,8 @@ end
 %% blue     #07cff6
 
 %% STYLES
-style aap.utbetalingsbehov.v1 fill:#c233b4, stroke:#2a204a, stroke-width:2px, color:#2a204a
 style aap.meldeplikt.v1 fill:#c233b4, stroke:#2a204a, stroke-width:2px, color:#2a204a
+style aap.utbetalingsbehov.v1 fill:#c233b4, stroke:#2a204a, stroke-width:2px, color:#2a204a
 style aap.vedtak.v1 fill:#c233b4, stroke:#2a204a, stroke-width:2px, color:#2a204a
 style aap.mottakere.v1 fill:#c233b4, stroke:#2a204a, stroke-width:2px, color:#2a204a
 style mottakere-state-store fill:#78369f, stroke:#2a204a, stroke-width:2px, color:#2a204a
