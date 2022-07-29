@@ -1,4 +1,4 @@
-name: Deploy Topic
+name: Deploy Topics
 
 on:
   push:
@@ -10,29 +10,26 @@ on:
       - '.nais/dev.yml'
 
 jobs:
-  deploy-mottakere:
-    name: Deploy mottakere
+  deploy:
+    strategy:
+      matrix:
+        name:
+          - topic-mottakere.yml
+          - topic-utbetalingsbehov.yml
+        cluster:
+          - dev-gcp
+        include:
+          - cluster: dev-gcp
+            vars: dev.yml
+    name: Deploy ${{ matrix.name }} to ${{ matrix.cluster }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Deploy aap.mottakere.v1 to dev
+      - name: Deploy ${{ matrix.name }} to ${{ matrix.cluster }}
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-gcp
-          RESOURCE: .nais/topic-mottakere.yml
-          VARS: .nais/dev.yml
-          PRINT_PAYLOAD: true
-  deploy-utbetalingsbehov:
-    name: Deploy utbetalingsbehov
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy aap.utbetalingsbehov.v1 to dev
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-gcp
-          RESOURCE: .nais/topic-utbetalingsbehov.yml
-          VARS: .nais/dev.yml
+          CLUSTER: ${{ matrix.cluster }}
+          RESOURCE: .nais/${{ matrix.name }}
+          VARS: .nais/${{ matrix.vars }}
           PRINT_PAYLOAD: true
