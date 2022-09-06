@@ -1,5 +1,5 @@
 val aapLibVersion = "3.1.5"
-val ktorVersion = "2.0.3"
+val ktorVersion = "2.1.1"
 
 plugins {
     id("com.github.johnrengelman.shadow")
