@@ -6,7 +6,7 @@ import no.nav.aap.domene.utbetaling.dto.DtoMottaker
 import no.nav.aap.domene.utbetaling.dto.DtoVedtakshendelse
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Personident
-import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
+import no.nav.aap.dto.kafka.IverksettVedtakKafkaDto
 import no.nav.aap.kafka.streams.extension.consume
 import no.nav.aap.kafka.streams.extension.filterNotNull
 import no.nav.aap.kafka.streams.extension.leftJoin
@@ -21,11 +21,21 @@ internal fun StreamsBuilder.vedtakStream(mottakerKtable: KTable<String, DtoMotta
         .produce(Topics.mottakere, "produced-mottakere-for-vedtak")
 }
 
-private val håndter = { ident: String, dtoVedtakshendelse: DtoVedtakshendelse, dtoMottaker: DtoMottaker? ->
+private val håndter = { ident: String, kafkaDto: IverksettVedtakKafkaDto, dtoMottaker: DtoMottaker? ->
     val mottaker = dtoMottaker?.let { Mottaker.gjenopprett(it) } ?: Mottaker(
         Personident(ident),
-        Fødselsdato(dtoVedtakshendelse.fødselsdato)
+        Fødselsdato(kafkaDto.fødselsdato)
     )
-    mottaker.håndterVedtak(Vedtakshendelse.gjenopprett(dtoVedtakshendelse))
+    val dtoVedtakshendelse = gjenopprett(kafkaDto)
+    dtoVedtakshendelse.håndter(mottaker)
     mottaker.toDto()
 }
+
+private fun gjenopprett(kafkaDto: IverksettVedtakKafkaDto) = DtoVedtakshendelse(
+    vedtaksid = kafkaDto.vedtaksid,
+    innvilget = kafkaDto.innvilget,
+    grunnlagsfaktor = kafkaDto.grunnlagsfaktor,
+    vedtaksdato = kafkaDto.vedtaksdato,
+    virkningsdato = kafkaDto.virkningsdato,
+    fødselsdato = kafkaDto.fødselsdato,
+)

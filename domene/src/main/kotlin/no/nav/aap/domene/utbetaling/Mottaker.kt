@@ -59,7 +59,7 @@ class Mottaker private constructor(
         observers.forEach { it.block() }
     }
 
-    fun håndterVedtak(vedtak: Vedtakshendelse) {
+    internal fun håndterVedtak(vedtak: Vedtakshendelse) {
         tilstand.håndterVedtak(this, vedtak)
     }
 

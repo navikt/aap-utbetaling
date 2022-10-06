@@ -6,7 +6,7 @@ import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import java.time.LocalDate
 import java.util.*
 
-class Vedtakshendelse(
+internal class Vedtakshendelse(
     val vedtaksid: UUID,
     val innvilget: Boolean,
     val grunnlagsfaktor: Grunnlagsfaktor,
@@ -14,8 +14,8 @@ class Vedtakshendelse(
     val virkningsdato: LocalDate,
     val fødselsdato: Fødselsdato
 ) : Hendelse() {
-    companion object {
-        fun gjenopprett(dtoVedtak: DtoVedtakshendelse) = Vedtakshendelse(
+    internal companion object {
+        internal fun gjenopprett(dtoVedtak: DtoVedtakshendelse) = Vedtakshendelse(
             vedtaksid = dtoVedtak.vedtaksid,
             innvilget = dtoVedtak.innvilget,
             grunnlagsfaktor = Grunnlagsfaktor(dtoVedtak.grunnlagsfaktor),

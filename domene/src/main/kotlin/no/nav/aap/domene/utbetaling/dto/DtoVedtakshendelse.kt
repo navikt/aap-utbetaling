@@ -1,8 +1,6 @@
 package no.nav.aap.domene.utbetaling.dto
 
 import no.nav.aap.domene.utbetaling.Mottaker
-import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
-import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import java.time.LocalDate
 import java.util.*
@@ -16,15 +14,6 @@ data class DtoVedtakshendelse(
     val fødselsdato: LocalDate
 ) {
     fun håndter(mottaker: Mottaker) {
-        mottaker.håndterVedtak(
-            Vedtakshendelse(
-                vedtaksid = vedtaksid,
-                innvilget = innvilget,
-                grunnlagsfaktor = Grunnlagsfaktor(grunnlagsfaktor),
-                vedtaksdato = vedtaksdato,
-                virkningsdato = virkningsdato,
-                fødselsdato = Fødselsdato(fødselsdato)
-            )
-        )
+        mottaker.håndterVedtak(Vedtakshendelse.gjenopprett(this))
     }
 }
