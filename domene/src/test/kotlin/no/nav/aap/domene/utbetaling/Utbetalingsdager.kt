@@ -4,8 +4,8 @@ import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjedag
 import java.time.LocalDate
 
-object Utbetalingsdager {
-    internal var seed = 3 januar 2022
+internal object Utbetalingsdager {
+    private var seed = 3 januar 2022
         get() {
             val f = field
             field = field.plusDays(1)

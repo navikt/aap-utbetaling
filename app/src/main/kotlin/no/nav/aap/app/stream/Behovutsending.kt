@@ -2,7 +2,7 @@ package no.nav.aap.app.stream
 
 import no.nav.aap.app.kafka.KafkaUtbetalingsbehovWrapper
 import no.nav.aap.app.kafka.Topics
-import no.nav.aap.domene.utbetaling.observer.MottakerObserver
+import no.nav.aap.domene.utbetaling.dto.DtoMottakerObserver
 import no.nav.aap.kafka.streams.Behov
 import no.nav.aap.kafka.streams.BehovExtractor
 import no.nav.aap.kafka.streams.branch
@@ -32,7 +32,7 @@ private class UtbetalingsbehovVisitor : BehovUtbetalingVisitor,
     override fun toJson() = utbetalingsbehov
 }
 
-internal class BehovObserver(private val ident: String) : MottakerObserver {
+internal class BehovObserver(private val ident: String) : DtoMottakerObserver {
     private val behovUtbetaling = mutableListOf<BehovUtbetaling>()
 
     fun behovene() = behovUtbetaling.toList()

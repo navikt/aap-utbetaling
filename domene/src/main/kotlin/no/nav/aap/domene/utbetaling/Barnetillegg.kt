@@ -6,7 +6,7 @@ import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import java.time.LocalDate
 
-class Barnetillegg {
+internal class Barnetillegg {
     private val historikk = mutableListOf<Barna>()
     private val nyesteInnslag get() = historikk.last()
 
@@ -23,13 +23,13 @@ class Barnetillegg {
         historikk.add(Barna(barna))
     }
 
-    class Barna(
+    internal class Barna(
         private val barn: List<Barn>
     ) {
         internal fun antallBarnUnder18År(dato: LocalDate) = barn.antallBarnUnder18År(dato)
     }
 
-    class Barn(
+    internal class Barn(
         private val fødselsdato: Fødselsdato
         // Legg til inntekt
     ) {

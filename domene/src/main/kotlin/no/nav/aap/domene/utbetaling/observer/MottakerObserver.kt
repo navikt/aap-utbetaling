@@ -1,5 +1,5 @@
 package no.nav.aap.domene.utbetaling.observer
 
-interface MottakerObserver {
+internal interface MottakerObserver {
     fun behovBarn() {}
 }

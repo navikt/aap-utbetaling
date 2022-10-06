@@ -1,11 +1,8 @@
 package no.nav.aap.app.stream
 
 import no.nav.aap.app.kafka.Topics
-import no.nav.aap.domene.utbetaling.Mottaker
 import no.nav.aap.domene.utbetaling.dto.DtoMottaker
 import no.nav.aap.domene.utbetaling.dto.DtoVedtakshendelse
-import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
-import no.nav.aap.domene.utbetaling.entitet.Personident
 import no.nav.aap.dto.kafka.IverksettVedtakKafkaDto
 import no.nav.aap.kafka.streams.extension.consume
 import no.nav.aap.kafka.streams.extension.filterNotNull
@@ -22,13 +19,10 @@ internal fun StreamsBuilder.vedtakStream(mottakerKtable: KTable<String, DtoMotta
 }
 
 private val håndter = { ident: String, kafkaDto: IverksettVedtakKafkaDto, dtoMottaker: DtoMottaker? ->
-    val mottaker = dtoMottaker?.let { Mottaker.gjenopprett(it) } ?: Mottaker(
-        Personident(ident),
-        Fødselsdato(kafkaDto.fødselsdato)
-    )
+    val mottaker = dtoMottaker ?: DtoMottaker.opprettMottaker(ident, kafkaDto.fødselsdato)
     val dtoVedtakshendelse = gjenopprett(kafkaDto)
-    dtoVedtakshendelse.håndter(mottaker)
-    mottaker.toDto()
+    val nyDtoMottaker = dtoVedtakshendelse.håndter(mottaker)
+    nyDtoMottaker
 }
 
 private fun gjenopprett(kafkaDto: IverksettVedtakKafkaDto) = DtoVedtakshendelse(

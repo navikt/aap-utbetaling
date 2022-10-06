@@ -3,7 +3,7 @@ package no.nav.aap.domene.utbetaling.entitet
 import kotlin.math.round
 import kotlin.math.roundToInt
 
-class Beløp(verdi: Number) : Comparable<Beløp> {
+internal class Beløp(verdi: Number) : Comparable<Beløp> {
 
     private val verdi: Double = round(verdi.toDouble() * 100) / 100
 

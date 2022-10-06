@@ -13,7 +13,7 @@ import no.nav.aap.domene.utbetaling.observer.MottakerObserver
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjehistorikk
 import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 
-class Mottaker private constructor(
+internal class Mottaker private constructor(
     private val personident: Personident,
     private val fødselsdato: Fødselsdato,
     private val vedtakshistorikk: Vedtakshistorikk,
@@ -25,7 +25,7 @@ class Mottaker private constructor(
 ) {
     private val observers = mutableListOf<MottakerObserver>()
 
-    constructor(
+    internal constructor(
         personident: Personident,
         fødselsdato: Fødselsdato
     ) : this(
@@ -38,8 +38,8 @@ class Mottaker private constructor(
         Oppdragshistorikk()
     )
 
-    companion object {
-        fun gjenopprett(dtoMottaker: DtoMottaker) = Mottaker(
+    internal companion object {
+        internal fun gjenopprett(dtoMottaker: DtoMottaker) = Mottaker(
             personident = Personident(dtoMottaker.personident),
             fødselsdato = Fødselsdato(dtoMottaker.fødselsdato),
             vedtakshistorikk = Vedtakshistorikk.gjenopprett(dtoMottaker.vedtakshistorikk),
@@ -51,7 +51,7 @@ class Mottaker private constructor(
         )
     }
 
-    fun registerObserver(observer: MottakerObserver) {
+    internal fun registerObserver(observer: MottakerObserver) {
         observers.add(observer)
     }
 
@@ -63,11 +63,11 @@ class Mottaker private constructor(
         tilstand.håndterVedtak(this, vedtak)
     }
 
-    fun håndterMeldeplikt(melding: Meldepliktshendelse) {
+    internal fun håndterMeldeplikt(melding: Meldepliktshendelse) {
         tilstand.håndterMeldeplikt(this, melding)
     }
 
-    fun håndterLøsning(løsning: LøsningBarn) {
+    internal fun håndterLøsning(løsning: LøsningBarn) {
         tilstand.håndterLøsning(this, løsning)
     }
 
@@ -75,7 +75,7 @@ class Mottaker private constructor(
 
     }
 
-    fun toDto() = DtoMottaker(
+    internal fun toDto() = DtoMottaker(
         personident = personident.toDto(),
         fødselsdato = fødselsdato.toDto(),
         vedtakshistorikk = vedtakshistorikk.toDto(),

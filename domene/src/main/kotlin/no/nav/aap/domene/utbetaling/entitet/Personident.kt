@@ -1,6 +1,6 @@
 package no.nav.aap.domene.utbetaling.entitet
 
-class Personident(
+internal class Personident(
     private val ident: String
 ) {
     internal fun toDto() = ident

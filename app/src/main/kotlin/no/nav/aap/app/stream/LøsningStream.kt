@@ -2,7 +2,6 @@ package no.nav.aap.app.stream
 
 import no.nav.aap.app.kafka.KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov
 import no.nav.aap.app.kafka.Topics
-import no.nav.aap.domene.utbetaling.Mottaker
 import no.nav.aap.domene.utbetaling.dto.DtoMottaker
 import no.nav.aap.kafka.streams.extension.consume
 import no.nav.aap.kafka.streams.extension.filterNotNullBy
@@ -20,7 +19,5 @@ internal fun StreamsBuilder.løsningStream(mottakerKtable: KTable<String, DtoMot
 
 private val håndter = { løsning: KafkaUtbetalingsbehov, dtoMottaker: DtoMottaker ->
     val response = requireNotNull(løsning.response) { "Hendelse uten response må filtreres bort" }
-    val mottaker = Mottaker.gjenopprett(dtoMottaker)
-    mottaker.håndterLøsning(response.barn.opprettLøsning())
-    mottaker.toDto()
+    response.barn.håndter(dtoMottaker)
 }

@@ -2,7 +2,7 @@ package no.nav.aap.domene.utbetaling.entitet
 
 import java.time.LocalDate
 
-class Fødselsdato(private val dato: LocalDate) {
+internal class Fødselsdato(private val dato: LocalDate) {
     private val `18ÅrsDagen`: LocalDate = this.dato.plusYears(18)
     private val `25ÅrsDagen`: LocalDate = this.dato.plusYears(25)
 

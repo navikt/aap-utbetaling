@@ -13,7 +13,9 @@ data class DtoVedtakshendelse(
     val virkningsdato: LocalDate,
     val fødselsdato: LocalDate
 ) {
-    fun håndter(mottaker: Mottaker) {
+    fun håndter(dtoMottaker: DtoMottaker): DtoMottaker {
+        val mottaker = Mottaker.gjenopprett(dtoMottaker)
         mottaker.håndterVedtak(Vedtakshendelse.gjenopprett(this))
+        return mottaker.toDto()
     }
 }

@@ -1,11 +1,11 @@
 package no.nav.aap.domene.utbetaling
 
-import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Dag
+import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import java.time.LocalDate
 
-object Aktivitetsdager {
-    internal var seed = 3 januar 2022
+internal object Aktivitetsdager {
+    private var seed = 3 januar 2022
         get() {
             val f = field
             field = field.plusDays(1)

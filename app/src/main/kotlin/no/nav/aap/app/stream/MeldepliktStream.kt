@@ -1,7 +1,6 @@
 package no.nav.aap.app.stream
 
 import no.nav.aap.app.kafka.Topics
-import no.nav.aap.domene.utbetaling.Mottaker
 import no.nav.aap.domene.utbetaling.dto.DtoMeldepliktshendelse
 import no.nav.aap.domene.utbetaling.dto.DtoMottaker
 import no.nav.aap.kafka.streams.extension.*
@@ -24,10 +23,7 @@ internal fun StreamsBuilder.meldepliktStream(mottakerKtable: KTable<String, DtoM
 }
 
 private val håndter = { ident: String, dtoMeldeplikt: DtoMeldepliktshendelse, dtoMottaker: DtoMottaker ->
-    val mottaker = Mottaker.gjenopprett(dtoMottaker)
     val observer = BehovObserver(ident)
-    mottaker.registerObserver(observer)
-    val meldepliktshendelse = dtoMeldeplikt.opprettMeldepliktshendelse()
-    mottaker.håndterMeldeplikt(meldepliktshendelse)
-    mottaker.toDto() to observer.behovene()
+    val nyDtoMottaker = dtoMeldeplikt.håndter(dtoMottaker, observer)
+    nyDtoMottaker to observer.behovene()
 }

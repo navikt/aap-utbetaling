@@ -1,3 +1,3 @@
 package no.nav.aap.domene.utbetaling.hendelse
 
-abstract class Hendelse
+internal abstract class Hendelse
