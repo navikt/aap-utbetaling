@@ -1,6 +1,8 @@
 package no.nav.aap.domene.utbetaling.utbetalingslinjer
 
 internal enum class Klassekode(internal val verdi: String) {
+    //TODO: Hvilken klassekode skal brukes for AAP?
+    AAP(verdi = "Hva skal brukes for AAP?"),
     RefusjonIkkeOpplysningspliktig(verdi = "SPREFAG-IOP"),
     RefusjonFeriepengerIkkeOpplysningspliktig(verdi = "SPREFAGFER-IOP"),
     SykepengerArbeidstakerOrdinær(verdi = "SPATORD");

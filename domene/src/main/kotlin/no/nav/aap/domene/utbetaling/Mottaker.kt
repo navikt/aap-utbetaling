@@ -44,9 +44,9 @@ internal class Mottaker private constructor(
             fødselsdato = Fødselsdato(dtoMottaker.fødselsdato),
             vedtakshistorikk = Vedtakshistorikk.gjenopprett(dtoMottaker.vedtakshistorikk),
             aktivitetstidslinje = Aktivitetstidslinje.gjenopprett(dtoMottaker.aktivitetstidslinje),
-            utbetalingstidslinjehistorikk = Utbetalingstidslinjehistorikk(),
-            barnetillegg = Barnetillegg(),
-            oppdragshistorikk = Oppdragshistorikk(),
+            utbetalingstidslinjehistorikk = Utbetalingstidslinjehistorikk.gjenopprett(dtoMottaker.utbetalingstidslinjehistorikk),
+            barnetillegg = Barnetillegg.gjenopprett(dtoMottaker.barnetillegg),
+            oppdragshistorikk = Oppdragshistorikk.gjenopprett(dtoMottaker.oppdragshistorikk),
             tilstand = enumValueOf<Tilstand.Tilstandsnavn>(dtoMottaker.tilstand).tilknyttetTilstand()
         )
     }
@@ -82,6 +82,7 @@ internal class Mottaker private constructor(
         aktivitetstidslinje = aktivitetstidslinje.toDto(),
         utbetalingstidslinjehistorikk = utbetalingstidslinjehistorikk.toDto(),
         oppdragshistorikk = oppdragshistorikk.toDto(),
+        barnetillegg = barnetillegg.toDto(),
         tilstand = tilstand.toDto()
     )
 

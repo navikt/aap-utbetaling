@@ -32,6 +32,22 @@ internal class Utbetalingslinje internal constructor(
         }
 
         internal fun Iterable<Utbetalingslinje>.toDto() = map(Utbetalingslinje::toDto)
+
+        internal fun gjenopprett(dtoUtbetalingslinje: DtoUtbetalingslinje) =
+            Utbetalingslinje(
+                fom = dtoUtbetalingslinje.fom,
+                tom = dtoUtbetalingslinje.tom,
+                satstype = Satstype.fromString(dtoUtbetalingslinje.satstype),
+                beløp = dtoUtbetalingslinje.beløp,
+                aktuellDagsinntekt = dtoUtbetalingslinje.aktuellDagsinntekt,
+                grad = dtoUtbetalingslinje.grad,
+                refFagsystemId = dtoUtbetalingslinje.refFagsystemId,
+                delytelseId = dtoUtbetalingslinje.delytelseId,
+                refDelytelseId = dtoUtbetalingslinje.refDelytelseId,
+                endringskode = enumValueOf(dtoUtbetalingslinje.endringskode),
+                klassekode = enumValueOf(dtoUtbetalingslinje.klassekode),
+                datoStatusFom = dtoUtbetalingslinje.datoStatusFom,
+            )
     }
 
     private fun toDto() = DtoUtbetalingslinje(

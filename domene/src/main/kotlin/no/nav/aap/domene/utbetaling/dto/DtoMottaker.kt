@@ -13,6 +13,7 @@ data class DtoMottaker(
     val aktivitetstidslinje: List<DtoMeldeperiode>,
     val utbetalingstidslinjehistorikk: List<DtoUtbetalingstidslinje>,
     val oppdragshistorikk: List<DtoOppdrag>,
+    val barnetillegg: List<DtoBarna>,
     val tilstand: String
 ) {
     companion object {

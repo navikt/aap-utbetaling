@@ -9,6 +9,11 @@ internal class Utbetalingstidslinje(
 ) {
     private val dager = dager.toMutableList()
 
+    internal companion object {
+        internal fun gjenopprett(dtoUtbetalingstidslinje: DtoUtbetalingstidslinje) =
+            Utbetalingstidslinje(dtoUtbetalingstidslinje.dager.map(Utbetalingstidslinjedag::gjenopprett))
+    }
+
     internal fun arbeidsprosent(arbeidsprosent: Double) {
         dager.forEach { it.arbeidsprosent(arbeidsprosent) }
     }

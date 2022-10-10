@@ -52,6 +52,20 @@ internal class Oppdrag private constructor(
         }
 
         internal fun kanIkkeForsøkesPåNy(vararg oppdrag: Oppdrag) = oppdrag.any { it.status == Oppdragstatus.AVVIST }
+
+        internal fun gjenopprett(dtoOppdrag: DtoOppdrag) =
+            Oppdrag(
+                mottaker = dtoOppdrag.mottaker,
+                fagområde = enumValueOf(dtoOppdrag.fagområde),
+                linjer = dtoOppdrag.linjer.map(Utbetalingslinje::gjenopprett).toMutableList(),
+                fagsystemId = dtoOppdrag.fagsystemId,
+                endringskode = enumValueOf(dtoOppdrag.endringskode),
+                nettoBeløp = dtoOppdrag.nettoBeløp,
+                overføringstidspunkt = dtoOppdrag.overføringstidspunkt,
+                avstemmingsnøkkel = dtoOppdrag.avstemmingsnøkkel,
+                status = dtoOppdrag.status?.let { enumValueOf<Oppdragstatus>(it) },
+                tidsstempel = dtoOppdrag.tidsstempel,
+            )
     }
 
     internal val førstedato get() = linjer.firstOrNull()?.let { it.datoStatusFom() ?: it.fom } ?: MIN
@@ -184,6 +198,7 @@ internal class Oppdrag private constructor(
                 log.warn(WARN_FORLENGER_OPPHØRT_OPPDRAG)
                 kjørFrem(eldre)
             }
+
             fomHarFlyttetSegFremover(eldre.kopierUtenOpphørslinjer()) -> {
                 log.warn("Utbetaling opphører tidligere utbetaling. Kontroller simuleringen")
                 returførOgKjørFrem(eldre.kopierUtenOpphørslinjer())
@@ -306,10 +321,12 @@ internal class Oppdrag private constructor(
                 tidligere,
                 sisteLinjeITidligereOppdrag
             ) -> nåværende.endreEksisterendeLinje(tidligere)
+
             nåværende.skalOpphøreOgErstatte(tidligere, sisteLinjeITidligereOppdrag) -> opphørTidligereLinjeOgOpprettNy(
                 nåværende,
                 tidligere
             )
+
             else -> opprettNyLinje(nåværende)
         }
     }

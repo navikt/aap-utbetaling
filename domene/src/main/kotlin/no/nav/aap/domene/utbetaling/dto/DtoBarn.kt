@@ -7,6 +7,7 @@ data class DtoBarna (
 )
 
 data class DtoBarn (
-    val fødselsnummer: String,
+    //TODO: Trenger vi fødselsnummeret til barna?
+    // val fødselsnummer: String,
     val fødselsdato: LocalDate
 )
