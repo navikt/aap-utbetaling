@@ -9,4 +9,8 @@
  */
 
 rootProject.name = "utbetaling"
-include("app", "domene")
+include(
+    "app",
+    "domene",
+    "dto-kafka"
+)
