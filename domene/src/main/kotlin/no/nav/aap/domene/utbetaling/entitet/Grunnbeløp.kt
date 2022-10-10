@@ -1,7 +1,7 @@
 package no.nav.aap.domene.utbetaling.entitet
 
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
-import no.nav.aap.domene.utbetaling.entitet.Grunnbeløp.Element.Companion.årligYtelseINOK
+import no.nav.aap.domene.utbetaling.entitet.Grunnbeløp.Element.Companion.grunnlagINOK
 import java.time.LocalDate
 
 internal object Grunnbeløp {
@@ -48,7 +48,7 @@ internal object Grunnbeløp {
         private val gjennomsnittBeløp: Beløp = gjennomsnittBeløp.beløp
 
         companion object {
-            fun Iterable<Element>.årligYtelseINOK(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor) =
+             fun Iterable<Element>.grunnlagINOK(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor) =
                 grunnlagsfaktor * finnGrunnbeløpForDato(dato).beløp
 
             private fun Iterable<Element>.finnGrunnbeløpForDato(dato: LocalDate) = this
@@ -57,6 +57,6 @@ internal object Grunnbeløp {
         }
     }
 
-    internal fun årligYtelseINOK(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor): Beløp =
-        grunnbeløp.årligYtelseINOK(dato, grunnlagsfaktor)
+    internal fun grunnlagINOK(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor): Beløp =
+        grunnbeløp.grunnlagINOK(dato, grunnlagsfaktor)
 }

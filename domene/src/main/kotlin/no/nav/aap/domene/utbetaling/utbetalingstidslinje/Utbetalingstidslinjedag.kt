@@ -32,11 +32,15 @@ internal sealed class Utbetalingstidslinjedag(
             private const val ANTALL_DAGER_MED_UTBETALING_PER_ÅR = 260
         }
 
-        private val grunnlag: Beløp = Grunnbeløp.årligYtelseINOK(dato, grunnlagsfaktor)
-        private val dagsats =
-            grunnlag * FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG / ANTALL_DAGER_MED_UTBETALING_PER_ÅR //TODO: Heltall??
-        private val høyestebeløpMedBarnetillegg =
-            grunnlag * MAKS_FAKTOR_AV_GRUNNLAG / ANTALL_DAGER_MED_UTBETALING_PER_ÅR //TODO: Denne også heltal
+        private val grunnlag: Beløp = Grunnbeløp.grunnlagINOK(dato, grunnlagsfaktor)
+        private val årligYtelse = grunnlag * FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG
+
+        //TODO: Heltall??
+        private val dagsats = årligYtelse / ANTALL_DAGER_MED_UTBETALING_PER_ÅR
+        private val høyesteÅrligYtelseMedBarnetillegg = grunnlag * MAKS_FAKTOR_AV_GRUNNLAG
+
+        //TODO: Denne også heltall?
+        private val høyestebeløpMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg / ANTALL_DAGER_MED_UTBETALING_PER_ÅR
         private val beløpMedBarnetillegg = minOf(høyestebeløpMedBarnetillegg, (dagsats + barnetillegg))
         private lateinit var beløp: Beløp
 
