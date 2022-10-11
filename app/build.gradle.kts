@@ -13,7 +13,7 @@ application {
 dependencies {
     implementation(project(":domene"))
     implementation(project(":dto-kafka"))
-    implementation("com.github.navikt:aap-vedtak:1.0.77")
+    implementation("com.github.navikt:aap-vedtak:1.0.82")
 
     implementation("com.github.navikt.aap-libs:ktor-utils:$aapLibVersion")
     implementation("com.github.navikt.aap-libs:kafka:$aapLibVersion")
@@ -24,8 +24,8 @@ dependencies {
     implementation("io.ktor:ktor-server-metrics-micrometer:$ktorVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:1.9.4")
 
-    implementation("ch.qos.logback:logback-classic:1.4.3")
-    runtimeOnly("net.logstash.logback:logstash-logback-encoder:7.2")
+    implementation("ch.qos.logback:logback-classic:1.4.4")
+    implementation("net.logstash.logback:logstash-logback-encoder:7.2")
 
     implementation("com.fasterxml.jackson.core:jackson-core:2.13.4")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.4")
