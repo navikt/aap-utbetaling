@@ -58,19 +58,24 @@ internal fun Application.server(kafka: KStreams = KafkaStreams) {
     }
 }
 
-internal fun topology(registry: MeterRegistry, mottakerProducer: Producer<String, MottakereKafkaDto>): Topology = StreamsBuilder().apply {
-    val mottakerKtable = consume(Topics.mottakere)
+internal fun topology(registry: MeterRegistry, mottakerProducer: Producer<String, MottakereKafkaDto>): Topology {
+    val streams = StreamsBuilder()
+    val mottakerKtable = streams
+        // Setter timestamp for mottakere tilbake ett år for å tvinge topologien å oppdatere tabellen før neste hendelse leses
+        .consume(Topics.mottakere, { record, _ -> record.timestamp() - 365L * 24L * 3600L * 1000L })
         .produce(Tables.mottakere)
 
     mottakerKtable.scheduleMetrics(Tables.mottakere, 2.minutes, registry)
     mottakerKtable.migrateStateStore(Tables.mottakere, mottakerProducer)
 
-    vedtakStream(mottakerKtable)
-    meldepliktStream(mottakerKtable)
-    løsningStream(mottakerKtable)
+    streams.vedtakStream(mottakerKtable)
+    streams.meldepliktStream(mottakerKtable)
+    streams.løsningStream(mottakerKtable)
 
-    utbetalingsbehovStreamMock()
-}.build()
+    streams.utbetalingsbehovStreamMock()
+
+    return streams.build()
+}
 
 private fun Routing.actuator(prometheus: PrometheusMeterRegistry, kafka: KStreams) {
     route("/actuator") {
