@@ -27,12 +27,12 @@ subgraph Utbetaling
 	mottakere-state-store --> join-0
 	join-0 --> |branch-meldeplikt-barn-produced-behov| aap.utbetalingsbehov.v1
 	join-0 --> |produced-mottakere-for-meldeplikt-buffered| aap.mottakere.v1
-	aap.vedtak.v1 --> join-1
+	aap.utbetalingsbehov.v1 --> join-1
 	mottakere-state-store --> join-1
-	join-1 --> |produced-mottakere-for-vedtak-buffered| aap.mottakere.v1
-	aap.utbetalingsbehov.v1 --> join-2
+	join-1 --> |produced-mottakere-for-losning-buffered| aap.mottakere.v1
+	aap.vedtak.v1 --> join-2
 	mottakere-state-store --> join-2
-	join-2 --> |produced-mottakere-for-losning-buffered| aap.mottakere.v1
+	join-2 --> |produced-mottakere-for-vedtak-buffered| aap.mottakere.v1
     
     %% JOB STREAMS
     metrics-mottakere-state-store --> mottakere-state-store
