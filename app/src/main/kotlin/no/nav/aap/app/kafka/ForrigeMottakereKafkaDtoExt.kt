@@ -11,7 +11,7 @@ internal fun ForrigeMottakereKafkaDto.toDto() = MottakereKafkaDto(
     aktivitetstidslinje = aktivitetstidslinje.map(Meldeperiode::toDto),
     utbetalingstidslinjehistorikk = utbetalingstidslinjehistorikk.map(Utbetalingstidslinje::toDto),
     oppdragshistorikk = oppdragshistorikk.map(Oppdrag::toDto),
-    barnetillegg = barnetillegg.map(Barna::toDto),
+    barnetillegg = emptyList(), // barnetillegg.map(Barna::toDto),
     tilstand = tilstand,
 )
 
@@ -39,16 +39,16 @@ internal fun Utbetalingstidslinje.toDto() = MottakereKafkaDto.Utbetalingstidslin
 )
 
 internal fun Utbetalingstidslinjedag.toDto() = MottakereKafkaDto.Utbetalingstidslinjedag(
-    type = type,
+    type = if(grunnlagsfaktor != null) "UTBETALINGSDAG" else "IKKE_UTBETALINGSDAG",
     dato = dato,
     grunnlagsfaktor = grunnlagsfaktor,
     barnetillegg = barnetillegg,
     grunnlag = grunnlag,
-    årligYtelse = årligYtelse,
+    årligYtelse = grunnlag?.times(.66),
     dagsats = dagsats,
-    høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg,
-    høyestebeløpMedBarnetillegg = høyestebeløpMedBarnetillegg,
-    dagsatsMedBarnetillegg = dagsatsMedBarnetillegg,
+    høyesteÅrligYtelseMedBarnetillegg = grunnlag?.times(.9),
+    høyesteBeløpMedBarnetillegg = høyestebeløpMedBarnetillegg,
+    dagsatsMedBarnetillegg = barnetillegg?.let { dagsats?.plus(it) },
     beløpMedBarnetillegg = beløpMedBarnetillegg,
     beløp = beløp,
     arbeidsprosent = arbeidsprosent,

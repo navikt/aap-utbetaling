@@ -15,7 +15,7 @@ data class DtoUtbetalingstidslinjedag(
     val årligYtelse: Double?,
     val dagsats: Double?,
     val høyesteÅrligYtelseMedBarnetillegg: Double?,
-    val høyestebeløpMedBarnetillegg: Double?,
+    val høyesteBeløpMedBarnetillegg: Double?,
     val dagsatsMedBarnetillegg: Double?,
     val beløpMedBarnetillegg: Double?,
     val beløp: Double?,

@@ -162,7 +162,7 @@ internal class GjenopprettTest {
                     årligYtelse = 294299.28,
                     dagsats = 1131.92,
                     høyesteÅrligYtelseMedBarnetillegg = 401317.2,
-                    høyestebeløpMedBarnetillegg = 1543.53,
+                    høyesteBeløpMedBarnetillegg = 1543.53,
                     dagsatsMedBarnetillegg = 1131.92,
                     beløpMedBarnetillegg = 1131.92,
                     beløp = 1131.92,

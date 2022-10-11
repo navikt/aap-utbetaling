@@ -47,9 +47,9 @@ internal sealed class Utbetalingstidslinjedag(
         private val høyesteÅrligYtelseMedBarnetillegg: Beløp = grunnlag * MAKS_FAKTOR_AV_GRUNNLAG,
 
         //TODO: Denne også heltall?
-        private val høyestebeløpMedBarnetillegg: Beløp = høyesteÅrligYtelseMedBarnetillegg / ANTALL_DAGER_MED_UTBETALING_PER_ÅR,
+        private val høyesteBeløpMedBarnetillegg: Beløp = høyesteÅrligYtelseMedBarnetillegg / ANTALL_DAGER_MED_UTBETALING_PER_ÅR,
         private val dagsatsMedBarnetillegg: Beløp = dagsats + barnetillegg,
-        private val beløpMedBarnetillegg: Beløp = minOf(høyestebeløpMedBarnetillegg, dagsatsMedBarnetillegg),
+        private val beløpMedBarnetillegg: Beløp = minOf(høyesteBeløpMedBarnetillegg, dagsatsMedBarnetillegg),
     ) : Utbetalingstidslinjedag(dato, Type.UTBETALINGSDAG) {
 
         private lateinit var beløp: Beløp
@@ -79,7 +79,7 @@ internal sealed class Utbetalingstidslinjedag(
                     årligYtelse = requireNotNull(dtoUtbetalingstidslinjedag.årligYtelse).beløp,
                     dagsats = requireNotNull(dtoUtbetalingstidslinjedag.dagsats).beløp,
                     høyesteÅrligYtelseMedBarnetillegg = requireNotNull(dtoUtbetalingstidslinjedag.høyesteÅrligYtelseMedBarnetillegg).beløp,
-                    høyestebeløpMedBarnetillegg = requireNotNull(dtoUtbetalingstidslinjedag.høyestebeløpMedBarnetillegg).beløp,
+                    høyesteBeløpMedBarnetillegg = requireNotNull(dtoUtbetalingstidslinjedag.høyesteBeløpMedBarnetillegg).beløp,
                     dagsatsMedBarnetillegg = requireNotNull(dtoUtbetalingstidslinjedag.dagsatsMedBarnetillegg).beløp,
                     beløpMedBarnetillegg = requireNotNull(dtoUtbetalingstidslinjedag.beløpMedBarnetillegg).beløp,
                 )
@@ -109,7 +109,7 @@ internal sealed class Utbetalingstidslinjedag(
             årligYtelse = årligYtelse.toDto(),
             dagsats = dagsats.toDto(),
             høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg.toDto(),
-            høyestebeløpMedBarnetillegg = høyestebeløpMedBarnetillegg.toDto(),
+            høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg.toDto(),
             dagsatsMedBarnetillegg = dagsatsMedBarnetillegg.toDto(),
             beløpMedBarnetillegg = beløpMedBarnetillegg.toDto(),
             beløp = beløp.toDto(),
@@ -148,7 +148,7 @@ internal sealed class Utbetalingstidslinjedag(
             årligYtelse = null,
             dagsats = null,
             høyesteÅrligYtelseMedBarnetillegg = null,
-            høyestebeløpMedBarnetillegg = null,
+            høyesteBeløpMedBarnetillegg = null,
             dagsatsMedBarnetillegg = null,
             beløpMedBarnetillegg = null,
             beløp = null,

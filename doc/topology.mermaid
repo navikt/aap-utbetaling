@@ -7,8 +7,8 @@ subgraph Utbetaling
     %% TOPICS
     aap.meldeplikt.v1([aap.meldeplikt.v1])
 	aap.utbetalingsbehov.v1([aap.utbetalingsbehov.v1])
-	aap.mottakere.v1([aap.mottakere.v1])
 	aap.vedtak.v1([aap.vedtak.v1])
+	aap.mottakere.v1([aap.mottakere.v1])
     
     %% JOINS
     join-0{join}
@@ -25,13 +25,13 @@ subgraph Utbetaling
     aap.meldeplikt.v1 --> join-0
 	mottakere-state-store --> join-0
 	join-0 --> |branch-meldeplikt-barn-produced-behov| aap.utbetalingsbehov.v1
-	join-0 --> |produced-mottakere-for-meldeplikt| aap.mottakere.v1
-	aap.utbetalingsbehov.v1 --> join-1
+	join-0 --> |produced-mottakere-for-meldeplikt-buffered| aap.mottakere.v1
+	aap.vedtak.v1 --> join-1
 	mottakere-state-store --> join-1
-	join-1 --> |produced-mottakere-for-losning| aap.mottakere.v1
-	aap.vedtak.v1 --> join-2
+	join-1 --> |produced-mottakere-for-vedtak-buffered| aap.mottakere.v1
+	aap.utbetalingsbehov.v1 --> join-2
 	mottakere-state-store --> join-2
-	join-2 --> |produced-mottakere-for-vedtak| aap.mottakere.v1
+	join-2 --> |produced-mottakere-for-losning-buffered| aap.mottakere.v1
     
     %% JOB STREAMS
     metrics-mottakere-state-store --> mottakere-state-store
@@ -50,7 +50,7 @@ end
 %% STYLES
 style aap.meldeplikt.v1 fill:#c233b4, stroke:#2a204a, stroke-width:2px, color:#2a204a
 style aap.utbetalingsbehov.v1 fill:#c233b4, stroke:#2a204a, stroke-width:2px, color:#2a204a
-style aap.mottakere.v1 fill:#c233b4, stroke:#2a204a, stroke-width:2px, color:#2a204a
 style aap.vedtak.v1 fill:#c233b4, stroke:#2a204a, stroke-width:2px, color:#2a204a
+style aap.mottakere.v1 fill:#c233b4, stroke:#2a204a, stroke-width:2px, color:#2a204a
 style mottakere-state-store fill:#78369f, stroke:#2a204a, stroke-width:2px, color:#2a204a
 style metrics-mottakere-state-store fill:#78369f, stroke:#2a204a, stroke-width:2px, color:#2a204a
