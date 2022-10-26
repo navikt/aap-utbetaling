@@ -6,7 +6,6 @@ on:
     paths:
       - 'dto-kafka/**'
       - '.github/workflows/release-kafka-dto.yml'
-      - 'jitpack.yml'
 
 jobs:
   build:
@@ -66,8 +65,8 @@ jobs:
             Changes in this Release
             ${{ steps.notes.outputs.CHANGELOG }}
 
-  - uses: gradle/gradle-build-action@v2.3.3
-      with:
-        arguments: -Pdto-kafka.version=${{ steps.tag.outputs.version }} publish
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: gradle/gradle-build-action@v2.3.3
+        with:
+          arguments: -Pdto-kafka.version=${{ steps.tag.outputs.version }} publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
