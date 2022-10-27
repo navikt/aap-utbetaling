@@ -1,10 +1,15 @@
 package no.nav.aap.app
 
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.ktor.http.*
+import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.metrics.micrometer.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.micrometer.core.instrument.MeterRegistry
@@ -12,10 +17,12 @@ import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.aap.app.kafka.Tables
 import no.nav.aap.app.kafka.Topics
+import no.nav.aap.app.simulering.SimuleringRequest
 import no.nav.aap.app.stream.løsningStream
 import no.nav.aap.app.stream.meldepliktStream
 import no.nav.aap.app.stream.mock.utbetalingsbehovStreamMock
 import no.nav.aap.app.stream.vedtakStream
+import no.nav.aap.domene.utbetaling.dto.*
 import no.nav.aap.dto.kafka.MottakereKafkaDto
 import no.nav.aap.kafka.streams.KStreams
 import no.nav.aap.kafka.streams.KafkaStreams
@@ -28,6 +35,7 @@ import no.nav.aap.ktor.config.loadConfig
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
+import java.util.*
 import kotlin.time.Duration.Companion.minutes
 
 fun main() {
@@ -40,6 +48,12 @@ internal fun Application.server(kafka: KStreams = KafkaStreams) {
     val mottakerProducer = kafka.createProducer(KafkaConfig.copyFrom(config.kafka), Topics.mottakere)
 
     install(MicrometerMetrics) { registry = prometheus }
+    install(ContentNegotiation) {
+        jackson {
+            registerModule(JavaTimeModule())
+            disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        }
+    }
 
     Thread.currentThread().setUncaughtExceptionHandler { _, e -> log.error("Uhåndtert feil", e) }
     environment.monitor.subscribe(ApplicationStopping) {
@@ -54,6 +68,7 @@ internal fun Application.server(kafka: KStreams = KafkaStreams) {
     )
 
     routing {
+        simulering()
         actuator(prometheus, kafka)
     }
 }
@@ -75,6 +90,36 @@ internal fun topology(registry: MeterRegistry, mottakerProducer: Producer<String
     streams.utbetalingsbehovStreamMock()
 
     return streams.build()
+}
+
+private fun Routing.simulering() {
+    route("/simuler") {
+        post("/{personident}") {
+            val personident = requireNotNull(call.parameters["personident"]) {"Personident må være satt"}
+            val simuleringRequest = call.receive<SimuleringRequest>()
+            val mottaker = DtoMottaker.opprettMottaker(personident, simuleringRequest.fødselsdato)
+            val vedtakshendelse = DtoVedtakshendelse(
+                vedtaksid = UUID.randomUUID(),
+                fødselsdato = simuleringRequest.fødselsdato,
+                innvilget = simuleringRequest.innvilget,
+                grunnlagsfaktor = simuleringRequest.grunnlagsfaktor,
+                vedtaksdato = simuleringRequest.vedtaksdato,
+                virkningsdato = simuleringRequest.virkningsdato
+            )
+            vedtakshendelse.håndter(mottaker)
+            val meldepliktshendelse = DtoMeldepliktshendelse(
+                aktivitetPerDag = listOf(DtoAkivitetPerDag(
+                    dato = simuleringRequest.virkningsdato,
+                    arbeidstimer = 0.0,
+                    fraværsdag = false
+                ))
+            )
+            meldepliktshendelse.håndter(mottaker, object : DtoMottakerObserver{})
+            // ???
+            // Profit
+            call.respondText("OK")
+        }
+    }
 }
 
 private fun Routing.actuator(prometheus: PrometheusMeterRegistry, kafka: KStreams) {

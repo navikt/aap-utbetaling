@@ -1,7 +1,15 @@
 package no.nav.aap.app
 
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.request.*
+import io.ktor.http.*
+import io.ktor.serialization.jackson.*
+import io.ktor.server.testing.*
 import no.nav.aap.app.kafka.KafkaUtbetalingsbehovWrapper
 import no.nav.aap.app.kafka.Topics
+import no.nav.aap.app.simulering.SimuleringRequest
 import no.nav.aap.domene.utbetaling.dto.DtoAkivitetPerDag
 import no.nav.aap.domene.utbetaling.dto.DtoLøsning
 import no.nav.aap.domene.utbetaling.dto.DtoLøsningBarn
@@ -10,8 +18,42 @@ import no.nav.aap.dto.kafka.IverksettVedtakKafkaDto
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.util.*
+import kotlin.test.assertEquals
 
 internal class AppTest {
+
+    @Test
+    fun `test simulering`() {
+        MockEnvironment().use { mocks ->
+            testApplication {
+                environment { config = mocks.containerProperties }
+                application {
+                    server(mocks.kafka)
+                }
+                val client = createClient {
+                    install(ContentNegotiation) {
+                        jackson {
+                            registerModule(JavaTimeModule())
+                            disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                        }
+                    }
+                }
+                val response = client.post("/simuler/12345678910") {
+                    contentType(ContentType.Application.Json)
+                    setBody(
+                        SimuleringRequest(
+                            fødselsdato = LocalDate.now(),
+                            innvilget = false,
+                            grunnlagsfaktor = 20.0,
+                            vedtaksdato = LocalDate.now(),
+                            virkningsdato = LocalDate.now()
+                        )
+                    )
+                }
+                assertEquals(HttpStatusCode.OK, response.status)
+            }
+        }
+    }
 
     @Test
     fun `Innsendt vedtak oppretter en mottaker`() = withTestApp { mocks ->
