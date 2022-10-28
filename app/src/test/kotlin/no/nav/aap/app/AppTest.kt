@@ -24,7 +24,7 @@ import kotlin.test.assertEquals
 internal class AppTest {
 
     @Test
-    @Disabled("Disabler til vi finner ut av hvorfor denne ikke rydder skikkelig opp")
+    @Disabled("Disabler til vi finner ut av hvorfor denne ikke rydder skikkelig opp og får alle andre tester til å feile")
     fun `test simulering`() {
         MockEnvironment().use { mocks ->
             testApplication {
@@ -51,7 +51,7 @@ internal class AppTest {
                             grunnlagsfaktor = 20.0,
                             vedtaksdato = LocalDate.now(),
                             virkningsdato = LocalDate.now(),
-                            aktivitetsdager = emptyList()
+                            aktivitetsdager = enkelMeldeplikt()
                         )
                     )
                 }
@@ -142,7 +142,7 @@ internal class AppTest {
         val mottakTopic = mocks.kafka.testTopic(Topics.mottakere)
         val meldepliktTopic = mocks.kafka.testTopic(Topics.meldeplikt)
         val løsningTopic = mocks.kafka.testTopic(Topics.utbetalingsbehov)
-        val løsningOutputTopic = mocks.kafka.outputTopic(Topics.utbetalingsbehov)
+        val løsningOutputTopic = mocks.kafka.testTopic(Topics.utbetalingsbehov)
         val vedtaksid = UUID.randomUUID()
         vedtakTopic.produce("123") {
             IverksettVedtakKafkaDto(
@@ -215,5 +215,13 @@ internal class AppTest {
         utbetalingsbehovOutputTopic.assertThat().hasValuesForPredicate("123", 1) {
             it.request.ident == "123"
         }
+    }
+
+    private fun enkelMeldeplikt() = (0L..13).map {
+        SimuleringRequest.AktivitetDag(
+            dato = LocalDate.now().minusDays(it),
+            arbeidstimer = 0.0,
+            fraværsdag = false
+        )
     }
 }
