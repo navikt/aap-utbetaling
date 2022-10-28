@@ -108,16 +108,16 @@ private fun Routing.simulering() {
             )
             vedtakshendelse.håndter(mottaker)
             val meldepliktshendelse = DtoMeldepliktshendelse(
-                aktivitetPerDag = listOf(DtoAkivitetPerDag(
-                    dato = simuleringRequest.virkningsdato,
-                    arbeidstimer = 0.0,
-                    fraværsdag = false
-                ))
+                aktivitetPerDag = simuleringRequest.aktivitetsdager.map {
+                    DtoAkivitetPerDag(
+                        dato = it.dato,
+                        arbeidstimer = it.arbeidstimer,
+                        fraværsdag = it.fraværsdag
+                    )
+                }
             )
-            meldepliktshendelse.håndter(mottaker, object : DtoMottakerObserver{})
-            // ???
-            // Profit
-            call.respondText("OK")
+            val endretMottaker = meldepliktshendelse.håndter(mottaker, object : DtoMottakerObserver{})
+            call.respond(endretMottaker)
         }
     }
 }

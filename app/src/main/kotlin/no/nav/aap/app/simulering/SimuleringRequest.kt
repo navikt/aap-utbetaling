@@ -7,5 +7,12 @@ data class SimuleringRequest(
     val innvilget: Boolean,
     val grunnlagsfaktor: Double,
     val vedtaksdato: LocalDate,
-    val virkningsdato: LocalDate
-)
+    val virkningsdato: LocalDate,
+    val aktivitetsdager: List<AktivitetDag>
+) {
+    data class AktivitetDag(
+        val dato: LocalDate,
+        val arbeidstimer: Double,
+        val fraværsdag: Boolean
+    )
+}

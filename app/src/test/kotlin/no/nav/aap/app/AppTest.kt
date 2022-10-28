@@ -50,7 +50,8 @@ internal class AppTest {
                             innvilget = false,
                             grunnlagsfaktor = 20.0,
                             vedtaksdato = LocalDate.now(),
-                            virkningsdato = LocalDate.now()
+                            virkningsdato = LocalDate.now(),
+                            aktivitetsdager = emptyList()
                         )
                     )
                 }
