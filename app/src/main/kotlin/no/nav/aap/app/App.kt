@@ -106,7 +106,7 @@ private fun Routing.simulering() {
                 vedtaksdato = simuleringRequest.vedtaksdato,
                 virkningsdato = simuleringRequest.virkningsdato
             )
-            vedtakshendelse.håndter(mottaker)
+            val mottakerMedVedtak = vedtakshendelse.håndter(mottaker)
             val meldepliktshendelse = DtoMeldepliktshendelse(
                 aktivitetPerDag = simuleringRequest.aktivitetsdager.map {
                     DtoAkivitetPerDag(
@@ -116,8 +116,9 @@ private fun Routing.simulering() {
                     )
                 }
             )
-            val endretMottaker = meldepliktshendelse.håndter(mottaker, object : DtoMottakerObserver{})
-            call.respond(endretMottaker)
+            val endretMottaker = meldepliktshendelse.håndter(mottakerMedVedtak, object : DtoMottakerObserver{})
+            val endretMedBarn = DtoLøsning(emptyList()).håndter(endretMottaker)
+            call.respond(endretMedBarn)
         }
     }
 }

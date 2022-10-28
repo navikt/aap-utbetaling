@@ -2,6 +2,7 @@ package no.nav.aap.app
 
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -10,10 +11,7 @@ import io.ktor.server.testing.*
 import no.nav.aap.app.kafka.KafkaUtbetalingsbehovWrapper
 import no.nav.aap.app.kafka.Topics
 import no.nav.aap.app.simulering.SimuleringRequest
-import no.nav.aap.domene.utbetaling.dto.DtoAkivitetPerDag
-import no.nav.aap.domene.utbetaling.dto.DtoLøsning
-import no.nav.aap.domene.utbetaling.dto.DtoLøsningBarn
-import no.nav.aap.domene.utbetaling.dto.DtoMeldepliktshendelse
+import no.nav.aap.domene.utbetaling.dto.*
 import no.nav.aap.dto.kafka.IverksettVedtakKafkaDto
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -55,6 +53,8 @@ internal class AppTest {
                         )
                     )
                 }
+                val body: DtoMottaker = response.body()
+                assertEquals("12345678910", body.personident)
                 assertEquals(HttpStatusCode.OK, response.status)
             }
         }
@@ -219,7 +219,7 @@ internal class AppTest {
 
     private fun enkelMeldeplikt() = (0L..13).map {
         SimuleringRequest.AktivitetDag(
-            dato = LocalDate.now().minusDays(it),
+            dato = LocalDate.now().plusDays(it),
             arbeidstimer = 0.0,
             fraværsdag = false
         )
