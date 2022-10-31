@@ -18,6 +18,7 @@ import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.aap.app.kafka.Tables
 import no.nav.aap.app.kafka.Topics
 import no.nav.aap.app.simulering.SimuleringRequest
+import no.nav.aap.app.simulering.SimuleringResponse
 import no.nav.aap.app.stream.løsningStream
 import no.nav.aap.app.stream.meldepliktStream
 import no.nav.aap.app.stream.mock.utbetalingsbehovStreamMock
@@ -95,7 +96,7 @@ internal fun topology(registry: MeterRegistry, mottakerProducer: Producer<String
 private fun Routing.simulering() {
     route("/simuler") {
         post("/{personident}") {
-            val personident = requireNotNull(call.parameters["personident"]) {"Personident må være satt"}
+            val personident = requireNotNull(call.parameters["personident"]) { "Personident må være satt" }
             val simuleringRequest = call.receive<SimuleringRequest>()
             val mottaker = DtoMottaker.opprettMottaker(personident, simuleringRequest.fødselsdato)
             val vedtakshendelse = DtoVedtakshendelse(
@@ -116,9 +117,29 @@ private fun Routing.simulering() {
                     )
                 }
             )
-            val endretMottaker = meldepliktshendelse.håndter(mottakerMedVedtak, object : DtoMottakerObserver{})
+            val endretMottaker = meldepliktshendelse.håndter(mottakerMedVedtak, object : DtoMottakerObserver {})
             val endretMedBarn = DtoLøsning(emptyList()).håndter(endretMottaker)
-            call.respond(endretMedBarn)
+            call.respond(SimuleringResponse(
+                utbetalingstidslinje =
+                endretMedBarn.utbetalingstidslinjehistorikk.single().dager.map {
+                    SimuleringResponse.TidslinjeDag(
+                        type = it.type,
+                        dato = it.dato,
+                        grunnlagsfaktor = it.grunnlagsfaktor,
+                        barnetillegg = it.barnetillegg,
+                        grunnlag = it.grunnlag,
+                        årligYtelse = it.årligYtelse,
+                        dagsats = it.dagsats,
+                        høyesteÅrligYtelseMedBarnetillegg = it.høyesteÅrligYtelseMedBarnetillegg,
+                        høyesteBeløpMedBarnetillegg = it.høyesteBeløpMedBarnetillegg,
+                        dagsatsMedBarnetillegg = it.dagsatsMedBarnetillegg,
+                        beløpMedBarnetillegg = it.beløpMedBarnetillegg,
+                        beløp = it.beløp,
+                        arbeidsprosent = it.arbeidsprosent
+                    )
+                }
+
+            ))
         }
     }
 }
