@@ -36,6 +36,7 @@ import no.nav.aap.ktor.config.loadConfig
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
+import java.time.LocalDate
 import java.util.*
 import kotlin.time.Duration.Companion.minutes
 
@@ -118,7 +119,7 @@ private fun Routing.simulering() {
                 }
             )
             val endretMottaker = meldepliktshendelse.håndter(mottakerMedVedtak, object : DtoMottakerObserver {})
-            val endretMedBarn = DtoLøsning(emptyList()).håndter(endretMottaker)
+            val endretMedBarn = DtoLøsning(listOf(DtoLøsningBarn(LocalDate.of(2018, 11, 1)))).håndter(endretMottaker)
             val aktivitetstidslinje = endretMedBarn.aktivitetstidslinje.single().dager.map {
                 SimuleringResponse.Aktivitetsdag(
                     dato = it.dato,
