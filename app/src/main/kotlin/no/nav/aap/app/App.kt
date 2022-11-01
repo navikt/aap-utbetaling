@@ -119,27 +119,44 @@ private fun Routing.simulering() {
             )
             val endretMottaker = meldepliktshendelse.håndter(mottakerMedVedtak, object : DtoMottakerObserver {})
             val endretMedBarn = DtoLøsning(emptyList()).håndter(endretMottaker)
-            call.respond(SimuleringResponse(
-                utbetalingstidslinje =
-                endretMedBarn.utbetalingstidslinjehistorikk.single().dager.map {
-                    SimuleringResponse.TidslinjeDag(
-                        type = it.type,
-                        dato = it.dato,
-                        grunnlagsfaktor = it.grunnlagsfaktor,
-                        barnetillegg = it.barnetillegg,
-                        grunnlag = it.grunnlag,
-                        årligYtelse = it.årligYtelse,
-                        dagsats = it.dagsats,
-                        høyesteÅrligYtelseMedBarnetillegg = it.høyesteÅrligYtelseMedBarnetillegg,
-                        høyesteBeløpMedBarnetillegg = it.høyesteBeløpMedBarnetillegg,
-                        dagsatsMedBarnetillegg = it.dagsatsMedBarnetillegg,
-                        beløpMedBarnetillegg = it.beløpMedBarnetillegg,
-                        beløp = it.beløp,
-                        arbeidsprosent = it.arbeidsprosent
-                    )
+            val aktivitetstidslinje = endretMedBarn.aktivitetstidslinje.single().dager.map {
+                SimuleringResponse.Aktivitetsdag(
+                    dato = it.dato,
+                    arbeidstimer = it.arbeidstimer,
+                    type = it.type,
+                )
+            }
+            val utbetalingstidslinje = endretMedBarn.utbetalingstidslinjehistorikk.single().dager.map {
+                SimuleringResponse.Utbetalingstidslinjedag(
+                    type = it.type,
+                    dato = it.dato,
+                    grunnlagsfaktor = it.grunnlagsfaktor,
+                    barnetillegg = it.barnetillegg,
+                    grunnlag = it.grunnlag,
+                    årligYtelse = it.årligYtelse,
+                    dagsats = it.dagsats,
+                    høyesteÅrligYtelseMedBarnetillegg = it.høyesteÅrligYtelseMedBarnetillegg,
+                    høyesteBeløpMedBarnetillegg = it.høyesteBeløpMedBarnetillegg,
+                    dagsatsMedBarnetillegg = it.dagsatsMedBarnetillegg,
+                    beløpMedBarnetillegg = it.beløpMedBarnetillegg,
+                    beløp = it.beløp,
+                    arbeidsprosent = it.arbeidsprosent,
+                )
+            }
+
+            val kombinerteDager = aktivitetstidslinje
+                .fold(emptyList<SimuleringResponse.KombinertDag>()) { acc, aktivitetsdag ->
+                    val tidslinjeDag = utbetalingstidslinje.singleOrNull { it.dato == aktivitetsdag.dato }
+                    acc + SimuleringResponse.KombinertDag(aktivitetsdag, tidslinjeDag)
                 }
 
-            ))
+            call.respond(
+                SimuleringResponse(
+                    aktivitetstidslinje = aktivitetstidslinje,
+                    utbetalingstidslinje = utbetalingstidslinje,
+                    kombinerteDager = kombinerteDager,
+                )
+            )
         }
     }
 }

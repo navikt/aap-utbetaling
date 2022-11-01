@@ -3,9 +3,22 @@ package no.nav.aap.app.simulering
 import java.time.LocalDate
 
 data class SimuleringResponse(
-    val utbetalingstidslinje: List<TidslinjeDag>
+    val aktivitetstidslinje: List<Aktivitetsdag>,
+    val utbetalingstidslinje: List<Utbetalingstidslinjedag>,
+    val kombinerteDager: List<KombinertDag>,
 ) {
-    data class TidslinjeDag(
+    data class KombinertDag(
+        val aktivitetsdag: Aktivitetsdag,
+        val utbetalingstidslinjedag: Utbetalingstidslinjedag?,
+    )
+
+    data class Aktivitetsdag(
+        val dato: LocalDate,
+        val arbeidstimer: Double?,
+        val type: String,
+    )
+
+    data class Utbetalingstidslinjedag(
         val type: String,
         val dato: LocalDate,
         val grunnlagsfaktor: Double?,
@@ -18,7 +31,6 @@ data class SimuleringResponse(
         val dagsatsMedBarnetillegg: Double?,
         val beløpMedBarnetillegg: Double?,
         val beløp: Double?,
-        val arbeidsprosent: Double
+        val arbeidsprosent: Double,
     )
 }
-

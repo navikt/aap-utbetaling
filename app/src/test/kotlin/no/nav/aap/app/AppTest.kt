@@ -11,6 +11,7 @@ import io.ktor.server.testing.*
 import no.nav.aap.app.kafka.KafkaUtbetalingsbehovWrapper
 import no.nav.aap.app.kafka.Topics
 import no.nav.aap.app.simulering.SimuleringRequest
+import no.nav.aap.app.simulering.SimuleringResponse
 import no.nav.aap.domene.utbetaling.dto.*
 import no.nav.aap.dto.kafka.IverksettVedtakKafkaDto
 import org.junit.jupiter.api.Disabled
@@ -53,8 +54,9 @@ internal class AppTest {
                         )
                     )
                 }
-                val body: DtoMottaker = response.body()
-                assertEquals("12345678910", body.personident)
+                val body: SimuleringResponse = response.body()
+                assertEquals(14, body.aktivitetstidslinje.size)
+                assertEquals(10, body.utbetalingstidslinje.size)
                 assertEquals(HttpStatusCode.OK, response.status)
             }
         }
