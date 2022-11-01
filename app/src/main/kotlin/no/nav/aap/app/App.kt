@@ -37,7 +37,6 @@ import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import java.time.LocalDate
-import java.util.*
 import kotlin.time.Duration.Companion.minutes
 
 fun main() {
@@ -99,65 +98,15 @@ private fun Routing.simulering() {
         post("/{personident}") {
             val personident = requireNotNull(call.parameters["personident"]) { "Personident må være satt" }
             val simuleringRequest = call.receive<SimuleringRequest>()
+
             val mottaker = DtoMottaker.opprettMottaker(personident, simuleringRequest.fødselsdato)
-            val vedtakshendelse = DtoVedtakshendelse(
-                vedtaksid = UUID.randomUUID(),
-                fødselsdato = simuleringRequest.fødselsdato,
-                innvilget = simuleringRequest.innvilget,
-                grunnlagsfaktor = simuleringRequest.grunnlagsfaktor,
-                vedtaksdato = simuleringRequest.vedtaksdato,
-                virkningsdato = simuleringRequest.virkningsdato
-            )
+            val vedtakshendelse = simuleringRequest.lagVedtakshendelse()
             val mottakerMedVedtak = vedtakshendelse.håndter(mottaker)
-            val meldepliktshendelse = DtoMeldepliktshendelse(
-                aktivitetPerDag = simuleringRequest.aktivitetsdager.map {
-                    DtoAkivitetPerDag(
-                        dato = it.dato,
-                        arbeidstimer = it.arbeidstimer,
-                        fraværsdag = it.fraværsdag
-                    )
-                }
-            )
+            val meldepliktshendelse = simuleringRequest.lagMeldepliktshendelse()
             val endretMottaker = meldepliktshendelse.håndter(mottakerMedVedtak, object : DtoMottakerObserver {})
-            val endretMedBarn = DtoLøsning(listOf(DtoLøsningBarn(LocalDate.of(2018, 11, 1)))).håndter(endretMottaker)
-            val aktivitetstidslinje = endretMedBarn.aktivitetstidslinje.single().dager.map {
-                SimuleringResponse.Aktivitetsdag(
-                    dato = it.dato,
-                    arbeidstimer = it.arbeidstimer,
-                    type = it.type,
-                )
-            }
-            val utbetalingstidslinje = endretMedBarn.utbetalingstidslinjehistorikk.single().dager.map {
-                SimuleringResponse.Utbetalingstidslinjedag(
-                    type = it.type,
-                    dato = it.dato,
-                    grunnlagsfaktor = it.grunnlagsfaktor,
-                    barnetillegg = it.barnetillegg,
-                    grunnlag = it.grunnlag,
-                    årligYtelse = it.årligYtelse,
-                    dagsats = it.dagsats,
-                    høyesteÅrligYtelseMedBarnetillegg = it.høyesteÅrligYtelseMedBarnetillegg,
-                    høyesteBeløpMedBarnetillegg = it.høyesteBeløpMedBarnetillegg,
-                    dagsatsMedBarnetillegg = it.dagsatsMedBarnetillegg,
-                    beløpMedBarnetillegg = it.beløpMedBarnetillegg,
-                    beløp = it.beløp,
-                    arbeidsprosent = it.arbeidsprosent,
-                )
-            }
+            val endretMottakerMedBarn = DtoLøsning(listOf(DtoLøsningBarn(LocalDate.of(2018, 11, 1)))).håndter(endretMottaker)
 
-            val kombinerteDager = aktivitetstidslinje
-                .fold(emptyList<SimuleringResponse.KombinertDag>()) { acc, aktivitetsdag ->
-                    val tidslinjeDag = utbetalingstidslinje.singleOrNull { it.dato == aktivitetsdag.dato }
-                    acc + SimuleringResponse.KombinertDag(aktivitetsdag, tidslinjeDag)
-                }
-
-            call.respond(
-                SimuleringResponse(
-                    aktivitetstidslinje = aktivitetstidslinje,
-                    utbetalingstidslinje = utbetalingstidslinje,
-                    kombinerteDager = kombinerteDager,
-                )
-            )
+            call.respond(SimuleringResponse.lagNy(endretMottakerMedBarn))
         }
     }
 }

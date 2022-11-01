@@ -1,5 +1,6 @@
 package no.nav.aap.app.simulering
 
+import no.nav.aap.domene.utbetaling.dto.DtoMottaker
 import java.time.LocalDate
 
 data class SimuleringResponse(
@@ -33,4 +34,44 @@ data class SimuleringResponse(
         val beløp: Double?,
         val arbeidsprosent: Double,
     )
+
+    companion object {
+        fun lagNy(endretMottakerMedBarn: DtoMottaker): SimuleringResponse {
+            val aktivitetstidslinje = endretMottakerMedBarn.aktivitetstidslinje.single().dager.map {
+                Aktivitetsdag(
+                    dato = it.dato,
+                    arbeidstimer = it.arbeidstimer,
+                    type = it.type,
+                )
+            }
+            val utbetalingstidslinje = endretMottakerMedBarn.utbetalingstidslinjehistorikk.single().dager.map {
+                Utbetalingstidslinjedag(
+                    type = it.type,
+                    dato = it.dato,
+                    grunnlagsfaktor = it.grunnlagsfaktor,
+                    barnetillegg = it.barnetillegg,
+                    grunnlag = it.grunnlag,
+                    årligYtelse = it.årligYtelse,
+                    dagsats = it.dagsats,
+                    høyesteÅrligYtelseMedBarnetillegg = it.høyesteÅrligYtelseMedBarnetillegg,
+                    høyesteBeløpMedBarnetillegg = it.høyesteBeløpMedBarnetillegg,
+                    dagsatsMedBarnetillegg = it.dagsatsMedBarnetillegg,
+                    beløpMedBarnetillegg = it.beløpMedBarnetillegg,
+                    beløp = it.beløp,
+                    arbeidsprosent = it.arbeidsprosent,
+                )
+            }
+
+            val kombinerteDager = aktivitetstidslinje
+                .fold(emptyList<KombinertDag>()) { acc, aktivitetsdag ->
+                    val tidslinjeDag = utbetalingstidslinje.singleOrNull { it.dato == aktivitetsdag.dato }
+                    acc + KombinertDag(aktivitetsdag, tidslinjeDag)
+                }
+            return SimuleringResponse(
+                aktivitetstidslinje = aktivitetstidslinje,
+                utbetalingstidslinje = utbetalingstidslinje,
+                kombinerteDager = kombinerteDager,
+            )
+        }
+    }
 }
