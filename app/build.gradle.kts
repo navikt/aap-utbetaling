@@ -29,7 +29,7 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:7.2")
 
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.13.4")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.14.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.4")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4")
 
