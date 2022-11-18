@@ -1,6 +1,8 @@
 package no.nav.aap.app.kafka
 
 import no.nav.aap.domene.utbetaling.dto.*
+import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Paragraf_11_20_1_ledd_ModellAPI
+import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Paragraf_11_20_2_ledd_2_punktum_ModellAPI
 import no.nav.aap.dto.kafka.MottakereKafkaDto
 import no.nav.aap.dto.kafka.MottakereKafkaDto.*
 
@@ -29,9 +31,7 @@ internal fun Meldeperiode.toDto() = DtoMeldeperiode(
 )
 
 internal fun Dag.toDto() = DtoDag(
-    dato = dato,
-    arbeidstimer = arbeidstimer,
-    type = type
+    dato = dato, arbeidstimer = arbeidstimer, type = type
 )
 
 internal fun Utbetalingstidslinje.toDto() = DtoUtbetalingstidslinje(
@@ -44,14 +44,26 @@ internal fun Utbetalingstidslinjedag.toDto() = DtoUtbetalingstidslinjedag(
     grunnlagsfaktor = grunnlagsfaktor,
     barnetillegg = barnetillegg,
     grunnlag = grunnlag,
-    årligYtelse = årligYtelse,
-    dagsats = dagsats,
+    årligYtelse = årligYtelse?.toDto(),
+    dagsats = dagsats?.toDto(),
     høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg,
     høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg,
     dagsatsMedBarnetillegg = dagsatsMedBarnetillegg,
     beløpMedBarnetillegg = beløpMedBarnetillegg,
     beløp = beløp,
     arbeidsprosent = arbeidsprosent,
+)
+
+internal fun Paragraf_11_20_2_ledd_2_punktum_KafkaDTO.toDto() = Paragraf_11_20_2_ledd_2_punktum_ModellAPI(
+    antallDagerMedUtbetalingPerÅr = antallDagerMedUtbetalingPerÅr,
+    årligYtelse = årligYtelse,
+    dagsats = dagsats
+)
+
+internal fun Paragraf_11_20_1_ledd_KafkaDTO.toDto() = Paragraf_11_20_1_ledd_ModellAPI(
+    faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
+    inntektsgrunnlag = inntektsgrunnlag,
+    årligytelse = årligytelse
 )
 
 internal fun Oppdrag.toDto() = DtoOppdrag(
@@ -116,9 +128,7 @@ internal fun DtoMeldeperiode.toJson() = Meldeperiode(
 )
 
 internal fun DtoDag.toJson() = Dag(
-    dato = dato,
-    arbeidstimer = arbeidstimer,
-    type = type
+    dato = dato, arbeidstimer = arbeidstimer, type = type
 )
 
 internal fun DtoUtbetalingstidslinje.toJson() = Utbetalingstidslinje(
@@ -131,14 +141,26 @@ internal fun DtoUtbetalingstidslinjedag.toJson() = Utbetalingstidslinjedag(
     grunnlagsfaktor = grunnlagsfaktor,
     barnetillegg = barnetillegg,
     grunnlag = grunnlag,
-    årligYtelse = årligYtelse,
-    dagsats = dagsats,
+    årligYtelse = årligYtelse?.toKafkaDTO(),
+    dagsats = dagsats?.toKafkaDTO(),
     høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg,
     høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg,
     dagsatsMedBarnetillegg = dagsatsMedBarnetillegg,
     beløpMedBarnetillegg = beløpMedBarnetillegg,
     beløp = beløp,
     arbeidsprosent = arbeidsprosent,
+)
+
+internal fun Paragraf_11_20_2_ledd_2_punktum_ModellAPI.toKafkaDTO() = Paragraf_11_20_2_ledd_2_punktum_KafkaDTO(
+    antallDagerMedUtbetalingPerÅr = antallDagerMedUtbetalingPerÅr,
+    årligYtelse = årligYtelse,
+    dagsats = dagsats
+)
+
+internal fun Paragraf_11_20_1_ledd_ModellAPI.toKafkaDTO() = Paragraf_11_20_1_ledd_KafkaDTO(
+    faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
+    inntektsgrunnlag = inntektsgrunnlag,
+    årligytelse = årligytelse
 )
 
 internal fun DtoOppdrag.toJson() = Oppdrag(

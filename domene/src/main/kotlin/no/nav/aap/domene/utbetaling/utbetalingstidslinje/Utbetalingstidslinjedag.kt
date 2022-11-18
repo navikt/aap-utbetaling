@@ -40,10 +40,13 @@ internal sealed class Utbetalingstidslinjedag(
         private val grunnlagsfaktor: Grunnlagsfaktor,
         private val barnetillegg: Beløp,
         private val grunnlag: Beløp = Grunnbeløp.grunnlagINOK(dato, grunnlagsfaktor),
-        private val årligYtelse: Beløp = grunnlag * FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG,
+        //private val årligYtelse: Beløp = grunnlag * FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG,
+        private val årligYtelse: Paragraf_11_20_1_ledd = Paragraf_11_20_1_ledd(grunnlag),
 
         //TODO: Heltall??
-        private val dagsats: Beløp = årligYtelse / ANTALL_DAGER_MED_UTBETALING_PER_ÅR,
+        //private val dagsats: Beløp = årligYtelse / ANTALL_DAGER_MED_UTBETALING_PER_ÅR,
+
+        private val dagsats: Paragraf_11_20_2_ledd_2_punktum = Paragraf_11_20_2_ledd_2_punktum(årligYtelse),
         private val høyesteÅrligYtelseMedBarnetillegg: Beløp = grunnlag * MAKS_FAKTOR_AV_GRUNNLAG,
 
         //TODO: Denne også heltall?
@@ -71,13 +74,24 @@ internal sealed class Utbetalingstidslinjedag(
             private const val ANTALL_DAGER_MED_UTBETALING_PER_ÅR = 260
 
             internal fun gjenopprett(dtoUtbetalingstidslinjedag: DtoUtbetalingstidslinjedag): Utbetalingsdag {
+                val årligYtelse = Paragraf_11_20_1_ledd.gjenopprett(
+                    faktorForReduksjonAvGrunnlag = requireNotNull(dtoUtbetalingstidslinjedag.årligYtelse).faktorForReduksjonAvGrunnlag,
+                    inntektsgrunnlag = requireNotNull(dtoUtbetalingstidslinjedag.årligYtelse).inntektsgrunnlag.beløp,
+                    årligYtelse = requireNotNull(dtoUtbetalingstidslinjedag.årligYtelse).årligytelse.beløp
+                )
+
+                val dagsats = Paragraf_11_20_2_ledd_2_punktum.gjenopprett(
+                    antallDagerMedUtbetalingPerÅr = requireNotNull(dtoUtbetalingstidslinjedag.dagsats).antallDagerMedUtbetalingPerÅr,
+                    årligYtelse = årligYtelse,
+                    dagsats = requireNotNull(dtoUtbetalingstidslinjedag.dagsats).dagsats.beløp
+                )
                 val utbetalingsdag = Utbetalingsdag(
                     dato = dtoUtbetalingstidslinjedag.dato,
                     grunnlagsfaktor = Grunnlagsfaktor(requireNotNull(dtoUtbetalingstidslinjedag.grunnlagsfaktor)),
                     barnetillegg = requireNotNull(dtoUtbetalingstidslinjedag.barnetillegg).beløp,
                     grunnlag = requireNotNull(dtoUtbetalingstidslinjedag.grunnlag).beløp,
-                    årligYtelse = requireNotNull(dtoUtbetalingstidslinjedag.årligYtelse).beløp,
-                    dagsats = requireNotNull(dtoUtbetalingstidslinjedag.dagsats).beløp,
+                    årligYtelse = årligYtelse,
+                    dagsats = dagsats,
                     høyesteÅrligYtelseMedBarnetillegg = requireNotNull(dtoUtbetalingstidslinjedag.høyesteÅrligYtelseMedBarnetillegg).beløp,
                     høyesteBeløpMedBarnetillegg = requireNotNull(dtoUtbetalingstidslinjedag.høyesteBeløpMedBarnetillegg).beløp,
                     dagsatsMedBarnetillegg = requireNotNull(dtoUtbetalingstidslinjedag.dagsatsMedBarnetillegg).beløp,

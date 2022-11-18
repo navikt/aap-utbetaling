@@ -39,13 +39,13 @@ internal fun Utbetalingstidslinje.toDto() = MottakereKafkaDto.Utbetalingstidslin
 )
 
 internal fun Utbetalingstidslinjedag.toDto() = MottakereKafkaDto.Utbetalingstidslinjedag(
-    type = if(grunnlagsfaktor != null) "UTBETALINGSDAG" else "IKKE_UTBETALINGSDAG",
+    type = if (grunnlagsfaktor != null) "UTBETALINGSDAG" else "IKKE_UTBETALINGSDAG",
     dato = dato,
     grunnlagsfaktor = grunnlagsfaktor,
     barnetillegg = barnetillegg,
     grunnlag = grunnlag,
-    årligYtelse = grunnlag?.times(.66),
-    dagsats = dagsats,
+    årligYtelse = årligYtelse?.let { MottakereKafkaDto.Paragraf_11_20_1_ledd_KafkaDTO(0.66, grunnlag!!, it) },
+    dagsats = dagsats?.let { MottakereKafkaDto.Paragraf_11_20_2_ledd_2_punktum_KafkaDTO(260,årligYtelse!!, it)},
     høyesteÅrligYtelseMedBarnetillegg = grunnlag?.times(.9),
     høyesteBeløpMedBarnetillegg = høyestebeløpMedBarnetillegg,
     dagsatsMedBarnetillegg = barnetillegg?.let { dagsats?.plus(it) },
