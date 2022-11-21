@@ -21,14 +21,14 @@ internal class UtbetalingstidslinjeBuilder(
 
 
     /**
-     * Builderen traverserer en aktivitetstidslinje for en gitt periode, og prøver å svare på tre spørsmål
-     * - Skal det utbetales for alle dager
-     * - Skal det utbetales for bare noen av dagene (mottaker har hatt to eller flere fraværsdager)
-     * - Skal det ikke utbetales for noen dager (mottaker har jobbet mer enn 60% innenfor en periode)
+     * Builderen traverserer en aktivitetstidslinje, og for hver periode prøver den å svare på tre spørsmål
+     * 1 Skal det utbetales for alle dager?
+     * 2 Skal det utbetales for bare noen av dagene (mottaker har hatt to eller flere fraværsdager)?
+     * 3 Skal det ikke utbetales for noen dager (mottaker har jobbet mer enn 60% innenfor en periode)?
      * */
-    private lateinit var vanligUtbetalingstidslinje: Utbetalingstidslinje
-    private lateinit var avvisteFraværsdagerUtbetalingstidslinje: Utbetalingstidslinje
-    private lateinit var avvisteDagerUtbetalingstidslinje: Utbetalingstidslinje
+    private lateinit var vanligUtbetalingstidslinje: Utbetalingstidslinje // Spørsmål 1
+    private lateinit var avvisteFraværsdagerUtbetalingstidslinje: Utbetalingstidslinje // Spørsmål 2
+    private lateinit var avvisteDagerUtbetalingstidslinje: Utbetalingstidslinje // Spørsmål 3
 
     private var arbeidstimerIPeriode: Arbeidstimer = 0.arbeidstimer
     // Skal kun summeres for hverdager som ikke er fraværsdager, bortsett fra hvis vi har kun en fraværsdag,
@@ -98,7 +98,9 @@ internal class UtbetalingstidslinjeBuilder(
         fun fraværsdag(builder: UtbetalingstidslinjeBuilder, dato: LocalDate) {}
         fun fullførMeldeperiode(builder: UtbetalingstidslinjeBuilder) {}
 
-        // Dersom vi aldri forlater denne tilstanden, har vi en standard aktivitetstidslinje (ingen fraværsdager)
+        /**
+         * Dersom vi aldri forlater denne tilstanden, har vi en standard aktivitetstidslinje (ingen fraværsdager)
+         */
         object Start : Tilstand {
             override fun arbeidsdag(
                 builder: UtbetalingstidslinjeBuilder,
@@ -129,8 +131,9 @@ internal class UtbetalingstidslinjeBuilder(
             }
         }
 
-        // Dersom aktivitetstidslinjen kun har en fraværsdag, så ender vi i denne tilstanden
-        // En fraværsdag i en periode er ok og skal ikke "telles" §11-8 3. ledd
+        /** Dersom aktivitetstidslinjen kun har en fraværsdag, så ender vi i denne tilstanden
+         * En fraværsdag i en periode er ok og skal ikke "telles" §11-8 3. ledd
+         */
         object EnFraværsdag : Tilstand {
             override fun arbeidsdag(
                 builder: UtbetalingstidslinjeBuilder,
@@ -154,13 +157,15 @@ internal class UtbetalingstidslinjeBuilder(
             }
 
             override fun fullførMeldeperiode(builder: UtbetalingstidslinjeBuilder) {
-                // Siden en fraværsdag ikke telles i visitoren, men skal telle i perioden, må vi legge til arbeidstid for den
+                // Siden en fraværsdag ikke telles i visitoren, men skal telle i perioden, må vi legge til arbeidstid for denne
                 builder.normalarbeidstimerIPeriode += NORMAL_ARBEIDSTIMER
                 builder.fullførMeldeperiode(builder.vanligUtbetalingstidslinje)
             }
         }
 
-        // Dersom aktivitetstidslinjen har mer enn en fraværsdag ender vi i denne tilstanden
+        /**
+         * Dersom aktivitetstidslinjen har mer enn en fraværsdag ender vi i denne tilstanden
+         */
         object MerEnnEnFraværsdag : Tilstand {
             override fun arbeidsdag(
                 builder: UtbetalingstidslinjeBuilder,
