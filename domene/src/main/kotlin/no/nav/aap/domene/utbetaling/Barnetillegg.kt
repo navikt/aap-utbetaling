@@ -47,8 +47,8 @@ internal class Barnetillegg private constructor(
 
         internal fun antallBarnUnder18År(dato: LocalDate) = barn.antallBarnUnder18År(dato)
 
-        internal fun toDto() = BarnaModellApi(
-            barn = barn.map(Barn::toDto)
+        internal fun toModellApi() = BarnaModellApi(
+            barn = barn.map(Barn::toModellApi)
         )
     }
 
@@ -66,10 +66,10 @@ internal class Barnetillegg private constructor(
                 )
         }
 
-        internal fun toDto() = BarnModellApi(
+        internal fun toModellApi() = BarnModellApi(
             fødselsdato = fødselsdato.toDto()
         )
     }
 
-    internal fun toDto() = historikk.map(Barna::toDto)
+    internal fun toDto() = historikk.map(Barna::toModellApi)
 }

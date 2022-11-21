@@ -31,7 +31,7 @@ internal class Utbetalingslinje internal constructor(
                 .size
         }
 
-        internal fun Iterable<Utbetalingslinje>.toDto() = map(Utbetalingslinje::toDto)
+        internal fun Iterable<Utbetalingslinje>.toModellApi() = map(Utbetalingslinje::toModellApi)
 
         internal fun gjenopprett(utbetalingslinjeModellApi: UtbetalingslinjeModellApi) =
             Utbetalingslinje(
@@ -50,7 +50,7 @@ internal class Utbetalingslinje internal constructor(
             )
     }
 
-    private fun toDto() = UtbetalingslinjeModellApi(
+    private fun toModellApi() = UtbetalingslinjeModellApi(
         fom = fom,
         tom = tom,
         satstype = satstype.toString(),

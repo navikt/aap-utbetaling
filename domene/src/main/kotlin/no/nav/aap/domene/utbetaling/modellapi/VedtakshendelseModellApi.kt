@@ -16,6 +16,6 @@ data class VedtakshendelseModellApi(
     fun håndter(mottakerModellApi: MottakerModellApi): MottakerModellApi {
         val mottaker = Mottaker.gjenopprett(mottakerModellApi)
         mottaker.håndterVedtak(Vedtakshendelse.gjenopprett(this))
-        return mottaker.toDto()
+        return mottaker.toModellApi()
     }
 }

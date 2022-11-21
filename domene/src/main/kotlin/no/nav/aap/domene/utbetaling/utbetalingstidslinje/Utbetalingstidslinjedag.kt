@@ -33,7 +33,7 @@ internal sealed class Utbetalingstidslinjedag(
     internal open fun barnetillegg(barnetillegg: Barnetillegg) {}
 
     internal abstract fun accept(visitor: UtbetalingsdagVisitor)
-    internal abstract fun toDto(): UtbetalingstidslinjedagModellApi
+    internal abstract fun toModellApi(): UtbetalingstidslinjedagModellApi
 
     //TODO: Gå gjennom hvilke beløp som skal rundes av
     //TODO: Flytt kode for fastsetting av minstegrunnlag (2G) inn hit
@@ -117,14 +117,14 @@ internal sealed class Utbetalingstidslinjedag(
             visitor.visitUtbetalingMedBeløp(this, dato, beløp)
         }
 
-        override fun toDto() = UtbetalingstidslinjedagModellApi(
+        override fun toModellApi() = UtbetalingstidslinjedagModellApi(
             type = dagtype.name,
             dato = dato,
             grunnlagsfaktor = grunnlagsfaktor.toDto(),
             barnetillegg = barnetillegg.toDto(),
             grunnlag = grunnlag.toDto(),
-            årligYtelse = årligYtelse.toDto(),
-            dagsats = dagsats.toDto(),
+            årligYtelse = årligYtelse.toModellApi(),
+            dagsats = dagsats.toModellApi(),
             høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg.toDto(),
             høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg.toDto(),
             dagsatsMedBarnetillegg = dagsatsMedBarnetillegg.toDto(),
@@ -156,7 +156,7 @@ internal sealed class Utbetalingstidslinjedag(
             visitor.visitIkkeUtbetaling(this, dato)
         }
 
-        override fun toDto() = UtbetalingstidslinjedagModellApi(
+        override fun toModellApi() = UtbetalingstidslinjedagModellApi(
             type = dagtype.name,
             dato = dato,
             grunnlagsfaktor = null,

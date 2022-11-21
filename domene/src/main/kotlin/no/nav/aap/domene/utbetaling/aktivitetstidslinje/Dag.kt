@@ -20,7 +20,7 @@ internal sealed class Dag(
 
     internal abstract fun accept(visitor: DagVisitor)
 
-    internal abstract fun toDto(): DagModellApi
+    internal abstract fun toModellApi(): DagModellApi
 
     private enum class Dagtype {
         HELG,
@@ -39,7 +39,7 @@ internal sealed class Dag(
             visitor.visitHelgedag(this, dato, arbeidstimer)
         }
 
-        override fun toDto() = DagModellApi(
+        override fun toModellApi() = DagModellApi(
             dato = dato,
             arbeidstimer = arbeidstimer.toDto(),
             type = Dagtype.HELG.name
@@ -54,7 +54,7 @@ internal sealed class Dag(
 
         override fun accept(visitor: DagVisitor) = visitor.visitArbeidsdag(dato, arbeidstimer)
 
-        override fun toDto() = DagModellApi(
+        override fun toModellApi() = DagModellApi(
             dato = dato,
             arbeidstimer = arbeidstimer.toDto(),
             type = Dagtype.ARBEIDSDAG.name
@@ -71,7 +71,7 @@ internal sealed class Dag(
             visitor.visitFraværsdag(this, dato)
         }
 
-        override fun toDto() = DagModellApi(
+        override fun toModellApi() = DagModellApi(
             dato = dato,
             arbeidstimer = null,
             type = Dagtype.FRAVÆRSDAG.name

@@ -17,7 +17,7 @@ internal class Paragraf_11_20_1_ledd private constructor(
 
     internal operator fun div(nevner: Number) = årligYtelse / nevner
 
-    internal fun toDto() = Paragraf_11_20_1_ledd_ModellApi(
+    internal fun toModellApi() = Paragraf_11_20_1_ledd_ModellApi(
         faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
         inntektsgrunnlag = inntektsgrunnlag.toDto(),
         årligytelse = årligYtelse.toDto(),

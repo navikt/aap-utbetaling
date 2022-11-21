@@ -33,5 +33,5 @@ internal class Aktivitetstidslinje(meldeperioder: List<Meldeperiode> = emptyList
         visitor.postVisitTidslinje(this)
     }
 
-    internal fun toDto(): List<MeldeperiodeModellApi> = meldeperioder.map { it.toDto() }
+    internal fun toModellApi(): List<MeldeperiodeModellApi> = meldeperioder.map { it.toModellApi() }
 }

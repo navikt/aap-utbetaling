@@ -19,8 +19,8 @@ internal class Meldeperiode(dager: List<Dag> = emptyList()) {
     private fun sammenfallerMed(other: Meldeperiode) =
         this.dager.first().sammenfallerMed(other.dager.first())
 
-    internal fun toDto() = MeldeperiodeModellApi(
-        dager = dager.map { it.toDto() }
+    internal fun toModellApi() = MeldeperiodeModellApi(
+        dager = dager.map { it.toModellApi() }
     )
 
     internal companion object {

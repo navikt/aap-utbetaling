@@ -12,7 +12,7 @@ data class LøsningModellApi(
     fun håndter(mottakerModellApi: MottakerModellApi): MottakerModellApi {
         val mottaker = Mottaker.gjenopprett(mottakerModellApi)
         mottaker.håndterLøsning(LøsningBarn(barn.map { Barnetillegg.Barn(Fødselsdato(it.fødselsdato)) }))
-        return mottaker.toDto()
+        return mottaker.toModellApi()
     }
 }
 

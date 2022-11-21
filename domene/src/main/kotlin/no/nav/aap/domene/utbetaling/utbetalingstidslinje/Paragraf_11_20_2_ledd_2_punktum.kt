@@ -18,9 +18,9 @@ internal class Paragraf_11_20_2_ledd_2_punktum private constructor(
 
     internal operator fun plus(barnetillegg: Beløp) = dagsats + barnetillegg
 
-    internal fun toDto() = Paragraf_11_20_2_ledd_2_punktum_ModellApi(
+    internal fun toModellApi() = Paragraf_11_20_2_ledd_2_punktum_ModellApi(
         antallDagerMedUtbetalingPerÅr = antallDagerMedUtbetalingPerÅr,
-        årligYtelse = årligYtelse.toDto().årligytelse,
+        årligYtelse = årligYtelse.toModellApi().årligytelse,
         dagsats = dagsats.toDto()
     )
 

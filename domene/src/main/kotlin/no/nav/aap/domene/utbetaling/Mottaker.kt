@@ -75,12 +75,12 @@ internal class Mottaker private constructor(
 
     }
 
-    internal fun toDto() = MottakerModellApi(
+    internal fun toModellApi() = MottakerModellApi(
         personident = personident.toDto(),
         fødselsdato = fødselsdato.toDto(),
-        vedtakshistorikk = vedtakshistorikk.toDto(),
-        aktivitetstidslinje = aktivitetstidslinje.toDto(),
-        utbetalingstidslinjehistorikk = utbetalingstidslinjehistorikk.toDto(),
+        vedtakshistorikk = vedtakshistorikk.toModellApi(),
+        aktivitetstidslinje = aktivitetstidslinje.toModellApi(),
+        utbetalingstidslinjehistorikk = utbetalingstidslinjehistorikk.toModellApi(),
         oppdragshistorikk = oppdragshistorikk.toDto(),
         barnetillegg = barnetillegg.toDto(),
         tilstand = tilstand.toDto()

@@ -29,5 +29,5 @@ internal class Oppdragshistorikk private constructor(
         oppdragVisitor.postVisitOppdragshistorikk()
     }
 
-    internal fun toDto() = oppdragshistorikk.map { it.toDto() }
+    internal fun toDto() = oppdragshistorikk.map { it.toModellApi() }
 }

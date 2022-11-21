@@ -31,6 +31,6 @@ internal class Vedtakshistorikk private constructor(
         visitor.visitVedtakshistorikk(finnGjeldendeVedtak())
     }
 
-    internal fun toDto(): List<VedtakModellApi> = vedtakshistorikk.map { it.toDto() }
+    internal fun toModellApi(): List<VedtakModellApi> = vedtakshistorikk.map { it.toModellApi() }
 
 }

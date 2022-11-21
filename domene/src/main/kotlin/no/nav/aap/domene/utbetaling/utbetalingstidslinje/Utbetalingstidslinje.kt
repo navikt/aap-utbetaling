@@ -31,5 +31,5 @@ internal class Utbetalingstidslinje(
         visitor.postVisitUtbetalingstidslinje(this)
     }
 
-    internal fun toDto() = UtbetalingstidslinjeModellApi(dager.map { it.toDto() })
+    internal fun toModellApi() = UtbetalingstidslinjeModellApi(dager.map { it.toModellApi() })
 }

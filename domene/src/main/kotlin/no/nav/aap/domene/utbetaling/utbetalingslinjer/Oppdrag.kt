@@ -1,7 +1,7 @@
 package no.nav.aap.domene.utbetaling.utbetalingslinjer
 
 import no.nav.aap.domene.utbetaling.modellapi.OppdragModellApi
-import no.nav.aap.domene.utbetaling.utbetalingslinjer.Utbetalingslinje.Companion.toDto
+import no.nav.aap.domene.utbetaling.utbetalingslinjer.Utbetalingslinje.Companion.toModellApi
 import no.nav.aap.domene.utbetaling.visitor.OppdragVisitor
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
@@ -381,10 +381,10 @@ internal class Oppdrag private constructor(
         }
     }
 
-    internal fun toDto() = OppdragModellApi(
+    internal fun toModellApi() = OppdragModellApi(
         mottaker = mottaker,
         fagområde = fagområde.name,
-        linjer = linjer.toDto(),
+        linjer = linjer.toModellApi(),
         fagsystemId = fagsystemId,
         endringskode = endringskode.name,
         nettoBeløp = nettoBeløp,

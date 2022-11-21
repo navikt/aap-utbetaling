@@ -55,7 +55,7 @@ internal class Vedtak(
 
     override fun hashCode() = vedtaksid.hashCode()
 
-    internal fun toDto() = VedtakModellApi(
+    internal fun toModellApi() = VedtakModellApi(
         vedtaksid = vedtaksid,
         innvilget = innvilget,
         grunnlagsfaktor = grunnlagsfaktor.toDto(),

@@ -25,7 +25,7 @@ internal class GjenopprettTest {
 
         val mottakerFraDtoMottaker = Mottaker.gjenopprett(mottakerModellApi)
 
-        val dtoMottakerFraMottaker = mottakerFraDtoMottaker.toDto()
+        val dtoMottakerFraMottaker = mottakerFraDtoMottaker.toModellApi()
 
         assertEquals(mottakerModellApi, dtoMottakerFraMottaker)
     }
@@ -54,7 +54,7 @@ internal class GjenopprettTest {
 
         val mottakerFraDtoMottaker = Mottaker.gjenopprett(mottakerModellApi)
 
-        val dtoMottakerFraMottaker = mottakerFraDtoMottaker.toDto()
+        val dtoMottakerFraMottaker = mottakerFraDtoMottaker.toModellApi()
 
         assertEquals(mottakerModellApi, dtoMottakerFraMottaker)
     }
@@ -93,7 +93,7 @@ internal class GjenopprettTest {
 
         val mottakerFraDtoMottaker = Mottaker.gjenopprett(mottakerModellApi)
 
-        val dtoMottakerFraMottaker = mottakerFraDtoMottaker.toDto()
+        val dtoMottakerFraMottaker = mottakerFraDtoMottaker.toModellApi()
 
         assertEquals(mottakerModellApi, dtoMottakerFraMottaker)
     }
@@ -121,7 +121,7 @@ internal class GjenopprettTest {
 
         val mottakerFraDtoMottaker = Mottaker.gjenopprett(mottakerModellApi)
 
-        val dtoMottakerFraMottaker = mottakerFraDtoMottaker.toDto()
+        val dtoMottakerFraMottaker = mottakerFraDtoMottaker.toModellApi()
 
         assertEquals(mottakerModellApi, dtoMottakerFraMottaker)
     }
@@ -206,7 +206,7 @@ internal class GjenopprettTest {
 
         val mottakerFraDtoMottaker = Mottaker.gjenopprett(mottakerModellApi)
 
-        val dtoMottakerFraMottaker = mottakerFraDtoMottaker.toDto()
+        val dtoMottakerFraMottaker = mottakerFraDtoMottaker.toModellApi()
 
         assertEquals(mottakerModellApi, dtoMottakerFraMottaker)
     }

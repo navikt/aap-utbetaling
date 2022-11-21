@@ -18,7 +18,7 @@ data class MottakerModellApi(
 ) {
     companion object {
         fun opprettMottaker(personident: String, fødselsdato: LocalDate): MottakerModellApi =
-            Mottaker(Personident(personident), Fødselsdato(fødselsdato)).toDto()
+            Mottaker(Personident(personident), Fødselsdato(fødselsdato)).toModellApi()
     }
 }
 

@@ -16,7 +16,7 @@ data class MeldepliktshendelseModellApi(
                 brukersAktivitet = aktivitetPerDag.opprettBrukersAktivitet()
             )
         )
-        return mottaker.toDto()
+        return mottaker.toModellApi()
     }
 }
 

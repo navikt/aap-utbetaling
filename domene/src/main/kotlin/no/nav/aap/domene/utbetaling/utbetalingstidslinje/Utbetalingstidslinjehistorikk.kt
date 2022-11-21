@@ -35,5 +35,5 @@ internal class Utbetalingstidslinjehistorikk(
         oppdragshistorikk.byggOppdrag(sisteUtbetalingstidslinje)
     }
 
-    internal fun toDto() = utbetalingstidslinjer.map { it.toDto() }
+    internal fun toModellApi() = utbetalingstidslinjer.map { it.toModellApi() }
 }
