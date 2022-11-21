@@ -1,6 +1,6 @@
 package no.nav.aap.domene.utbetaling.hendelse
 
-import no.nav.aap.domene.utbetaling.dto.DtoVedtakshendelse
+import no.nav.aap.domene.utbetaling.modellapi.VedtakshendelseModellApi
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import java.time.LocalDate
@@ -15,7 +15,7 @@ internal class Vedtakshendelse(
     val fødselsdato: Fødselsdato
 ) : Hendelse() {
     internal companion object {
-        internal fun gjenopprett(dtoVedtak: DtoVedtakshendelse) = Vedtakshendelse(
+        internal fun gjenopprett(dtoVedtak: VedtakshendelseModellApi) = Vedtakshendelse(
             vedtaksid = dtoVedtak.vedtaksid,
             innvilget = dtoVedtak.innvilget,
             grunnlagsfaktor = Grunnlagsfaktor(dtoVedtak.grunnlagsfaktor),

@@ -1,7 +1,7 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.erHelg
-import no.nav.aap.domene.utbetaling.dto.*
+import no.nav.aap.domene.utbetaling.modellapi.*
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Paragraf_11_20_1_ledd_ModellAPI
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Paragraf_11_20_2_ledd_2_punktum_ModellAPI
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -12,7 +12,7 @@ internal class GjenopprettTest {
 
     @Test
     fun `Gjennopprett og lagre tom mottaker`() {
-        val dtoMottaker = DtoMottaker(
+        val mottakerModellApi = MottakerModellApi(
             personident = "12345678910",
             fødselsdato = 1 januar 2000,
             vedtakshistorikk = emptyList(),
@@ -23,20 +23,20 @@ internal class GjenopprettTest {
             tilstand = "START",
         )
 
-        val mottakerFraDtoMottaker = Mottaker.gjenopprett(dtoMottaker)
+        val mottakerFraDtoMottaker = Mottaker.gjenopprett(mottakerModellApi)
 
         val dtoMottakerFraMottaker = mottakerFraDtoMottaker.toDto()
 
-        assertEquals(dtoMottaker, dtoMottakerFraMottaker)
+        assertEquals(mottakerModellApi, dtoMottakerFraMottaker)
     }
 
     @Test
     fun `Gjennopprett og lagre mottaker med ett vedtak`() {
-        val dtoMottaker = DtoMottaker(
+        val mottakerModellApi = MottakerModellApi(
             personident = "12345678910",
             fødselsdato = 1 januar 2000,
             vedtakshistorikk = listOf(
-                DtoVedtak(
+                VedtakModellApi(
                     vedtaksid = UUID.randomUUID(),
                     innvilget = true,
                     grunnlagsfaktor = 4.0,
@@ -52,20 +52,20 @@ internal class GjenopprettTest {
             tilstand = "VEDTAK_MOTTATT",
         )
 
-        val mottakerFraDtoMottaker = Mottaker.gjenopprett(dtoMottaker)
+        val mottakerFraDtoMottaker = Mottaker.gjenopprett(mottakerModellApi)
 
         val dtoMottakerFraMottaker = mottakerFraDtoMottaker.toDto()
 
-        assertEquals(dtoMottaker, dtoMottakerFraMottaker)
+        assertEquals(mottakerModellApi, dtoMottakerFraMottaker)
     }
 
     @Test
     fun `Gjennopprett og lagre mottaker med ett vedtak og meldeplikthendelse`() {
-        val dtoMottaker = DtoMottaker(
+        val mottakerModellApi = MottakerModellApi(
             personident = "12345678910",
             fødselsdato = 1 januar 2000,
             vedtakshistorikk = listOf(
-                DtoVedtak(
+                VedtakModellApi(
                     vedtaksid = UUID.randomUUID(),
                     innvilget = true,
                     grunnlagsfaktor = 4.0,
@@ -75,10 +75,10 @@ internal class GjenopprettTest {
                 )
             ),
             aktivitetstidslinje = listOf(
-                DtoMeldeperiode(dager =
+                MeldeperiodeModellApi(dager =
                 (0 until 14L).map { nummer ->
                     val dato = (10 oktober 2022).plusDays(nummer)
-                    DtoDag(
+                    DagModellApi(
                         dato = dato,
                         arbeidstimer = 0.0,
                         type = if (dato.erHelg()) "HELG" else "ARBEIDSDAG",
@@ -91,16 +91,16 @@ internal class GjenopprettTest {
             tilstand = "MELDEPLIKTSHENDELSE_MOTTATT",
         )
 
-        val mottakerFraDtoMottaker = Mottaker.gjenopprett(dtoMottaker)
+        val mottakerFraDtoMottaker = Mottaker.gjenopprett(mottakerModellApi)
 
         val dtoMottakerFraMottaker = mottakerFraDtoMottaker.toDto()
 
-        assertEquals(dtoMottaker, dtoMottakerFraMottaker)
+        assertEquals(mottakerModellApi, dtoMottakerFraMottaker)
     }
 
     @Test
     fun `Gjennopprett og lagre mottaker med barnetillegg`() {
-        val dtoMottaker = DtoMottaker(
+        val mottakerModellApi = MottakerModellApi(
             personident = "12345678910",
             fødselsdato = 1 januar 2000,
             vedtakshistorikk = emptyList(),
@@ -108,9 +108,9 @@ internal class GjenopprettTest {
             utbetalingstidslinjehistorikk = emptyList(),
             oppdragshistorikk = emptyList(),
             barnetillegg = listOf(
-                DtoBarna(
+                BarnaModellApi(
                     barn = listOf(
-                        DtoBarn(
+                        BarnModellApi(
                             fødselsdato = 1 januar 2022
                         )
                     )
@@ -119,20 +119,20 @@ internal class GjenopprettTest {
             tilstand = "MELDEPLIKTSHENDELSE_MOTTATT",
         )
 
-        val mottakerFraDtoMottaker = Mottaker.gjenopprett(dtoMottaker)
+        val mottakerFraDtoMottaker = Mottaker.gjenopprett(mottakerModellApi)
 
         val dtoMottakerFraMottaker = mottakerFraDtoMottaker.toDto()
 
-        assertEquals(dtoMottaker, dtoMottakerFraMottaker)
+        assertEquals(mottakerModellApi, dtoMottakerFraMottaker)
     }
 
     @Test
     fun `Gjennopprett og lagre mottaker med beregnet utbetaling`() {
-        val dtoMottaker = DtoMottaker(
+        val mottakerModellApi = MottakerModellApi(
             personident = "12345678910",
             fødselsdato = 1 januar 2000,
             vedtakshistorikk = listOf(
-                DtoVedtak(
+                VedtakModellApi(
                     vedtaksid = UUID.randomUUID(),
                     innvilget = true,
                     grunnlagsfaktor = 4.0,
@@ -142,20 +142,20 @@ internal class GjenopprettTest {
                 )
             ),
             aktivitetstidslinje = listOf(
-                DtoMeldeperiode(dager =
+                MeldeperiodeModellApi(dager =
                 (0 until 14L).map { nummer ->
                     val dato = (10 oktober 2022).plusDays(nummer)
-                    DtoDag(
+                    DagModellApi(
                         dato = dato,
                         arbeidstimer = 0.0,
                         type = if (dato.erHelg()) "HELG" else "ARBEIDSDAG",
                     )
                 })
             ),
-            utbetalingstidslinjehistorikk = listOf(DtoUtbetalingstidslinje(dager = (0 until 14L).mapNotNull { nummer ->
+            utbetalingstidslinjehistorikk = listOf(UtbetalingstidslinjeModellApi(dager = (0 until 14L).mapNotNull { nummer ->
                 val dato = (10 oktober 2022).plusDays(nummer)
                 if (dato.erHelg()) return@mapNotNull null
-                DtoUtbetalingstidslinjedag(
+                UtbetalingstidslinjedagModellApi(
                     type = "UTBETALINGSDAG",
                     dato = dato,
                     grunnlagsfaktor = 4.0,
@@ -172,11 +172,11 @@ internal class GjenopprettTest {
                 )
             })),
             oppdragshistorikk = listOf(
-                DtoOppdrag(
+                OppdragModellApi(
                     mottaker = "12345678910",
                     fagområde = "Arbeidsavklaringspenger",
                     linjer = listOf(
-                        DtoUtbetalingslinje(
+                        UtbetalingslinjeModellApi(
                             fom = 10 oktober 2022,
                             tom = 23 oktober 2022,
                             satstype = "DAG",
@@ -204,10 +204,10 @@ internal class GjenopprettTest {
             tilstand = "UTBETALING_BEREGNET",
         )
 
-        val mottakerFraDtoMottaker = Mottaker.gjenopprett(dtoMottaker)
+        val mottakerFraDtoMottaker = Mottaker.gjenopprett(mottakerModellApi)
 
         val dtoMottakerFraMottaker = mottakerFraDtoMottaker.toDto()
 
-        assertEquals(dtoMottaker, dtoMottakerFraMottaker)
+        assertEquals(mottakerModellApi, dtoMottakerFraMottaker)
     }
 }

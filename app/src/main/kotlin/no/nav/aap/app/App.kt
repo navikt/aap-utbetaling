@@ -23,7 +23,7 @@ import no.nav.aap.app.stream.løsningStream
 import no.nav.aap.app.stream.meldepliktStream
 import no.nav.aap.app.stream.mock.utbetalingsbehovStreamMock
 import no.nav.aap.app.stream.vedtakStream
-import no.nav.aap.domene.utbetaling.dto.*
+import no.nav.aap.domene.utbetaling.modellapi.*
 import no.nav.aap.dto.kafka.MottakereKafkaDto
 import no.nav.aap.kafka.streams.KStreams
 import no.nav.aap.kafka.streams.KafkaStreams
@@ -99,12 +99,12 @@ private fun Routing.simulering() {
             val personident = requireNotNull(call.parameters["personident"]) { "Personident må være satt" }
             val simuleringRequest = call.receive<SimuleringRequest>()
 
-            val mottaker = DtoMottaker.opprettMottaker(personident, simuleringRequest.fødselsdato)
+            val mottaker = MottakerModellApi.opprettMottaker(personident, simuleringRequest.fødselsdato)
             val vedtakshendelse = simuleringRequest.lagVedtakshendelse()
             val mottakerMedVedtak = vedtakshendelse.håndter(mottaker)
             val meldepliktshendelse = simuleringRequest.lagMeldepliktshendelse()
-            val endretMottaker = meldepliktshendelse.håndter(mottakerMedVedtak, object : DtoMottakerObserver {})
-            val endretMottakerMedBarn = DtoLøsning(listOf(DtoLøsningBarn(LocalDate.of(2018, 11, 1)))).håndter(endretMottaker)
+            val endretMottaker = meldepliktshendelse.håndter(mottakerMedVedtak, object : MottakerModellApiObserver {})
+            val endretMottakerMedBarn = LøsningModellApi(listOf(LøsningBarnModellApi(LocalDate.of(2018, 11, 1)))).håndter(endretMottaker)
 
             call.respond(SimuleringResponse.lagNy(endretMottakerMedBarn))
         }

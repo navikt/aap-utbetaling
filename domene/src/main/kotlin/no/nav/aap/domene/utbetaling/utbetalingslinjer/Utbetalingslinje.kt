@@ -1,7 +1,7 @@
 package no.nav.aap.domene.utbetaling.utbetalingslinjer
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.erHelg
-import no.nav.aap.domene.utbetaling.dto.DtoUtbetalingslinje
+import no.nav.aap.domene.utbetaling.modellapi.UtbetalingslinjeModellApi
 import no.nav.aap.domene.utbetaling.visitor.OppdragVisitor
 import java.time.LocalDate
 
@@ -33,24 +33,24 @@ internal class Utbetalingslinje internal constructor(
 
         internal fun Iterable<Utbetalingslinje>.toDto() = map(Utbetalingslinje::toDto)
 
-        internal fun gjenopprett(dtoUtbetalingslinje: DtoUtbetalingslinje) =
+        internal fun gjenopprett(utbetalingslinjeModellApi: UtbetalingslinjeModellApi) =
             Utbetalingslinje(
-                fom = dtoUtbetalingslinje.fom,
-                tom = dtoUtbetalingslinje.tom,
-                satstype = Satstype.fromString(dtoUtbetalingslinje.satstype),
-                beløp = dtoUtbetalingslinje.beløp,
-                aktuellDagsinntekt = dtoUtbetalingslinje.aktuellDagsinntekt,
-                grad = dtoUtbetalingslinje.grad,
-                refFagsystemId = dtoUtbetalingslinje.refFagsystemId,
-                delytelseId = dtoUtbetalingslinje.delytelseId,
-                refDelytelseId = dtoUtbetalingslinje.refDelytelseId,
-                endringskode = enumValueOf(dtoUtbetalingslinje.endringskode),
-                klassekode = enumValueOf(dtoUtbetalingslinje.klassekode),
-                datoStatusFom = dtoUtbetalingslinje.datoStatusFom,
+                fom = utbetalingslinjeModellApi.fom,
+                tom = utbetalingslinjeModellApi.tom,
+                satstype = Satstype.fromString(utbetalingslinjeModellApi.satstype),
+                beløp = utbetalingslinjeModellApi.beløp,
+                aktuellDagsinntekt = utbetalingslinjeModellApi.aktuellDagsinntekt,
+                grad = utbetalingslinjeModellApi.grad,
+                refFagsystemId = utbetalingslinjeModellApi.refFagsystemId,
+                delytelseId = utbetalingslinjeModellApi.delytelseId,
+                refDelytelseId = utbetalingslinjeModellApi.refDelytelseId,
+                endringskode = enumValueOf(utbetalingslinjeModellApi.endringskode),
+                klassekode = enumValueOf(utbetalingslinjeModellApi.klassekode),
+                datoStatusFom = utbetalingslinjeModellApi.datoStatusFom,
             )
     }
 
-    private fun toDto() = DtoUtbetalingslinje(
+    private fun toDto() = UtbetalingslinjeModellApi(
         fom = fom,
         tom = tom,
         satstype = satstype.toString(),

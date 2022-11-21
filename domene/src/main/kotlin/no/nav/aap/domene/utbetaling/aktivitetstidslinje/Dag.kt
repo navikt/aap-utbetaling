@@ -1,6 +1,6 @@
 package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
-import no.nav.aap.domene.utbetaling.dto.DtoDag
+import no.nav.aap.domene.utbetaling.modellapi.DagModellApi
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.NORMAL_ARBEIDSTIMER
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
@@ -20,7 +20,7 @@ internal sealed class Dag(
 
     internal abstract fun accept(visitor: DagVisitor)
 
-    internal abstract fun toDto(): DtoDag
+    internal abstract fun toDto(): DagModellApi
 
     private enum class Dagtype {
         HELG,
@@ -39,7 +39,7 @@ internal sealed class Dag(
             visitor.visitHelgedag(this, dato, arbeidstimer)
         }
 
-        override fun toDto() = DtoDag(
+        override fun toDto() = DagModellApi(
             dato = dato,
             arbeidstimer = arbeidstimer.toDto(),
             type = Dagtype.HELG.name
@@ -54,7 +54,7 @@ internal sealed class Dag(
 
         override fun accept(visitor: DagVisitor) = visitor.visitArbeidsdag(dato, arbeidstimer)
 
-        override fun toDto() = DtoDag(
+        override fun toDto() = DagModellApi(
             dato = dato,
             arbeidstimer = arbeidstimer.toDto(),
             type = Dagtype.ARBEIDSDAG.name
@@ -71,7 +71,7 @@ internal sealed class Dag(
             visitor.visitFraværsdag(this, dato)
         }
 
-        override fun toDto() = DtoDag(
+        override fun toDto() = DagModellApi(
             dato = dato,
             arbeidstimer = null,
             type = Dagtype.FRAVÆRSDAG.name
@@ -89,10 +89,10 @@ internal sealed class Dag(
         internal fun fraværsdag(dato: LocalDate) =
             Fraværsdag(dato)
 
-        internal fun gjenopprett(dtoDag: DtoDag) = when (enumValueOf<Dagtype>(dtoDag.type)) {
-            Dagtype.HELG -> Helg(dtoDag.dato, Arbeidstimer(requireNotNull(dtoDag.arbeidstimer)))
-            Dagtype.ARBEIDSDAG -> Arbeidsdag(dtoDag.dato, Arbeidstimer(requireNotNull(dtoDag.arbeidstimer)))
-            Dagtype.FRAVÆRSDAG -> Fraværsdag(dtoDag.dato)
+        internal fun gjenopprett(dagModellApi: DagModellApi) = when (enumValueOf<Dagtype>(dagModellApi.type)) {
+            Dagtype.HELG -> Helg(dagModellApi.dato, Arbeidstimer(requireNotNull(dagModellApi.arbeidstimer)))
+            Dagtype.ARBEIDSDAG -> Arbeidsdag(dagModellApi.dato, Arbeidstimer(requireNotNull(dagModellApi.arbeidstimer)))
+            Dagtype.FRAVÆRSDAG -> Fraværsdag(dagModellApi.dato)
         }
     }
 }

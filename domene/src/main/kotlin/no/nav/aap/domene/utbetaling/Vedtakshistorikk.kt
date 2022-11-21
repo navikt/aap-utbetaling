@@ -1,7 +1,7 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.Vedtak.Companion.sortertPåDato
-import no.nav.aap.domene.utbetaling.dto.DtoVedtak
+import no.nav.aap.domene.utbetaling.modellapi.VedtakModellApi
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 
@@ -11,8 +11,8 @@ internal class Vedtakshistorikk private constructor(
     internal constructor(): this(mutableListOf())
 
     companion object {
-        fun gjenopprett(dtoVedtak: List<DtoVedtak>) = Vedtakshistorikk(
-            vedtakshistorikk = dtoVedtak.map { Vedtak.gjenopprett(it) }.toMutableList()
+        fun gjenopprett(vedtakModellApi: List<VedtakModellApi>) = Vedtakshistorikk(
+            vedtakshistorikk = vedtakModellApi.map { Vedtak.gjenopprett(it) }.toMutableList()
         )
     }
 
@@ -31,6 +31,6 @@ internal class Vedtakshistorikk private constructor(
         visitor.visitVedtakshistorikk(finnGjeldendeVedtak())
     }
 
-    internal fun toDto(): List<DtoVedtak> = vedtakshistorikk.map { it.toDto() }
+    internal fun toDto(): List<VedtakModellApi> = vedtakshistorikk.map { it.toDto() }
 
 }

@@ -1,7 +1,7 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
 import no.nav.aap.domene.utbetaling.Barnetillegg
-import no.nav.aap.domene.utbetaling.dto.DtoUtbetalingstidslinjedag
+import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjedagModellApi
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnbeløp
@@ -22,10 +22,10 @@ internal sealed class Utbetalingstidslinjedag(
     protected var arbeidsprosent: Double = Double.NaN
 
     internal companion object {
-        internal fun gjenopprett(dtoUtbetalingstidslinjedag: DtoUtbetalingstidslinjedag) =
-            when (enumValueOf<Type>(dtoUtbetalingstidslinjedag.type)) {
-                Type.UTBETALINGSDAG -> Utbetalingsdag.gjenopprett(dtoUtbetalingstidslinjedag)
-                Type.IKKE_UTBETALINGSDAG -> IkkeUtbetalingsdag.gjenopprett(dtoUtbetalingstidslinjedag)
+        internal fun gjenopprett(utbetalingstidslinjedagModellApi: UtbetalingstidslinjedagModellApi) =
+            when (enumValueOf<Type>(utbetalingstidslinjedagModellApi.type)) {
+                Type.UTBETALINGSDAG -> Utbetalingsdag.gjenopprett(utbetalingstidslinjedagModellApi)
+                Type.IKKE_UTBETALINGSDAG -> IkkeUtbetalingsdag.gjenopprett(utbetalingstidslinjedagModellApi)
             }
     }
 
@@ -33,7 +33,7 @@ internal sealed class Utbetalingstidslinjedag(
     internal open fun barnetillegg(barnetillegg: Barnetillegg) {}
 
     internal abstract fun accept(visitor: UtbetalingsdagVisitor)
-    internal abstract fun toDto(): DtoUtbetalingstidslinjedag
+    internal abstract fun toDto(): UtbetalingstidslinjedagModellApi
 
     //TODO: Gå gjennom hvilke beløp som skal rundes av
     //TODO: Flytt kode for fastsetting av minstegrunnlag (2G) inn hit
@@ -76,33 +76,33 @@ internal sealed class Utbetalingstidslinjedag(
             private const val MAKS_FAKTOR_AV_GRUNNLAG = 0.9
             private const val ANTALL_DAGER_MED_UTBETALING_PER_ÅR = 260
 
-            internal fun gjenopprett(dtoUtbetalingstidslinjedag: DtoUtbetalingstidslinjedag): Utbetalingsdag {
+            internal fun gjenopprett(utbetalingstidslinjedagModellApi: UtbetalingstidslinjedagModellApi): Utbetalingsdag {
                 val årligYtelse = Paragraf_11_20_1_ledd.gjenopprett(
-                    faktorForReduksjonAvGrunnlag = requireNotNull(dtoUtbetalingstidslinjedag.årligYtelse).faktorForReduksjonAvGrunnlag,
-                    inntektsgrunnlag = requireNotNull(dtoUtbetalingstidslinjedag.årligYtelse).inntektsgrunnlag.beløp,
-                    årligYtelse = requireNotNull(dtoUtbetalingstidslinjedag.årligYtelse).årligytelse.beløp
+                    faktorForReduksjonAvGrunnlag = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).faktorForReduksjonAvGrunnlag,
+                    inntektsgrunnlag = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).inntektsgrunnlag.beløp,
+                    årligYtelse = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).årligytelse.beløp
                 )
 
                 val dagsats = Paragraf_11_20_2_ledd_2_punktum.gjenopprett(
-                    antallDagerMedUtbetalingPerÅr = requireNotNull(dtoUtbetalingstidslinjedag.dagsats).antallDagerMedUtbetalingPerÅr,
+                    antallDagerMedUtbetalingPerÅr = requireNotNull(utbetalingstidslinjedagModellApi.dagsats).antallDagerMedUtbetalingPerÅr,
                     årligYtelse = årligYtelse,
-                    dagsats = requireNotNull(dtoUtbetalingstidslinjedag.dagsats).dagsats.beløp
+                    dagsats = requireNotNull(utbetalingstidslinjedagModellApi.dagsats).dagsats.beløp
                 )
                 val utbetalingsdag = Utbetalingsdag(
-                    dato = dtoUtbetalingstidslinjedag.dato,
-                    grunnlagsfaktor = Grunnlagsfaktor(requireNotNull(dtoUtbetalingstidslinjedag.grunnlagsfaktor)),
-                    barnetillegg = requireNotNull(dtoUtbetalingstidslinjedag.barnetillegg).beløp,
-                    grunnlag = requireNotNull(dtoUtbetalingstidslinjedag.grunnlag).beløp,
+                    dato = utbetalingstidslinjedagModellApi.dato,
+                    grunnlagsfaktor = Grunnlagsfaktor(requireNotNull(utbetalingstidslinjedagModellApi.grunnlagsfaktor)),
+                    barnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.barnetillegg).beløp,
+                    grunnlag = requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).beløp,
                     årligYtelse = årligYtelse,
                     dagsats = dagsats,
-                    høyesteÅrligYtelseMedBarnetillegg = requireNotNull(dtoUtbetalingstidslinjedag.høyesteÅrligYtelseMedBarnetillegg).beløp,
-                    høyesteBeløpMedBarnetillegg = requireNotNull(dtoUtbetalingstidslinjedag.høyesteBeløpMedBarnetillegg).beløp,
-                    dagsatsMedBarnetillegg = requireNotNull(dtoUtbetalingstidslinjedag.dagsatsMedBarnetillegg).beløp,
-                    beløpMedBarnetillegg = requireNotNull(dtoUtbetalingstidslinjedag.beløpMedBarnetillegg).beløp,
+                    høyesteÅrligYtelseMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.høyesteÅrligYtelseMedBarnetillegg).beløp,
+                    høyesteBeløpMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.høyesteBeløpMedBarnetillegg).beløp,
+                    dagsatsMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.dagsatsMedBarnetillegg).beløp,
+                    beløpMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.beløpMedBarnetillegg).beløp,
                 )
 
-                utbetalingsdag.beløp = requireNotNull(dtoUtbetalingstidslinjedag.beløp).beløp
-                utbetalingsdag.arbeidsprosent = dtoUtbetalingstidslinjedag.arbeidsprosent
+                utbetalingsdag.beløp = requireNotNull(utbetalingstidslinjedagModellApi.beløp).beløp
+                utbetalingsdag.arbeidsprosent = utbetalingstidslinjedagModellApi.arbeidsprosent
 
                 return utbetalingsdag
             }
@@ -117,7 +117,7 @@ internal sealed class Utbetalingstidslinjedag(
             visitor.visitUtbetalingMedBeløp(this, dato, beløp)
         }
 
-        override fun toDto() = DtoUtbetalingstidslinjedag(
+        override fun toDto() = UtbetalingstidslinjedagModellApi(
             type = dagtype.name,
             dato = dato,
             grunnlagsfaktor = grunnlagsfaktor.toDto(),
@@ -137,12 +137,12 @@ internal sealed class Utbetalingstidslinjedag(
     internal class IkkeUtbetalingsdag(dato: LocalDate) : Utbetalingstidslinjedag(dato, Type.IKKE_UTBETALINGSDAG) {
 
         internal companion object {
-            internal fun gjenopprett(dtoUtbetalingstidslinjedag: DtoUtbetalingstidslinjedag): IkkeUtbetalingsdag {
+            internal fun gjenopprett(utbetalingstidslinjedagModellApi: UtbetalingstidslinjedagModellApi): IkkeUtbetalingsdag {
                 val ikkeUtbetalingsdag = IkkeUtbetalingsdag(
-                    dato = dtoUtbetalingstidslinjedag.dato
+                    dato = utbetalingstidslinjedagModellApi.dato
                 )
 
-                ikkeUtbetalingsdag.arbeidsprosent = dtoUtbetalingstidslinjedag.arbeidsprosent
+                ikkeUtbetalingsdag.arbeidsprosent = utbetalingstidslinjedagModellApi.arbeidsprosent
 
                 return ikkeUtbetalingsdag
             }
@@ -156,7 +156,7 @@ internal sealed class Utbetalingstidslinjedag(
             visitor.visitIkkeUtbetaling(this, dato)
         }
 
-        override fun toDto() = DtoUtbetalingstidslinjedag(
+        override fun toDto() = UtbetalingstidslinjedagModellApi(
             type = dagtype.name,
             dato = dato,
             grunnlagsfaktor = null,

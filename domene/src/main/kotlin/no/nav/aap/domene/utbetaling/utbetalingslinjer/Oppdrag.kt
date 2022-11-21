@@ -1,6 +1,6 @@
 package no.nav.aap.domene.utbetaling.utbetalingslinjer
 
-import no.nav.aap.domene.utbetaling.dto.DtoOppdrag
+import no.nav.aap.domene.utbetaling.modellapi.OppdragModellApi
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Utbetalingslinje.Companion.toDto
 import no.nav.aap.domene.utbetaling.visitor.OppdragVisitor
 import org.slf4j.LoggerFactory
@@ -53,18 +53,18 @@ internal class Oppdrag private constructor(
 
         internal fun kanIkkeForsøkesPåNy(vararg oppdrag: Oppdrag) = oppdrag.any { it.status == Oppdragstatus.AVVIST }
 
-        internal fun gjenopprett(dtoOppdrag: DtoOppdrag) =
+        internal fun gjenopprett(oppdragModellApi: OppdragModellApi) =
             Oppdrag(
-                mottaker = dtoOppdrag.mottaker,
-                fagområde = enumValueOf(dtoOppdrag.fagområde),
-                linjer = dtoOppdrag.linjer.map(Utbetalingslinje::gjenopprett).toMutableList(),
-                fagsystemId = dtoOppdrag.fagsystemId,
-                endringskode = enumValueOf(dtoOppdrag.endringskode),
-                nettoBeløp = dtoOppdrag.nettoBeløp,
-                overføringstidspunkt = dtoOppdrag.overføringstidspunkt,
-                avstemmingsnøkkel = dtoOppdrag.avstemmingsnøkkel,
-                status = dtoOppdrag.status?.let { enumValueOf<Oppdragstatus>(it) },
-                tidsstempel = dtoOppdrag.tidsstempel,
+                mottaker = oppdragModellApi.mottaker,
+                fagområde = enumValueOf(oppdragModellApi.fagområde),
+                linjer = oppdragModellApi.linjer.map(Utbetalingslinje::gjenopprett).toMutableList(),
+                fagsystemId = oppdragModellApi.fagsystemId,
+                endringskode = enumValueOf(oppdragModellApi.endringskode),
+                nettoBeløp = oppdragModellApi.nettoBeløp,
+                overføringstidspunkt = oppdragModellApi.overføringstidspunkt,
+                avstemmingsnøkkel = oppdragModellApi.avstemmingsnøkkel,
+                status = oppdragModellApi.status?.let { enumValueOf<Oppdragstatus>(it) },
+                tidsstempel = oppdragModellApi.tidsstempel,
             )
     }
 
@@ -381,7 +381,7 @@ internal class Oppdrag private constructor(
         }
     }
 
-    internal fun toDto() = DtoOppdrag(
+    internal fun toDto() = OppdragModellApi(
         mottaker = mottaker,
         fagområde = fagområde.name,
         linjer = linjer.toDto(),

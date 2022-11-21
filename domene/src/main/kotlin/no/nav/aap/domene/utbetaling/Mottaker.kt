@@ -1,7 +1,7 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Aktivitetstidslinje
-import no.nav.aap.domene.utbetaling.dto.DtoMottaker
+import no.nav.aap.domene.utbetaling.modellapi.MottakerModellApi
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Personident
 import no.nav.aap.domene.utbetaling.hendelse.Hendelse
@@ -39,15 +39,15 @@ internal class Mottaker private constructor(
     )
 
     internal companion object {
-        internal fun gjenopprett(dtoMottaker: DtoMottaker) = Mottaker(
-            personident = Personident(dtoMottaker.personident),
-            fødselsdato = Fødselsdato(dtoMottaker.fødselsdato),
-            vedtakshistorikk = Vedtakshistorikk.gjenopprett(dtoMottaker.vedtakshistorikk),
-            aktivitetstidslinje = Aktivitetstidslinje.gjenopprett(dtoMottaker.aktivitetstidslinje),
-            utbetalingstidslinjehistorikk = Utbetalingstidslinjehistorikk.gjenopprett(dtoMottaker.utbetalingstidslinjehistorikk),
-            barnetillegg = Barnetillegg.gjenopprett(dtoMottaker.barnetillegg),
-            oppdragshistorikk = Oppdragshistorikk.gjenopprett(dtoMottaker.oppdragshistorikk),
-            tilstand = enumValueOf<Tilstand.Tilstandsnavn>(dtoMottaker.tilstand).tilknyttetTilstand()
+        internal fun gjenopprett(mottakerModellApi: MottakerModellApi) = Mottaker(
+            personident = Personident(mottakerModellApi.personident),
+            fødselsdato = Fødselsdato(mottakerModellApi.fødselsdato),
+            vedtakshistorikk = Vedtakshistorikk.gjenopprett(mottakerModellApi.vedtakshistorikk),
+            aktivitetstidslinje = Aktivitetstidslinje.gjenopprett(mottakerModellApi.aktivitetstidslinje),
+            utbetalingstidslinjehistorikk = Utbetalingstidslinjehistorikk.gjenopprett(mottakerModellApi.utbetalingstidslinjehistorikk),
+            barnetillegg = Barnetillegg.gjenopprett(mottakerModellApi.barnetillegg),
+            oppdragshistorikk = Oppdragshistorikk.gjenopprett(mottakerModellApi.oppdragshistorikk),
+            tilstand = enumValueOf<Tilstand.Tilstandsnavn>(mottakerModellApi.tilstand).tilknyttetTilstand()
         )
     }
 
@@ -75,7 +75,7 @@ internal class Mottaker private constructor(
 
     }
 
-    internal fun toDto() = DtoMottaker(
+    internal fun toDto() = MottakerModellApi(
         personident = personident.toDto(),
         fødselsdato = fødselsdato.toDto(),
         vedtakshistorikk = vedtakshistorikk.toDto(),

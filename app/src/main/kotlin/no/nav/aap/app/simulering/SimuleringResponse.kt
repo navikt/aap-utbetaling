@@ -1,6 +1,6 @@
 package no.nav.aap.app.simulering
 
-import no.nav.aap.domene.utbetaling.dto.DtoMottaker
+import no.nav.aap.domene.utbetaling.modellapi.MottakerModellApi
 import java.time.LocalDate
 
 data class SimuleringResponse(
@@ -36,7 +36,7 @@ data class SimuleringResponse(
     )
 
     companion object {
-        fun lagNy(endretMottakerMedBarn: DtoMottaker): SimuleringResponse {
+        fun lagNy(endretMottakerMedBarn: MottakerModellApi): SimuleringResponse {
             val aktivitetstidslinje = endretMottakerMedBarn.aktivitetstidslinje.single().dager.map {
                 Aktivitetsdag(
                     dato = it.dato,

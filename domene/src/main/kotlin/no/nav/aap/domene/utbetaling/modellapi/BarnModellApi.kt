@@ -1,12 +1,12 @@
-package no.nav.aap.domene.utbetaling.dto
+package no.nav.aap.domene.utbetaling.modellapi
 
 import java.time.LocalDate
 
-data class DtoBarna (
-    val barn: List<DtoBarn>
+data class BarnaModellApi (
+    val barn: List<BarnModellApi>
 )
 
-data class DtoBarn (
+data class BarnModellApi (
     //TODO: Trenger vi fødselsnummeret til barna?
     // val fødselsnummer: String,
     val fødselsdato: LocalDate

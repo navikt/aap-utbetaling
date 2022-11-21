@@ -12,7 +12,7 @@ import no.nav.aap.app.kafka.KafkaUtbetalingsbehovWrapper
 import no.nav.aap.app.kafka.Topics
 import no.nav.aap.app.simulering.SimuleringRequest
 import no.nav.aap.app.simulering.SimuleringResponse
-import no.nav.aap.domene.utbetaling.dto.*
+import no.nav.aap.domene.utbetaling.modellapi.*
 import no.nav.aap.dto.kafka.IverksettVedtakKafkaDto
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -122,9 +122,9 @@ internal class AppTest {
         }
 
         meldepliktTopic.produce("123") {
-            DtoMeldepliktshendelse(
+            MeldepliktshendelseModellApi(
                 aktivitetPerDag = listOf(
-                    DtoAkivitetPerDag(
+                    AkivitetPerDagModellApi(
                         dato = LocalDate.now(),
                         arbeidstimer = 0.0,
                         fraværsdag = true
@@ -158,9 +158,9 @@ internal class AppTest {
         }
 
         meldepliktTopic.produce("123") {
-            DtoMeldepliktshendelse(
+            MeldepliktshendelseModellApi(
                 aktivitetPerDag = listOf(
-                    DtoAkivitetPerDag(
+                    AkivitetPerDagModellApi(
                         dato = LocalDate.now(),
                         arbeidstimer = 0.0,
                         fraværsdag = true
@@ -173,8 +173,8 @@ internal class AppTest {
         løsningTopic.produce("123") {
             behov.copy(
                 response = KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov.Response(
-                    DtoLøsning(
-                        barn = listOf(DtoLøsningBarn(LocalDate.now()))
+                    LøsningModellApi(
+                        barn = listOf(LøsningBarnModellApi(LocalDate.now()))
                     )
                 )
             )
@@ -203,9 +203,9 @@ internal class AppTest {
         }
 
         meldepliktTopic.produce("123") {
-            DtoMeldepliktshendelse(
+            MeldepliktshendelseModellApi(
                 aktivitetPerDag = listOf(
-                    DtoAkivitetPerDag(
+                    AkivitetPerDagModellApi(
                         dato = LocalDate.now(),
                         arbeidstimer = 0.0,
                         fraværsdag = true

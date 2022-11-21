@@ -1,7 +1,7 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.UtbetalingstidslinjeBuilder
-import no.nav.aap.domene.utbetaling.dto.DtoVedtak
+import no.nav.aap.domene.utbetaling.modellapi.VedtakModellApi
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
@@ -27,13 +27,13 @@ internal class Vedtak(
             fødselsdato = vedtakshendelse.fødselsdato
         )
 
-        internal fun gjenopprett(dtoVedtak: DtoVedtak) = Vedtak(
-            vedtaksid = dtoVedtak.vedtaksid,
-            innvilget = dtoVedtak.innvilget,
-            grunnlagsfaktor = Grunnlagsfaktor(dtoVedtak.grunnlagsfaktor),
-            vedtaksdato = dtoVedtak.vedtaksdato,
-            virkningsdato = dtoVedtak.virkningsdato,
-            fødselsdato = Fødselsdato(dtoVedtak.fødselsdato)
+        internal fun gjenopprett(vedtakModellApi: VedtakModellApi) = Vedtak(
+            vedtaksid = vedtakModellApi.vedtaksid,
+            innvilget = vedtakModellApi.innvilget,
+            grunnlagsfaktor = Grunnlagsfaktor(vedtakModellApi.grunnlagsfaktor),
+            vedtaksdato = vedtakModellApi.vedtaksdato,
+            virkningsdato = vedtakModellApi.virkningsdato,
+            fødselsdato = Fødselsdato(vedtakModellApi.fødselsdato)
         )
 
         internal fun Iterable<Vedtak>.sortertPåDato() = this.sortedBy { it.vedtaksdato }
@@ -55,7 +55,7 @@ internal class Vedtak(
 
     override fun hashCode() = vedtaksid.hashCode()
 
-    internal fun toDto() = DtoVedtak(
+    internal fun toDto() = VedtakModellApi(
         vedtaksid = vedtaksid,
         innvilget = innvilget,
         grunnlagsfaktor = grunnlagsfaktor.toDto(),

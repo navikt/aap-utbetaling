@@ -2,7 +2,7 @@ package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
 import no.nav.aap.domene.utbetaling.Barnetillegg
 import no.nav.aap.domene.utbetaling.Oppdragshistorikk
-import no.nav.aap.domene.utbetaling.dto.DtoUtbetalingstidslinje
+import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjeModellApi
 import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 
 internal class Utbetalingstidslinjehistorikk(
@@ -13,8 +13,8 @@ internal class Utbetalingstidslinjehistorikk(
     private val sisteUtbetalingstidslinje get() = utbetalingstidslinjer.last()
 
     internal companion object {
-        internal fun gjenopprett(dtoUtbetalingstidslinje: List<DtoUtbetalingstidslinje>) =
-            Utbetalingstidslinjehistorikk(dtoUtbetalingstidslinje.map(Utbetalingstidslinje::gjenopprett))
+        internal fun gjenopprett(utbetalingstidslinjeModellApi: List<UtbetalingstidslinjeModellApi>) =
+            Utbetalingstidslinjehistorikk(utbetalingstidslinjeModellApi.map(Utbetalingstidslinje::gjenopprett))
     }
 
     internal fun add(utbetalingstidslinje: Utbetalingstidslinje) {

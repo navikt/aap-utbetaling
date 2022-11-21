@@ -2,7 +2,7 @@ package no.nav.aap.app.kafka
 
 import no.nav.aap.app.stream.BehovUtbetaling
 import no.nav.aap.app.stream.BehovUtbetalingVisitor
-import no.nav.aap.domene.utbetaling.dto.DtoLøsning
+import no.nav.aap.domene.utbetaling.modellapi.LøsningModellApi
 
 internal data class KafkaUtbetalingsbehovWrapper(
     private val behov: KafkaUtbetalingsbehov
@@ -22,7 +22,7 @@ internal data class KafkaUtbetalingsbehovWrapper(
         )
 
         data class Response(
-            val barn: DtoLøsning
+            val barn: LøsningModellApi
         )
     }
 }

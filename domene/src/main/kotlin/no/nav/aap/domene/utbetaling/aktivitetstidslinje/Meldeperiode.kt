@@ -1,6 +1,6 @@
 package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
-import no.nav.aap.domene.utbetaling.dto.DtoMeldeperiode
+import no.nav.aap.domene.utbetaling.modellapi.MeldeperiodeModellApi
 import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 
 internal class Meldeperiode(dager: List<Dag> = emptyList()) {
@@ -19,7 +19,7 @@ internal class Meldeperiode(dager: List<Dag> = emptyList()) {
     private fun sammenfallerMed(other: Meldeperiode) =
         this.dager.first().sammenfallerMed(other.dager.first())
 
-    internal fun toDto() = DtoMeldeperiode(
+    internal fun toDto() = MeldeperiodeModellApi(
         dager = dager.map { it.toDto() }
     )
 
@@ -31,8 +31,8 @@ internal class Meldeperiode(dager: List<Dag> = emptyList()) {
             return this.mapIndexed { i, meldeperiode -> if (i == index) other else meldeperiode }
         }
 
-        internal fun gjenopprett(dtoMeldeperiode: DtoMeldeperiode) = Meldeperiode(
-            dager = dtoMeldeperiode.dager.map { Dag.gjenopprett(it) }
+        internal fun gjenopprett(meldeperiodeModellApi: MeldeperiodeModellApi) = Meldeperiode(
+            dager = meldeperiodeModellApi.dager.map { Dag.gjenopprett(it) }
         )
     }
 }

@@ -4,18 +4,18 @@ import no.nav.aap.dto.kafka.ForrigeMottakereKafkaDto
 import no.nav.aap.dto.kafka.ForrigeMottakereKafkaDto.*
 import no.nav.aap.dto.kafka.MottakereKafkaDto
 
-internal fun ForrigeMottakereKafkaDto.toDto() = MottakereKafkaDto(
+internal fun ForrigeMottakereKafkaDto.toModellApi() = MottakereKafkaDto(
     personident = personident,
     fødselsdato = fødselsdato,
-    vedtakshistorikk = vedtakshistorikk.map(Vedtak::toDto),
-    aktivitetstidslinje = aktivitetstidslinje.map(Meldeperiode::toDto),
-    utbetalingstidslinjehistorikk = utbetalingstidslinjehistorikk.map(Utbetalingstidslinje::toDto),
-    oppdragshistorikk = oppdragshistorikk.map(Oppdrag::toDto),
+    vedtakshistorikk = vedtakshistorikk.map(Vedtak::toModellApi),
+    aktivitetstidslinje = aktivitetstidslinje.map(Meldeperiode::toModellApi),
+    utbetalingstidslinjehistorikk = utbetalingstidslinjehistorikk.map(Utbetalingstidslinje::toModellApi),
+    oppdragshistorikk = oppdragshistorikk.map(Oppdrag::toModellApi),
     barnetillegg = emptyList(), // barnetillegg.map(Barna::toDto),
     tilstand = tilstand,
 )
 
-internal fun Vedtak.toDto() = MottakereKafkaDto.Vedtak(
+internal fun Vedtak.toModellApi() = MottakereKafkaDto.Vedtak(
     vedtaksid = vedtaksid,
     innvilget = innvilget,
     grunnlagsfaktor = grunnlagsfaktor,
@@ -24,21 +24,21 @@ internal fun Vedtak.toDto() = MottakereKafkaDto.Vedtak(
     fødselsdato = fødselsdato,
 )
 
-internal fun Meldeperiode.toDto() = MottakereKafkaDto.Meldeperiode(
-    dager = dager.map(Dag::toDto)
+internal fun Meldeperiode.toModellApi() = MottakereKafkaDto.Meldeperiode(
+    dager = dager.map(Dag::toModellApi)
 )
 
-internal fun Dag.toDto() = MottakereKafkaDto.Dag(
+internal fun Dag.toModellApi() = MottakereKafkaDto.Dag(
     dato = dato,
     arbeidstimer = arbeidstimer,
     type = type
 )
 
-internal fun Utbetalingstidslinje.toDto() = MottakereKafkaDto.Utbetalingstidslinje(
-    dager = dager.map(Utbetalingstidslinjedag::toDto)
+internal fun Utbetalingstidslinje.toModellApi() = MottakereKafkaDto.Utbetalingstidslinje(
+    dager = dager.map(Utbetalingstidslinjedag::toModellApi)
 )
 
-internal fun Utbetalingstidslinjedag.toDto() = MottakereKafkaDto.Utbetalingstidslinjedag(
+internal fun Utbetalingstidslinjedag.toModellApi() = MottakereKafkaDto.Utbetalingstidslinjedag(
     type = if (grunnlagsfaktor != null) "UTBETALINGSDAG" else "IKKE_UTBETALINGSDAG",
     dato = dato,
     grunnlagsfaktor = grunnlagsfaktor,
@@ -54,10 +54,10 @@ internal fun Utbetalingstidslinjedag.toDto() = MottakereKafkaDto.Utbetalingstids
     arbeidsprosent = arbeidsprosent,
 )
 
-internal fun Oppdrag.toDto() = MottakereKafkaDto.Oppdrag(
+internal fun Oppdrag.toModellApi() = MottakereKafkaDto.Oppdrag(
     mottaker = mottaker,
     fagområde = fagområde,
-    linjer = linjer.map(Utbetalingslinje::toDto),
+    linjer = linjer.map(Utbetalingslinje::toModellApi),
     fagsystemId = fagsystemId,
     endringskode = endringskode,
     nettoBeløp = nettoBeløp,
@@ -67,7 +67,7 @@ internal fun Oppdrag.toDto() = MottakereKafkaDto.Oppdrag(
     tidsstempel = tidsstempel,
 )
 
-internal fun Utbetalingslinje.toDto() = MottakereKafkaDto.Utbetalingslinje(
+internal fun Utbetalingslinje.toModellApi() = MottakereKafkaDto.Utbetalingslinje(
     fom = fom,
     tom = tom,
     satstype = satstype,
@@ -82,10 +82,10 @@ internal fun Utbetalingslinje.toDto() = MottakereKafkaDto.Utbetalingslinje(
     datoStatusFom = datoStatusFom,
 )
 
-internal fun Barna.toDto() = MottakereKafkaDto.Barna(
-    barn = barn.map(Barn::toDto)
+internal fun Barna.toModellApi() = MottakereKafkaDto.Barna(
+    barn = barn.map(Barn::toModellApi)
 )
 
-internal fun Barn.toDto() = MottakereKafkaDto.Barn(
+internal fun Barn.toModellApi() = MottakereKafkaDto.Barn(
     fødselsdato = fødselsdato
 )

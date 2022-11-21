@@ -2,7 +2,7 @@ package no.nav.aap.app.stream.mock
 
 import no.nav.aap.app.kafka.KafkaUtbetalingsbehovWrapper
 import no.nav.aap.app.kafka.Topics
-import no.nav.aap.domene.utbetaling.dto.DtoLøsning
+import no.nav.aap.domene.utbetaling.modellapi.LøsningModellApi
 import no.nav.aap.kafka.streams.extension.filterNotNull
 import no.nav.aap.kafka.streams.extension.filterValues
 import no.nav.aap.kafka.streams.extension.mapValues
@@ -18,7 +18,7 @@ internal fun StreamsBuilder.utbetalingsbehovStreamMock() {
         .mapValues("mock-utbetalingsbehov-opprett-response") { utbetalingsbehov ->
             utbetalingsbehov.copy(
                 response = KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov.Response(
-                    DtoLøsning(emptyList())
+                    LøsningModellApi(emptyList())
                 )
             )
         }

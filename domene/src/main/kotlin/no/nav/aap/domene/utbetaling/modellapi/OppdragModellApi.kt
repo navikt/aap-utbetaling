@@ -1,12 +1,12 @@
-package no.nav.aap.domene.utbetaling.dto
+package no.nav.aap.domene.utbetaling.modellapi
 
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-data class DtoOppdrag(
+data class OppdragModellApi(
     val mottaker: String,
     val fagområde: String,
-    val linjer: List<DtoUtbetalingslinje>,
+    val linjer: List<UtbetalingslinjeModellApi>,
     val fagsystemId: String,
     val endringskode: String,
     val nettoBeløp: Int,
@@ -16,7 +16,7 @@ data class DtoOppdrag(
     val tidsstempel: LocalDateTime
 )
 
-data class DtoUtbetalingslinje(
+data class UtbetalingslinjeModellApi(
     val fom: LocalDate,
     val tom: LocalDate,
     val satstype: String,

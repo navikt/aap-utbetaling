@@ -1,7 +1,7 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
 import no.nav.aap.domene.utbetaling.Barnetillegg
-import no.nav.aap.domene.utbetaling.dto.DtoUtbetalingstidslinje
+import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjeModellApi
 import no.nav.aap.domene.utbetaling.visitor.UtbetalingstidslinjeVisitor
 
 internal class Utbetalingstidslinje(
@@ -10,8 +10,8 @@ internal class Utbetalingstidslinje(
     private val dager = dager.toMutableList()
 
     internal companion object {
-        internal fun gjenopprett(dtoUtbetalingstidslinje: DtoUtbetalingstidslinje) =
-            Utbetalingstidslinje(dtoUtbetalingstidslinje.dager.map(Utbetalingstidslinjedag::gjenopprett))
+        internal fun gjenopprett(utbetalingstidslinjeModellApi: UtbetalingstidslinjeModellApi) =
+            Utbetalingstidslinje(utbetalingstidslinjeModellApi.dager.map(Utbetalingstidslinjedag::gjenopprett))
     }
 
     internal fun arbeidsprosent(arbeidsprosent: Double) {
@@ -31,5 +31,5 @@ internal class Utbetalingstidslinje(
         visitor.postVisitUtbetalingstidslinje(this)
     }
 
-    internal fun toDto() = DtoUtbetalingstidslinje(dager.map { it.toDto() })
+    internal fun toDto() = UtbetalingstidslinjeModellApi(dager.map { it.toDto() })
 }

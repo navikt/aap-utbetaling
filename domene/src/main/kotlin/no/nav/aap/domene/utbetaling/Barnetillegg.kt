@@ -1,8 +1,8 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.Barnetillegg.Barn.Companion.antallBarnUnder18År
-import no.nav.aap.domene.utbetaling.dto.DtoBarn
-import no.nav.aap.domene.utbetaling.dto.DtoBarna
+import no.nav.aap.domene.utbetaling.modellapi.BarnModellApi
+import no.nav.aap.domene.utbetaling.modellapi.BarnaModellApi
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
@@ -19,9 +19,9 @@ internal class Barnetillegg private constructor(
     internal companion object {
         private val BARNETILLEGG = 27.beløp
 
-        internal fun gjenopprett(dtoBarna: List<DtoBarna>) =
+        internal fun gjenopprett(barnaModellApi: List<BarnaModellApi>) =
             Barnetillegg(
-                historikk = dtoBarna.map(Barna::gjenopprett)
+                historikk = barnaModellApi.map(Barna::gjenopprett)
             )
     }
 
@@ -39,15 +39,15 @@ internal class Barnetillegg private constructor(
     ) {
 
         internal companion object {
-            internal fun gjenopprett(dtoBarna: DtoBarna) =
+            internal fun gjenopprett(barnaModellApi: BarnaModellApi) =
                 Barna(
-                    barn = dtoBarna.barn.map(Barn::gjenopprett)
+                    barn = barnaModellApi.barn.map(Barn::gjenopprett)
                 )
         }
 
         internal fun antallBarnUnder18År(dato: LocalDate) = barn.antallBarnUnder18År(dato)
 
-        internal fun toDto() = DtoBarna(
+        internal fun toDto() = BarnaModellApi(
             barn = barn.map(Barn::toDto)
         )
     }
@@ -60,13 +60,13 @@ internal class Barnetillegg private constructor(
             internal fun Iterable<Barn>.antallBarnUnder18År(dato: LocalDate) =
                 count { it.fødselsdato.erUnder18År(dato) }
 
-            internal fun gjenopprett(dtoBarn: DtoBarn) =
+            internal fun gjenopprett(barnModellApi: BarnModellApi) =
                 Barn(
-                    fødselsdato = Fødselsdato(dtoBarn.fødselsdato)
+                    fødselsdato = Fødselsdato(barnModellApi.fødselsdato)
                 )
         }
 
-        internal fun toDto() = DtoBarn(
+        internal fun toDto() = BarnModellApi(
             fødselsdato = fødselsdato.toDto()
         )
     }

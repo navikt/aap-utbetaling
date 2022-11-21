@@ -1,7 +1,7 @@
 package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Meldeperiode.Companion.merge
-import no.nav.aap.domene.utbetaling.dto.DtoMeldeperiode
+import no.nav.aap.domene.utbetaling.modellapi.MeldeperiodeModellApi
 import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
 
@@ -10,8 +10,8 @@ internal class Aktivitetstidslinje(meldeperioder: List<Meldeperiode> = emptyList
     private var meldeperioder: List<Meldeperiode> = meldeperioder.toMutableList()
 
     internal companion object{
-        internal fun gjenopprett(dtoMeldeperioder: List<DtoMeldeperiode>)=Aktivitetstidslinje(
-            meldeperioder = dtoMeldeperioder.map { Meldeperiode.gjenopprett(it) }
+        internal fun gjenopprett(meldeperioderModellApi: List<MeldeperiodeModellApi>)=Aktivitetstidslinje(
+            meldeperioder = meldeperioderModellApi.map { Meldeperiode.gjenopprett(it) }
         )
     }
 
@@ -33,5 +33,5 @@ internal class Aktivitetstidslinje(meldeperioder: List<Meldeperiode> = emptyList
         visitor.postVisitTidslinje(this)
     }
 
-    internal fun toDto(): List<DtoMeldeperiode> = meldeperioder.map { it.toDto() }
+    internal fun toDto(): List<MeldeperiodeModellApi> = meldeperioder.map { it.toDto() }
 }

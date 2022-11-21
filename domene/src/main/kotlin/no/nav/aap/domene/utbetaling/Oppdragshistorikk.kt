@@ -1,6 +1,6 @@
 package no.nav.aap.domene.utbetaling
 
-import no.nav.aap.domene.utbetaling.dto.DtoOppdrag
+import no.nav.aap.domene.utbetaling.modellapi.OppdragModellApi
 import no.nav.aap.domene.utbetaling.utbetalingslinjer.Oppdrag
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.OppdragBuilder
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
@@ -15,8 +15,8 @@ internal class Oppdragshistorikk private constructor(
     private val sisteOppdrag get() = oppdragshistorikk.lastOrNull()
 
     internal companion object {
-        internal fun gjenopprett(dtoOppdrag: List<DtoOppdrag>) =
-            Oppdragshistorikk(dtoOppdrag.map(Oppdrag::gjenopprett))
+        internal fun gjenopprett(oppdragModellApi: List<OppdragModellApi>) =
+            Oppdragshistorikk(oppdragModellApi.map(Oppdrag::gjenopprett))
     }
 
     internal fun byggOppdrag(sisteUtbetalingstidslinje: Utbetalingstidslinje) {

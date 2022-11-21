@@ -2,7 +2,7 @@ package no.nav.aap.app.stream
 
 import no.nav.aap.app.kafka.KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov
 import no.nav.aap.app.kafka.Topics
-import no.nav.aap.app.kafka.toDto
+import no.nav.aap.app.kafka.toModellApi
 import no.nav.aap.app.kafka.toJson
 import no.nav.aap.dto.kafka.MottakereKafkaDto
 import no.nav.aap.kafka.streams.extension.consume
@@ -20,7 +20,7 @@ internal fun StreamsBuilder.løsningStream(mottakerKtable: KTable<String, Mottak
 }
 
 private val håndter = { løsning: KafkaUtbetalingsbehov, mottakerKafkaDto: MottakereKafkaDto ->
-    val dtoMottaker = mottakerKafkaDto.toDto()
+    val dtoMottaker = mottakerKafkaDto.toModellApi()
     val response = requireNotNull(løsning.response) { "Hendelse uten response må filtreres bort" }
     val endretMottaker = response.barn.håndter(dtoMottaker)
     endretMottaker.toJson(mottakerKafkaDto.sekvensnummer)

@@ -1,8 +1,8 @@
 package no.nav.aap.app.simulering
 
-import no.nav.aap.domene.utbetaling.dto.DtoAkivitetPerDag
-import no.nav.aap.domene.utbetaling.dto.DtoMeldepliktshendelse
-import no.nav.aap.domene.utbetaling.dto.DtoVedtakshendelse
+import no.nav.aap.domene.utbetaling.modellapi.AkivitetPerDagModellApi
+import no.nav.aap.domene.utbetaling.modellapi.MeldepliktshendelseModellApi
+import no.nav.aap.domene.utbetaling.modellapi.VedtakshendelseModellApi
 import java.time.LocalDate
 import java.util.*
 
@@ -20,7 +20,7 @@ data class SimuleringRequest(
         val fraværsdag: Boolean
     )
 
-    fun lagVedtakshendelse() = DtoVedtakshendelse(
+    fun lagVedtakshendelse() = VedtakshendelseModellApi(
         vedtaksid = UUID.randomUUID(),
         fødselsdato = fødselsdato,
         innvilget = innvilget,
@@ -29,9 +29,9 @@ data class SimuleringRequest(
         virkningsdato = virkningsdato
     )
 
-    fun lagMeldepliktshendelse() = DtoMeldepliktshendelse(
+    fun lagMeldepliktshendelse() = MeldepliktshendelseModellApi(
         aktivitetPerDag = aktivitetsdager.map {
-            DtoAkivitetPerDag(
+            AkivitetPerDagModellApi(
                 dato = it.dato,
                 arbeidstimer = it.arbeidstimer,
                 fraværsdag = it.fraværsdag

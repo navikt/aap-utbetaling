@@ -1,9 +1,9 @@
 package no.nav.aap.app.stream
 
 import no.nav.aap.app.kafka.Topics
-import no.nav.aap.app.kafka.toDto
+import no.nav.aap.app.kafka.toModellApi
 import no.nav.aap.app.kafka.toJson
-import no.nav.aap.domene.utbetaling.dto.DtoMeldepliktshendelse
+import no.nav.aap.domene.utbetaling.modellapi.MeldepliktshendelseModellApi
 import no.nav.aap.dto.kafka.MottakereKafkaDto
 import no.nav.aap.kafka.streams.extension.*
 import org.apache.kafka.streams.StreamsBuilder
@@ -24,9 +24,9 @@ internal fun StreamsBuilder.meldepliktStream(mottakerKtable: KTable<String, Mott
         .sendBehov("meldeplikt")
 }
 
-private val håndter = { ident: String, dtoMeldeplikt: DtoMeldepliktshendelse, mottakerKafkaDto: MottakereKafkaDto ->
-    val dtoMottaker = mottakerKafkaDto.toDto()
+private val håndter = { ident: String, dtoMeldeplikt: MeldepliktshendelseModellApi, mottakerKafkaDto: MottakereKafkaDto ->
+    val mottakerModellApi = mottakerKafkaDto.toModellApi()
     val observer = BehovObserver(ident)
-    val endretDtoMottaker = dtoMeldeplikt.håndter(dtoMottaker, observer)
+    val endretDtoMottaker = dtoMeldeplikt.håndter(mottakerModellApi, observer)
     endretDtoMottaker.toJson(mottakerKafkaDto.sekvensnummer) to observer.behovene()
 }
