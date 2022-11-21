@@ -21,7 +21,7 @@ internal class UtbetalingstidslinjeBuilder(
 
 
     /**
-     * Builderen prøver å svare på tre spørsmål
+     * Builderen traverserer en aktivitetstidslinje for en gitt periode, og prøver å svare på tre spørsmål
      * - Skal det utbetales for alle dager
      * - Skal det utbetales for bare noen av dagene (mottaker har hatt to eller flere fraværsdager)
      * - Skal det ikke utbetales for noen dager (mottaker har jobbet mer enn 60% innenfor en periode)
@@ -31,6 +31,8 @@ internal class UtbetalingstidslinjeBuilder(
     private lateinit var avvisteDagerUtbetalingstidslinje: Utbetalingstidslinje
 
     private var arbeidstimerIPeriode: Arbeidstimer = 0.arbeidstimer
+    // Skal kun summeres for hverdager som ikke er fraværsdager, bortsett fra hvis vi har kun en fraværsdag,
+    // da skal den telles inn.
     private var normalarbeidstimerIPeriode: Arbeidstimer = 0.arbeidstimer
 
     private var tilstand: Tilstand = Tilstand.Start
@@ -87,11 +89,16 @@ internal class UtbetalingstidslinjeBuilder(
         barnetillegg = barnetillegg.barnetilleggForDag(dato)
     )
 
+    /**
+     * Tilstanden sier noe om hvilken type aktivitetstidslinje vi har for denne perioden og dermed hvilken
+     * utbetalingstidslinje vi ender opp med.
+     */
     private sealed interface Tilstand {
         fun arbeidsdag(builder: UtbetalingstidslinjeBuilder, dato: LocalDate, arbeidstimer: Arbeidstimer) {}
         fun fraværsdag(builder: UtbetalingstidslinjeBuilder, dato: LocalDate) {}
         fun fullførMeldeperiode(builder: UtbetalingstidslinjeBuilder) {}
 
+        // Dersom vi aldri forlater denne tilstanden, har vi en standard aktivitetstidslinje (ingen fraværsdager)
         object Start : Tilstand {
             override fun arbeidsdag(
                 builder: UtbetalingstidslinjeBuilder,
@@ -122,6 +129,8 @@ internal class UtbetalingstidslinjeBuilder(
             }
         }
 
+        // Dersom aktivitetstidslinjen kun har en fraværsdag, så ender vi i denne tilstanden
+        // En fraværsdag i en periode er ok og skal ikke "telles" §11-8 3. ledd
         object EnFraværsdag : Tilstand {
             override fun arbeidsdag(
                 builder: UtbetalingstidslinjeBuilder,
@@ -145,11 +154,13 @@ internal class UtbetalingstidslinjeBuilder(
             }
 
             override fun fullførMeldeperiode(builder: UtbetalingstidslinjeBuilder) {
+                // Siden en fraværsdag ikke telles i visitoren, men skal telle i perioden, må vi legge til arbeidstid for den
                 builder.normalarbeidstimerIPeriode += NORMAL_ARBEIDSTIMER
                 builder.fullførMeldeperiode(builder.vanligUtbetalingstidslinje)
             }
         }
 
+        // Dersom aktivitetstidslinjen har mer enn en fraværsdag ender vi i denne tilstanden
         object MerEnnEnFraværsdag : Tilstand {
             override fun arbeidsdag(
                 builder: UtbetalingstidslinjeBuilder,
