@@ -20,8 +20,8 @@ internal fun StreamsBuilder.løsningStream(mottakerKtable: KTable<String, Mottak
 }
 
 private val håndter = { løsning: KafkaUtbetalingsbehov, mottakerKafkaDto: MottakereKafkaDto ->
-    val dtoMottaker = mottakerKafkaDto.toModellApi()
+    val mottakerModellApi = mottakerKafkaDto.toModellApi()
     val response = requireNotNull(løsning.response) { "Hendelse uten response må filtreres bort" }
-    val endretMottaker = response.barn.håndter(dtoMottaker)
+    val endretMottaker = response.barn.håndter(mottakerModellApi)
     endretMottaker.toJson(mottakerKafkaDto.sekvensnummer)
 }

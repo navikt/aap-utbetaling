@@ -23,8 +23,8 @@ internal fun StreamsBuilder.vedtakStream(mottakerKtable: KTable<String, Mottaker
 
 private val håndter = { ident: String, kafkaDto: IverksettVedtakKafkaDto, mottakerKafkaDto: MottakereKafkaDto? ->
     val mottakerModellApi = mottakerKafkaDto?.toModellApi() ?: MottakerModellApi.opprettMottaker(ident, kafkaDto.fødselsdato)
-    val dtoVedtakshendelse = gjenopprett(kafkaDto)
-    val endretDtoMottaker = dtoVedtakshendelse.håndter(mottakerModellApi)
+    val vedtakshendelseModellApi = gjenopprett(kafkaDto)
+    val endretDtoMottaker = vedtakshendelseModellApi.håndter(mottakerModellApi)
     endretDtoMottaker.toJson(mottakerKafkaDto?.sekvensnummer ?: MottakereKafkaDto.INIT_SEKVENS)
 }
 

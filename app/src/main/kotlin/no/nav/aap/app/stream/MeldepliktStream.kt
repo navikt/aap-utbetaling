@@ -24,9 +24,9 @@ internal fun StreamsBuilder.meldepliktStream(mottakerKtable: KTable<String, Mott
         .sendBehov("meldeplikt")
 }
 
-private val håndter = { ident: String, dtoMeldeplikt: MeldepliktshendelseModellApi, mottakerKafkaDto: MottakereKafkaDto ->
+private val håndter = { ident: String, meldepliktshendelseModellApi: MeldepliktshendelseModellApi, mottakerKafkaDto: MottakereKafkaDto ->
     val mottakerModellApi = mottakerKafkaDto.toModellApi()
     val observer = BehovObserver(ident)
-    val endretDtoMottaker = dtoMeldeplikt.håndter(mottakerModellApi, observer)
-    endretDtoMottaker.toJson(mottakerKafkaDto.sekvensnummer) to observer.behovene()
+    val endretMottakerModellApi = meldepliktshendelseModellApi.håndter(mottakerModellApi, observer)
+    endretMottakerModellApi.toJson(mottakerKafkaDto.sekvensnummer) to observer.behovene()
 }
