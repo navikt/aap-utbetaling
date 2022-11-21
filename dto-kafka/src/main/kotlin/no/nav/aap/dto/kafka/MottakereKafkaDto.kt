@@ -9,11 +9,11 @@ import java.util.*
 data class MottakereKafkaDto(
     val personident: String,
     val fødselsdato: LocalDate,
-    val vedtakshistorikk: List<Vedtak>,
-    val aktivitetstidslinje: List<Meldeperiode>,
-    val utbetalingstidslinjehistorikk: List<Utbetalingstidslinje>,
-    val oppdragshistorikk: List<Oppdrag>,
-    val barnetillegg: List<Barna>,
+    val vedtakshistorikk: List<VedtakKafkaDto>,
+    val aktivitetstidslinje: List<MeldeperiodeKafkaDto>,
+    val utbetalingstidslinjehistorikk: List<UtbetalingstidslinjeKafkaDto>,
+    val oppdragshistorikk: List<OppdragKafkaDto>,
+    val barnetillegg: List<BarnaKafkaDto>,
     val tilstand: String,
     val sekvensnummer: Long = INIT_SEKVENS,
     val version: Int = VERSION, // Denne bumpes ved hver migrering
@@ -26,7 +26,7 @@ data class MottakereKafkaDto(
         const val INIT_SEKVENS = 0L
     }
 
-    data class Vedtak(
+    data class VedtakKafkaDto(
         val vedtaksid: UUID,
         val innvilget: Boolean,
         val grunnlagsfaktor: Double,
@@ -35,28 +35,28 @@ data class MottakereKafkaDto(
         val fødselsdato: LocalDate
     )
 
-    data class Meldeperiode(
-        val dager: List<Dag>
+    data class MeldeperiodeKafkaDto(
+        val dager: List<DagKafkaDto>
     )
 
-    data class Dag(
+    data class DagKafkaDto(
         val dato: LocalDate,
         val arbeidstimer: Double?,
         val type: String
     )
 
-    data class Utbetalingstidslinje(
-        val dager: List<Utbetalingstidslinjedag>
+    data class UtbetalingstidslinjeKafkaDto(
+        val dager: List<UtbetalingstidslinjedagKafkaDto>
     )
 
-    data class Utbetalingstidslinjedag(
+    data class UtbetalingstidslinjedagKafkaDto(
         val type: String,
         val dato: LocalDate,
         val grunnlagsfaktor: Double?,
         val barnetillegg: Double?,
         val grunnlag: Double?,
-        val årligYtelse: Paragraf_11_20_1_ledd_KafkaDTO?,
-        val dagsats: Paragraf_11_20_2_ledd_2_punktum_KafkaDTO?,
+        val årligYtelse: Paragraf_11_20_1_ledd_KafkaDto?,
+        val dagsats: Paragraf_11_20_2_ledd_2_punktum_KafkaDto?,
         val høyesteÅrligYtelseMedBarnetillegg: Double?,
         val høyesteBeløpMedBarnetillegg: Double?,
         val dagsatsMedBarnetillegg: Double?,
@@ -65,23 +65,23 @@ data class MottakereKafkaDto(
         val arbeidsprosent: Double
     )
 
-    data class Paragraf_11_20_1_ledd_KafkaDTO(
+    data class Paragraf_11_20_1_ledd_KafkaDto(
         val faktorForReduksjonAvGrunnlag: Double,
         val inntektsgrunnlag: Double,
         val årligytelse: Double
     )
 
-    data class Paragraf_11_20_2_ledd_2_punktum_KafkaDTO(
+    data class Paragraf_11_20_2_ledd_2_punktum_KafkaDto(
         val antallDagerMedUtbetalingPerÅr: Int,
         val årligYtelse: Double,
         val dagsats: Double
     )
 
 
-    data class Oppdrag(
+    data class OppdragKafkaDto(
         val mottaker: String,
         val fagområde: String,
-        val linjer: List<Utbetalingslinje>,
+        val linjer: List<UtbetalingslinjeKafkaDto>,
         val fagsystemId: String,
         val endringskode: String,
         val nettoBeløp: Int,
@@ -91,7 +91,7 @@ data class MottakereKafkaDto(
         val tidsstempel: LocalDateTime
     )
 
-    data class Utbetalingslinje(
+    data class UtbetalingslinjeKafkaDto(
         val fom: LocalDate,
         val tom: LocalDate,
         val satstype: String,
@@ -106,11 +106,11 @@ data class MottakereKafkaDto(
         val datoStatusFom: LocalDate?
     )
 
-    data class Barna(
-        val barn: List<Barn>
+    data class BarnaKafkaDto(
+        val barn: List<BarnKafkaDto>
     )
 
-    data class Barn(
+    data class BarnKafkaDto(
         val fødselsdato: LocalDate
     )
 

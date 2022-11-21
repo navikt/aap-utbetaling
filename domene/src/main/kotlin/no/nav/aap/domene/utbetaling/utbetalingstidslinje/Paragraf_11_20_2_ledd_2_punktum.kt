@@ -1,6 +1,7 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
 import no.nav.aap.domene.utbetaling.entitet.Beløp
+import no.nav.aap.domene.utbetaling.modellapi.Paragraf_11_20_2_ledd_2_punktum_ModellApi
 
 internal class Paragraf_11_20_2_ledd_2_punktum private constructor(
     private val antallDagerMedUtbetalingPerÅr: Int,
@@ -17,7 +18,7 @@ internal class Paragraf_11_20_2_ledd_2_punktum private constructor(
 
     internal operator fun plus(barnetillegg: Beløp) = dagsats + barnetillegg
 
-    internal fun toDto() = Paragraf_11_20_2_ledd_2_punktum_ModellAPI(
+    internal fun toDto() = Paragraf_11_20_2_ledd_2_punktum_ModellApi(
         antallDagerMedUtbetalingPerÅr = antallDagerMedUtbetalingPerÅr,
         årligYtelse = årligYtelse.toDto().årligytelse,
         dagsats = dagsats.toDto()

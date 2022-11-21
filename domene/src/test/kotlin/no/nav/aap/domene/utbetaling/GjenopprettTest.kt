@@ -2,8 +2,8 @@ package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.erHelg
 import no.nav.aap.domene.utbetaling.modellapi.*
-import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Paragraf_11_20_1_ledd_ModellAPI
-import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Paragraf_11_20_2_ledd_2_punktum_ModellAPI
+import no.nav.aap.domene.utbetaling.modellapi.Paragraf_11_20_1_ledd_ModellApi
+import no.nav.aap.domene.utbetaling.modellapi.Paragraf_11_20_2_ledd_2_punktum_ModellApi
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -161,8 +161,8 @@ internal class GjenopprettTest {
                     grunnlagsfaktor = 4.0,
                     barnetillegg = 0.0,
                     grunnlag = 445908.0,
-                    årligYtelse = Paragraf_11_20_1_ledd_ModellAPI(0.66, 445908.0, 294299.28),
-                    dagsats = Paragraf_11_20_2_ledd_2_punktum_ModellAPI(260, 294299.28, 1131.92),
+                    årligYtelse = Paragraf_11_20_1_ledd_ModellApi(0.66, 445908.0, 294299.28),
+                    dagsats = Paragraf_11_20_2_ledd_2_punktum_ModellApi(260, 294299.28, 1131.92),
                     høyesteÅrligYtelseMedBarnetillegg = 401317.2,
                     høyesteBeløpMedBarnetillegg = 1543.53,
                     dagsatsMedBarnetillegg = 1131.92,

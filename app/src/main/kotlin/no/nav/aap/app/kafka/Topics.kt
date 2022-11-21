@@ -13,7 +13,7 @@ import no.nav.aap.kafka.streams.concurrency.RaceConditionBuffer
 internal object Topics {
     private val buffer = RaceConditionBuffer<String, MottakereKafkaDto>(logRecordValues = true)
 
-    val mottakere = BufferableTopic("aap.mottakere.v1", JsonSerde.jackson(MottakereKafkaDto.VERSION, ForrigeMottakereKafkaDto::toModellApi), buffer)
+    val mottakere = BufferableTopic("aap.mottakere.v1", JsonSerde.jackson(MottakereKafkaDto.VERSION, ForrigeMottakereKafkaDto::toKafkaDto), buffer)
     val vedtak = Topic("aap.vedtak.v1", JsonSerde.jackson<IverksettVedtakKafkaDto>())
     val meldeplikt = Topic("aap.meldeplikt.v1", JsonSerde.jackson<MeldepliktshendelseModellApi>())
     // TODO Hvordan løser vi samlede løsninger

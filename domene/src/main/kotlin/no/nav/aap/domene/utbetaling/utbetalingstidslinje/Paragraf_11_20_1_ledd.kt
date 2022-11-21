@@ -1,6 +1,7 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
 import no.nav.aap.domene.utbetaling.entitet.Beløp
+import no.nav.aap.domene.utbetaling.modellapi.Paragraf_11_20_1_ledd_ModellApi
 
 internal class Paragraf_11_20_1_ledd private constructor(
     private val faktorForReduksjonAvGrunnlag: Double,
@@ -16,7 +17,7 @@ internal class Paragraf_11_20_1_ledd private constructor(
 
     internal operator fun div(nevner: Number) = årligYtelse / nevner
 
-    internal fun toDto() = Paragraf_11_20_1_ledd_ModellAPI(
+    internal fun toDto() = Paragraf_11_20_1_ledd_ModellApi(
         faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
         inntektsgrunnlag = inntektsgrunnlag.toDto(),
         årligytelse = årligYtelse.toDto(),

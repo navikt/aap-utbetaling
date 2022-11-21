@@ -1,23 +1,23 @@
 package no.nav.aap.app.kafka
 
 import no.nav.aap.domene.utbetaling.modellapi.*
-import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Paragraf_11_20_1_ledd_ModellAPI
-import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Paragraf_11_20_2_ledd_2_punktum_ModellAPI
+import no.nav.aap.domene.utbetaling.modellapi.Paragraf_11_20_1_ledd_ModellApi
+import no.nav.aap.domene.utbetaling.modellapi.Paragraf_11_20_2_ledd_2_punktum_ModellApi
 import no.nav.aap.dto.kafka.MottakereKafkaDto
 import no.nav.aap.dto.kafka.MottakereKafkaDto.*
 
 internal fun MottakereKafkaDto.toModellApi() = MottakerModellApi(
     personident = personident,
     fødselsdato = fødselsdato,
-    vedtakshistorikk = vedtakshistorikk.map(Vedtak::toModellApi),
-    aktivitetstidslinje = aktivitetstidslinje.map(Meldeperiode::toModellApi),
-    utbetalingstidslinjehistorikk = utbetalingstidslinjehistorikk.map(Utbetalingstidslinje::toModellApi),
-    oppdragshistorikk = oppdragshistorikk.map(Oppdrag::toModellApi),
-    barnetillegg = barnetillegg.map(Barna::toModellApi),
+    vedtakshistorikk = vedtakshistorikk.map(VedtakKafkaDto::toModellApi),
+    aktivitetstidslinje = aktivitetstidslinje.map(MeldeperiodeKafkaDto::toModellApi),
+    utbetalingstidslinjehistorikk = utbetalingstidslinjehistorikk.map(UtbetalingstidslinjeKafkaDto::toModellApi),
+    oppdragshistorikk = oppdragshistorikk.map(OppdragKafkaDto::toModellApi),
+    barnetillegg = barnetillegg.map(BarnaKafkaDto::toModellApi),
     tilstand = tilstand,
 )
 
-internal fun Vedtak.toModellApi() = VedtakModellApi(
+internal fun VedtakKafkaDto.toModellApi() = VedtakModellApi(
     vedtaksid = vedtaksid,
     innvilget = innvilget,
     grunnlagsfaktor = grunnlagsfaktor,
@@ -26,19 +26,19 @@ internal fun Vedtak.toModellApi() = VedtakModellApi(
     fødselsdato = fødselsdato,
 )
 
-internal fun Meldeperiode.toModellApi() = MeldeperiodeModellApi(
-    dager = dager.map(Dag::toModellApi)
+internal fun MeldeperiodeKafkaDto.toModellApi() = MeldeperiodeModellApi(
+    dager = dager.map(DagKafkaDto::toModellApi)
 )
 
-internal fun Dag.toModellApi() = DagModellApi(
+internal fun DagKafkaDto.toModellApi() = DagModellApi(
     dato = dato, arbeidstimer = arbeidstimer, type = type
 )
 
-internal fun Utbetalingstidslinje.toModellApi() = UtbetalingstidslinjeModellApi(
-    dager = dager.map(Utbetalingstidslinjedag::toModellApi)
+internal fun UtbetalingstidslinjeKafkaDto.toModellApi() = UtbetalingstidslinjeModellApi(
+    dager = dager.map(UtbetalingstidslinjedagKafkaDto::toModellApi)
 )
 
-internal fun Utbetalingstidslinjedag.toModellApi() = UtbetalingstidslinjedagModellApi(
+internal fun UtbetalingstidslinjedagKafkaDto.toModellApi() = UtbetalingstidslinjedagModellApi(
     type = type,
     dato = dato,
     grunnlagsfaktor = grunnlagsfaktor,
@@ -54,22 +54,22 @@ internal fun Utbetalingstidslinjedag.toModellApi() = UtbetalingstidslinjedagMode
     arbeidsprosent = arbeidsprosent,
 )
 
-internal fun Paragraf_11_20_2_ledd_2_punktum_KafkaDTO.toModellApi() = Paragraf_11_20_2_ledd_2_punktum_ModellAPI(
+internal fun Paragraf_11_20_2_ledd_2_punktum_KafkaDto.toModellApi() = Paragraf_11_20_2_ledd_2_punktum_ModellApi(
     antallDagerMedUtbetalingPerÅr = antallDagerMedUtbetalingPerÅr,
     årligYtelse = årligYtelse,
     dagsats = dagsats
 )
 
-internal fun Paragraf_11_20_1_ledd_KafkaDTO.toModellApi() = Paragraf_11_20_1_ledd_ModellAPI(
+internal fun Paragraf_11_20_1_ledd_KafkaDto.toModellApi() = Paragraf_11_20_1_ledd_ModellApi(
     faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
     inntektsgrunnlag = inntektsgrunnlag,
     årligytelse = årligytelse
 )
 
-internal fun Oppdrag.toModellApi() = OppdragModellApi(
+internal fun OppdragKafkaDto.toModellApi() = OppdragModellApi(
     mottaker = mottaker,
     fagområde = fagområde,
-    linjer = linjer.map(Utbetalingslinje::toModellApi),
+    linjer = linjer.map(UtbetalingslinjeKafkaDto::toModellApi),
     fagsystemId = fagsystemId,
     endringskode = endringskode,
     nettoBeløp = nettoBeløp,
@@ -79,7 +79,7 @@ internal fun Oppdrag.toModellApi() = OppdragModellApi(
     tidsstempel = tidsstempel,
 )
 
-internal fun Utbetalingslinje.toModellApi() = UtbetalingslinjeModellApi(
+internal fun UtbetalingslinjeKafkaDto.toModellApi() = UtbetalingslinjeModellApi(
     fom = fom,
     tom = tom,
     satstype = satstype,
@@ -94,11 +94,11 @@ internal fun Utbetalingslinje.toModellApi() = UtbetalingslinjeModellApi(
     datoStatusFom = datoStatusFom,
 )
 
-internal fun Barna.toModellApi() = BarnaModellApi(
-    barn = barn.map(Barn::toModellApi)
+internal fun BarnaKafkaDto.toModellApi() = BarnaModellApi(
+    barn = barn.map(BarnKafkaDto::toModellApi)
 )
 
-internal fun Barn.toModellApi() = BarnModellApi(
+internal fun BarnKafkaDto.toModellApi() = BarnModellApi(
     fødselsdato = fødselsdato
 )
 
@@ -114,7 +114,7 @@ internal fun MottakerModellApi.toJson(gammelSekvensnummer: Long) = MottakereKafk
     sekvensnummer = gammelSekvensnummer + 1,
 )
 
-internal fun VedtakModellApi.toJson() = Vedtak(
+internal fun VedtakModellApi.toJson() = VedtakKafkaDto(
     vedtaksid = vedtaksid,
     innvilget = innvilget,
     grunnlagsfaktor = grunnlagsfaktor,
@@ -123,26 +123,26 @@ internal fun VedtakModellApi.toJson() = Vedtak(
     fødselsdato = fødselsdato,
 )
 
-internal fun MeldeperiodeModellApi.toJson() = Meldeperiode(
+internal fun MeldeperiodeModellApi.toJson() = MeldeperiodeKafkaDto(
     dager = dager.map(DagModellApi::toJson)
 )
 
-internal fun DagModellApi.toJson() = Dag(
+internal fun DagModellApi.toJson() = DagKafkaDto(
     dato = dato, arbeidstimer = arbeidstimer, type = type
 )
 
-internal fun UtbetalingstidslinjeModellApi.toJson() = Utbetalingstidslinje(
+internal fun UtbetalingstidslinjeModellApi.toJson() = UtbetalingstidslinjeKafkaDto(
     dager = dager.map(UtbetalingstidslinjedagModellApi::toJson)
 )
 
-internal fun UtbetalingstidslinjedagModellApi.toJson() = Utbetalingstidslinjedag(
+internal fun UtbetalingstidslinjedagModellApi.toJson() = UtbetalingstidslinjedagKafkaDto(
     type = type,
     dato = dato,
     grunnlagsfaktor = grunnlagsfaktor,
     barnetillegg = barnetillegg,
     grunnlag = grunnlag,
-    årligYtelse = årligYtelse?.toKafkaDTO(),
-    dagsats = dagsats?.toKafkaDTO(),
+    årligYtelse = årligYtelse?.toKafkaDto(),
+    dagsats = dagsats?.toKafkaDto(),
     høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg,
     høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg,
     dagsatsMedBarnetillegg = dagsatsMedBarnetillegg,
@@ -151,19 +151,19 @@ internal fun UtbetalingstidslinjedagModellApi.toJson() = Utbetalingstidslinjedag
     arbeidsprosent = arbeidsprosent,
 )
 
-internal fun Paragraf_11_20_2_ledd_2_punktum_ModellAPI.toKafkaDTO() = Paragraf_11_20_2_ledd_2_punktum_KafkaDTO(
+internal fun Paragraf_11_20_2_ledd_2_punktum_ModellApi.toKafkaDto() = Paragraf_11_20_2_ledd_2_punktum_KafkaDto(
     antallDagerMedUtbetalingPerÅr = antallDagerMedUtbetalingPerÅr,
     årligYtelse = årligYtelse,
     dagsats = dagsats
 )
 
-internal fun Paragraf_11_20_1_ledd_ModellAPI.toKafkaDTO() = Paragraf_11_20_1_ledd_KafkaDTO(
+internal fun Paragraf_11_20_1_ledd_ModellApi.toKafkaDto() = Paragraf_11_20_1_ledd_KafkaDto(
     faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
     inntektsgrunnlag = inntektsgrunnlag,
     årligytelse = årligytelse
 )
 
-internal fun OppdragModellApi.toJson() = Oppdrag(
+internal fun OppdragModellApi.toJson() = OppdragKafkaDto(
     mottaker = mottaker,
     fagområde = fagområde,
     linjer = linjer.map(UtbetalingslinjeModellApi::toJson),
@@ -176,7 +176,7 @@ internal fun OppdragModellApi.toJson() = Oppdrag(
     tidsstempel = tidsstempel,
 )
 
-internal fun UtbetalingslinjeModellApi.toJson() = Utbetalingslinje(
+internal fun UtbetalingslinjeModellApi.toJson() = UtbetalingslinjeKafkaDto(
     fom = fom,
     tom = tom,
     satstype = satstype,
@@ -191,10 +191,10 @@ internal fun UtbetalingslinjeModellApi.toJson() = Utbetalingslinje(
     datoStatusFom = datoStatusFom,
 )
 
-internal fun BarnaModellApi.toJson() = Barna(
+internal fun BarnaModellApi.toJson() = BarnaKafkaDto(
     barn = barn.map(BarnModellApi::toJson)
 )
 
-internal fun BarnModellApi.toJson() = Barn(
+internal fun BarnModellApi.toJson() = BarnKafkaDto(
     fødselsdato = fødselsdato
 )

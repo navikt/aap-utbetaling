@@ -1,7 +1,5 @@
 package no.nav.aap.domene.utbetaling.modellapi
 
-import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Paragraf_11_20_1_ledd_ModellAPI
-import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Paragraf_11_20_2_ledd_2_punktum_ModellAPI
 import java.time.LocalDate
 
 data class UtbetalingstidslinjeModellApi(
@@ -14,8 +12,8 @@ data class UtbetalingstidslinjedagModellApi(
     val grunnlagsfaktor: Double?,
     val barnetillegg: Double?,
     val grunnlag: Double?,
-    val årligYtelse: Paragraf_11_20_1_ledd_ModellAPI?,
-    val dagsats: Paragraf_11_20_2_ledd_2_punktum_ModellAPI?,
+    val årligYtelse: Paragraf_11_20_1_ledd_ModellApi?,
+    val dagsats: Paragraf_11_20_2_ledd_2_punktum_ModellApi?,
     val høyesteÅrligYtelseMedBarnetillegg: Double?,
     val høyesteBeløpMedBarnetillegg: Double?,
     val dagsatsMedBarnetillegg: Double?,
