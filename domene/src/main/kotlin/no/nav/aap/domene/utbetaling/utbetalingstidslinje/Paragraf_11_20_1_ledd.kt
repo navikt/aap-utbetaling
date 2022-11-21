@@ -2,8 +2,6 @@ package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 
-private const val FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG = 0.66
-
 internal class Paragraf_11_20_1_ledd private constructor(
     private val faktorForReduksjonAvGrunnlag: Double,
     private val inntektsgrunnlag: Beløp,
@@ -17,20 +15,24 @@ internal class Paragraf_11_20_1_ledd private constructor(
     )
 
     internal operator fun div(nevner: Number) = årligYtelse / nevner
-    fun toDto(): Paragraf_11_20_1_ledd_ModellAPI {
-        return Paragraf_11_20_1_ledd_ModellAPI(
-            faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
-            inntektsgrunnlag = inntektsgrunnlag.toDto(),
-            årligytelse = årligYtelse.toDto(),
-        )
-    }
 
-    companion object {
-        internal fun gjenopprett(faktorForReduksjonAvGrunnlag: Double, inntektsgrunnlag: Beløp, årligYtelse: Beløp) =
-            Paragraf_11_20_1_ledd(
-                faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
-                inntektsgrunnlag = inntektsgrunnlag,
-                årligYtelse = årligYtelse
-            )
+    internal fun toDto() = Paragraf_11_20_1_ledd_ModellAPI(
+        faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
+        inntektsgrunnlag = inntektsgrunnlag.toDto(),
+        årligytelse = årligYtelse.toDto(),
+    )
+
+    internal companion object {
+        private const val FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG = 0.66
+
+        internal fun gjenopprett(
+            faktorForReduksjonAvGrunnlag: Double,
+            inntektsgrunnlag: Beløp,
+            årligYtelse: Beløp
+        ) = Paragraf_11_20_1_ledd(
+            faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
+            inntektsgrunnlag = inntektsgrunnlag,
+            årligYtelse = årligYtelse
+        )
     }
 }

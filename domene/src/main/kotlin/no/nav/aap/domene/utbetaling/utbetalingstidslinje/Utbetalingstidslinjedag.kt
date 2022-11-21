@@ -35,25 +35,29 @@ internal sealed class Utbetalingstidslinjedag(
     internal abstract fun accept(visitor: UtbetalingsdagVisitor)
     internal abstract fun toDto(): DtoUtbetalingstidslinjedag
 
+    //TODO: Gå gjennom hvilke beløp som skal rundes av
+    //TODO: Flytt kode for fastsetting av minstegrunnlag (2G) inn hit
     internal class Utbetalingsdag private constructor(
         dato: LocalDate,
         private val grunnlagsfaktor: Grunnlagsfaktor,
         private val barnetillegg: Beløp,
+        //§11-19 3. ledd
         private val grunnlag: Beløp = Grunnbeløp.grunnlagINOK(dato, grunnlagsfaktor),
-        //private val årligYtelse: Beløp = grunnlag * FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG,
         private val årligYtelse: Paragraf_11_20_1_ledd = Paragraf_11_20_1_ledd(grunnlag),
-
-        //TODO: Heltall??
-        //private val dagsats: Beløp = årligYtelse / ANTALL_DAGER_MED_UTBETALING_PER_ÅR,
-
         private val dagsats: Paragraf_11_20_2_ledd_2_punktum = Paragraf_11_20_2_ledd_2_punktum(årligYtelse),
-        private val høyesteÅrligYtelseMedBarnetillegg: Beløp = grunnlag * MAKS_FAKTOR_AV_GRUNNLAG,
 
+        //§11-20 6. ledd
+        private val høyesteÅrligYtelseMedBarnetillegg: Beløp = grunnlag * MAKS_FAKTOR_AV_GRUNNLAG,
+        //§11-20 2. ledd 2. punktum
         //TODO: Denne også heltall?
         private val høyesteBeløpMedBarnetillegg: Beløp = høyesteÅrligYtelseMedBarnetillegg / ANTALL_DAGER_MED_UTBETALING_PER_ÅR,
+
+        //§11-20 3.-5. ledd
         private val dagsatsMedBarnetillegg: Beløp = dagsats + barnetillegg,
+        //§11-20 6. ledd
         private val beløpMedBarnetillegg: Beløp = minOf(høyesteBeløpMedBarnetillegg, dagsatsMedBarnetillegg),
-    ) : Utbetalingstidslinjedag(dato, Type.UTBETALINGSDAG) {
+
+        ) : Utbetalingstidslinjedag(dato, Type.UTBETALINGSDAG) {
 
         private lateinit var beløp: Beløp
 
@@ -69,7 +73,6 @@ internal sealed class Utbetalingstidslinjedag(
         )
 
         internal companion object {
-            private const val FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG = 0.66
             private const val MAKS_FAKTOR_AV_GRUNNLAG = 0.9
             private const val ANTALL_DAGER_MED_UTBETALING_PER_ÅR = 260
 

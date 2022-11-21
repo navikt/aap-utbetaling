@@ -19,6 +19,13 @@ internal class UtbetalingstidslinjeBuilder(
 
     private var utbetalingstidslinje = Utbetalingstidslinje(emptyList())
 
+
+    /**
+     * Builderen prøver å svare på tre spørsmål
+     * - Skal det utbetales for alle dager
+     * - Skal det utbetales for bare noen av dagene (mottaker har hatt to eller flere fraværsdager)
+     * - Skal det ikke utbetales for noen dager (mottaker har jobbet mer enn 60% innenfor en periode)
+     * */
     private lateinit var vanligUtbetalingstidslinje: Utbetalingstidslinje
     private lateinit var avvisteFraværsdagerUtbetalingstidslinje: Utbetalingstidslinje
     private lateinit var avvisteDagerUtbetalingstidslinje: Utbetalingstidslinje
@@ -75,6 +82,7 @@ internal class UtbetalingstidslinjeBuilder(
 
     private fun opprettUtbetaling(dato: LocalDate) = Utbetalingstidslinjedag.Utbetalingsdag(
         dato = dato,
+        //TODO: Flytt kode for fastsetting av minstegrunnlag til Utbetalingstidslinjedag
         grunnlagsfaktor = fødselsdato.justerGrunnlagsfaktorForAlder(dato, grunnlagsfaktor),
         barnetillegg = barnetillegg.barnetilleggForDag(dato)
     )
