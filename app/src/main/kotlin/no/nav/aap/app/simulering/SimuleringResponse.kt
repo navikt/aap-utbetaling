@@ -1,6 +1,8 @@
 package no.nav.aap.app.simulering
 
 import no.nav.aap.domene.utbetaling.modellapi.MottakerModellApi
+import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjedagModellApi
+import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjedagModellApiVisitor
 import java.time.LocalDate
 
 data class SimuleringResponse(
@@ -45,21 +47,49 @@ data class SimuleringResponse(
                 )
             }
             val utbetalingstidslinje = endretMottakerMedBarn.utbetalingstidslinjehistorikk.single().dager.map {
-                Utbetalingstidslinjedag(
-                    type = it.type,
-                    dato = it.dato,
-                    grunnlagsfaktor = it.grunnlagsfaktor,
-                    barnetillegg = it.barnetillegg,
-                    grunnlag = it.grunnlag?.grunnlag,
-                    årligYtelse = it.årligYtelse?.årligytelse,
-                    dagsats = it.dagsats?.dagsats,
-                    høyesteÅrligYtelseMedBarnetillegg = it.høyesteÅrligYtelseMedBarnetillegg?.høyesteÅrligYtelseMedBarnetillegg,
-                    høyesteBeløpMedBarnetillegg = it.høyesteBeløpMedBarnetillegg,
-                    dagsatsMedBarnetillegg = it.dagsatsMedBarnetillegg,
-                    beløpMedBarnetillegg = it.beløpMedBarnetillegg,
-                    beløp = it.beløp,
-                    arbeidsprosent = it.arbeidsprosent,
-                )
+                object : UtbetalingstidslinjedagModellApiVisitor {
+                    lateinit var dag: Utbetalingstidslinjedag
+
+                    init {
+                        it.accept(this)
+                    }
+
+                    override fun visitUtbetalingsdag(utbetalingsdag: UtbetalingstidslinjedagModellApi.UtbetalingsdagModellApi) {
+                        dag = Utbetalingstidslinjedag(
+                            type = "UTBETALINGSDAG",
+                            dato = utbetalingsdag.dato,
+                            grunnlagsfaktor = utbetalingsdag.grunnlagsfaktor,
+                            barnetillegg = utbetalingsdag.barnetillegg,
+                            grunnlag = utbetalingsdag.grunnlag.grunnlag,
+                            årligYtelse = utbetalingsdag.årligYtelse.årligytelse,
+                            dagsats = utbetalingsdag.dagsats.dagsats,
+                            høyesteÅrligYtelseMedBarnetillegg = utbetalingsdag.høyesteÅrligYtelseMedBarnetillegg.høyesteÅrligYtelseMedBarnetillegg,
+                            høyesteBeløpMedBarnetillegg = utbetalingsdag.høyesteBeløpMedBarnetillegg,
+                            dagsatsMedBarnetillegg = utbetalingsdag.dagsatsMedBarnetillegg,
+                            beløpMedBarnetillegg = utbetalingsdag.beløpMedBarnetillegg,
+                            beløp = utbetalingsdag.beløp,
+                            arbeidsprosent = utbetalingsdag.arbeidsprosent,
+                        )
+                    }
+
+                    override fun visitIkkeUtbetalingsdag(ikkeUtbetalingsdag: UtbetalingstidslinjedagModellApi.IkkeUtbetalingsdagModellApi) {
+                        dag = Utbetalingstidslinjedag(
+                            type = "IKKE_UTBETALINGSDAG",
+                            dato = ikkeUtbetalingsdag.dato,
+                            grunnlagsfaktor = null,
+                            barnetillegg = null,
+                            grunnlag = null,
+                            årligYtelse = null,
+                            dagsats = null,
+                            høyesteÅrligYtelseMedBarnetillegg = null,
+                            høyesteBeløpMedBarnetillegg = null,
+                            dagsatsMedBarnetillegg = null,
+                            beløpMedBarnetillegg = null,
+                            beløp = null,
+                            arbeidsprosent = ikkeUtbetalingsdag.arbeidsprosent,
+                        )
+                    }
+                }.dag
             }
 
             val kombinerteDager = aktivitetstidslinje

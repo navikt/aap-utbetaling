@@ -38,21 +38,34 @@ internal fun UtbetalingstidslinjeKafkaDto.toKafkaDto() = MottakereKafkaDto.Utbet
     dager = dager.map(UtbetalingstidslinjedagKafkaDto::toKafkaDto)
 )
 
-internal fun UtbetalingstidslinjedagKafkaDto.toKafkaDto() = MottakereKafkaDto.UtbetalingstidslinjedagKafkaDto(
-    type = if (grunnlagsfaktor != null) "UTBETALINGSDAG" else "IKKE_UTBETALINGSDAG",
-    dato = dato,
-    grunnlagsfaktor = grunnlagsfaktor,
-    barnetillegg = barnetillegg,
-    grunnlag = grunnlag?.let { MottakereKafkaDto.Paragraf_11_19_3_leddKafkaDto(dato, grunnlagsfaktor!!, it) },
-    årligYtelse = årligYtelse?.let { MottakereKafkaDto.Paragraf_11_20_1_ledd_KafkaDto(0.66, grunnlag!!, it) },
-    dagsats = dagsats?.let { MottakereKafkaDto.Paragraf_11_20_2_ledd_2_punktum_KafkaDto(260,årligYtelse!!, it)},
-    høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg?.let { MottakereKafkaDto.Paragraf_11_20_6_leddKafkaDto(0.9, grunnlag!!, it) },
-    høyesteBeløpMedBarnetillegg = høyestebeløpMedBarnetillegg,
-    dagsatsMedBarnetillegg = barnetillegg?.let { dagsats?.plus(it) },
-    beløpMedBarnetillegg = beløpMedBarnetillegg,
-    beløp = beløp,
-    arbeidsprosent = arbeidsprosent,
-)
+internal fun UtbetalingstidslinjedagKafkaDto.toKafkaDto() =
+    if (type == "UTBETALINGSDAG") {
+        MottakereKafkaDto.UtbetalingstidslinjedagKafkaDto(
+            utbetalingsdag = MottakereKafkaDto.UtbetalingstidslinjedagKafkaDto.UtbetalingsdagKafkaDto(
+                dato = dato,
+                grunnlagsfaktor = grunnlagsfaktor!!,
+                barnetillegg = barnetillegg!!,
+                grunnlag = MottakereKafkaDto.Paragraf_11_19_3_leddKafkaDto(dato, grunnlagsfaktor!!, grunnlag!!),
+                årligYtelse = MottakereKafkaDto.Paragraf_11_20_1_ledd_KafkaDto(0.66, grunnlag!!, årligYtelse!!),
+                dagsats = MottakereKafkaDto.Paragraf_11_20_2_ledd_2_punktum_KafkaDto(260, årligYtelse!!, dagsats!!),
+                høyesteÅrligYtelseMedBarnetillegg = MottakereKafkaDto.Paragraf_11_20_6_leddKafkaDto(0.9, grunnlag!!, høyesteÅrligYtelseMedBarnetillegg!!),
+                høyesteBeløpMedBarnetillegg = høyestebeløpMedBarnetillegg!!,
+                dagsatsMedBarnetillegg = dagsatsMedBarnetillegg!!,
+                beløpMedBarnetillegg = beløpMedBarnetillegg!!,
+                beløp = beløp!!,
+                arbeidsprosent = arbeidsprosent,
+            ),
+            ikkeUtbetalingsdag = null,
+        )
+    } else {
+        MottakereKafkaDto.UtbetalingstidslinjedagKafkaDto(
+            utbetalingsdag = null,
+            ikkeUtbetalingsdag = MottakereKafkaDto.UtbetalingstidslinjedagKafkaDto.IkkeUtbetalingsdagKafkaDto(
+                dato = dato,
+                arbeidsprosent = arbeidsprosent,
+            )
+        )
+    }
 
 internal fun OppdragKafkaDto.toKafkaDto() = MottakereKafkaDto.OppdragKafkaDto(
     mottaker = mottaker,

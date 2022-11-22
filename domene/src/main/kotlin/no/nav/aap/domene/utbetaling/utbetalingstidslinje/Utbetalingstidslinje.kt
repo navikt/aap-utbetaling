@@ -2,6 +2,7 @@ package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
 import no.nav.aap.domene.utbetaling.Barnetillegg
 import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjeModellApi
+import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjedagModellApi
 import no.nav.aap.domene.utbetaling.visitor.UtbetalingstidslinjeVisitor
 
 internal class Utbetalingstidslinje(
@@ -11,7 +12,7 @@ internal class Utbetalingstidslinje(
 
     internal companion object {
         internal fun gjenopprett(utbetalingstidslinjeModellApi: UtbetalingstidslinjeModellApi) =
-            Utbetalingstidslinje(utbetalingstidslinjeModellApi.dager.map(Utbetalingstidslinjedag::gjenopprett))
+            Utbetalingstidslinje(utbetalingstidslinjeModellApi.dager.map(UtbetalingstidslinjedagModellApi::gjenopprett))
     }
 
     internal fun arbeidsprosent(arbeidsprosent: Double) {

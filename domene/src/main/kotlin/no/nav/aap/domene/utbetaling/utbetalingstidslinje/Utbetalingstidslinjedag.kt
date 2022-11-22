@@ -1,10 +1,10 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
 import no.nav.aap.domene.utbetaling.Barnetillegg
-import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjedagModellApi
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
+import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjedagModellApi
 import no.nav.aap.domene.utbetaling.visitor.UtbetalingsdagVisitor
 import java.time.LocalDate
 
@@ -19,14 +19,6 @@ internal sealed class Utbetalingstidslinjedag(
     }
 
     protected var arbeidsprosent: Double = Double.NaN
-
-    internal companion object {
-        internal fun gjenopprett(utbetalingstidslinjedagModellApi: UtbetalingstidslinjedagModellApi) =
-            when (enumValueOf<Type>(utbetalingstidslinjedagModellApi.type)) {
-                Type.UTBETALINGSDAG -> Utbetalingsdag.gjenopprett(utbetalingstidslinjedagModellApi)
-                Type.IKKE_UTBETALINGSDAG -> IkkeUtbetalingsdag.gjenopprett(utbetalingstidslinjedagModellApi)
-            }
-    }
 
     internal abstract fun arbeidsprosent(arbeidsprosent: Double)
     internal open fun barnetillegg(barnetillegg: Barnetillegg) {}
@@ -72,13 +64,12 @@ internal sealed class Utbetalingstidslinjedag(
         internal companion object {
             private const val ANTALL_DAGER_MED_UTBETALING_PER_ÅR = 260
 
-            internal fun gjenopprett(utbetalingstidslinjedagModellApi: UtbetalingstidslinjedagModellApi): Utbetalingsdag {
+            internal fun gjenopprett(utbetalingstidslinjedagModellApi: UtbetalingstidslinjedagModellApi.UtbetalingsdagModellApi): Utbetalingsdag {
                 val grunnlag = Paragraf_11_19_3_ledd.gjenopprett(
                     dato = requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).dato,
                     grunnlagsfaktor = Grunnlagsfaktor(requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).grunnlagsfaktor),
                     grunnlag = requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).grunnlag.beløp
                 )
-
                 val årligYtelse = Paragraf_11_20_1_ledd.gjenopprett(
                     faktorForReduksjonAvGrunnlag = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).faktorForReduksjonAvGrunnlag,
                     inntektsgrunnlag = grunnlag,
@@ -124,8 +115,7 @@ internal sealed class Utbetalingstidslinjedag(
             visitor.visitUtbetalingMedBeløp(this, dato, beløp)
         }
 
-        override fun toModellApi() = UtbetalingstidslinjedagModellApi(
-            type = dagtype.name,
+        override fun toModellApi() = UtbetalingstidslinjedagModellApi.UtbetalingsdagModellApi(
             dato = dato,
             grunnlagsfaktor = grunnlagsfaktor.toModellApi(),
             barnetillegg = barnetillegg.toModellApi(),
@@ -144,7 +134,7 @@ internal sealed class Utbetalingstidslinjedag(
     internal class IkkeUtbetalingsdag(dato: LocalDate) : Utbetalingstidslinjedag(dato, Type.IKKE_UTBETALINGSDAG) {
 
         internal companion object {
-            internal fun gjenopprett(utbetalingstidslinjedagModellApi: UtbetalingstidslinjedagModellApi): IkkeUtbetalingsdag {
+            internal fun gjenopprett(utbetalingstidslinjedagModellApi: UtbetalingstidslinjedagModellApi.IkkeUtbetalingsdagModellApi): IkkeUtbetalingsdag {
                 val ikkeUtbetalingsdag = IkkeUtbetalingsdag(
                     dato = utbetalingstidslinjedagModellApi.dato
                 )
@@ -163,19 +153,8 @@ internal sealed class Utbetalingstidslinjedag(
             visitor.visitIkkeUtbetaling(this, dato)
         }
 
-        override fun toModellApi() = UtbetalingstidslinjedagModellApi(
-            type = dagtype.name,
+        override fun toModellApi() = UtbetalingstidslinjedagModellApi.IkkeUtbetalingsdagModellApi(
             dato = dato,
-            grunnlagsfaktor = null,
-            barnetillegg = null,
-            grunnlag = null,
-            årligYtelse = null,
-            dagsats = null,
-            høyesteÅrligYtelseMedBarnetillegg = null,
-            høyesteBeløpMedBarnetillegg = null,
-            dagsatsMedBarnetillegg = null,
-            beløpMedBarnetillegg = null,
-            beløp = null,
             arbeidsprosent = arbeidsprosent
         )
     }

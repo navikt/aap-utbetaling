@@ -22,7 +22,7 @@ data class MottakereKafkaDto(
     private var erMigrertAkkuratNå: Boolean = false
 
     companion object {
-        const val VERSION = 2
+        const val VERSION = 3
         const val INIT_SEKVENS = 0L
     }
 
@@ -50,20 +50,29 @@ data class MottakereKafkaDto(
     )
 
     data class UtbetalingstidslinjedagKafkaDto(
-        val type: String,
-        val dato: LocalDate,
-        val grunnlagsfaktor: Double?,
-        val barnetillegg: Double?,
-        val grunnlag: Paragraf_11_19_3_leddKafkaDto?,
-        val årligYtelse: Paragraf_11_20_1_ledd_KafkaDto?,
-        val dagsats: Paragraf_11_20_2_ledd_2_punktum_KafkaDto?,
-        val høyesteÅrligYtelseMedBarnetillegg: Paragraf_11_20_6_leddKafkaDto?,
-        val høyesteBeløpMedBarnetillegg: Double?,
-        val dagsatsMedBarnetillegg: Double?,
-        val beløpMedBarnetillegg: Double?,
-        val beløp: Double?,
-        val arbeidsprosent: Double
-    )
+        val utbetalingsdag: UtbetalingsdagKafkaDto?,
+        val ikkeUtbetalingsdag: IkkeUtbetalingsdagKafkaDto?,
+    ) {
+        data class UtbetalingsdagKafkaDto(
+            val dato: LocalDate,
+            val grunnlagsfaktor: Double,
+            val barnetillegg: Double,
+            val grunnlag: Paragraf_11_19_3_leddKafkaDto,
+            val årligYtelse: Paragraf_11_20_1_ledd_KafkaDto,
+            val dagsats: Paragraf_11_20_2_ledd_2_punktum_KafkaDto,
+            val høyesteÅrligYtelseMedBarnetillegg: Paragraf_11_20_6_leddKafkaDto,
+            val høyesteBeløpMedBarnetillegg: Double,
+            val dagsatsMedBarnetillegg: Double,
+            val beløpMedBarnetillegg: Double,
+            val beløp: Double,
+            val arbeidsprosent: Double
+        )
+
+        data class IkkeUtbetalingsdagKafkaDto(
+            val dato: LocalDate,
+            val arbeidsprosent: Double
+        )
+    }
 
     data class Paragraf_11_19_3_leddKafkaDto(
         val dato: LocalDate,

@@ -2,8 +2,6 @@ package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.erHelg
 import no.nav.aap.domene.utbetaling.modellapi.*
-import no.nav.aap.domene.utbetaling.modellapi.Paragraf_11_20_1_ledd_ModellApi
-import no.nav.aap.domene.utbetaling.modellapi.Paragraf_11_20_2_ledd_2_punktum_ModellApi
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -155,8 +153,7 @@ internal class GjenopprettTest {
             utbetalingstidslinjehistorikk = listOf(UtbetalingstidslinjeModellApi(dager = (0 until 14L).mapNotNull { nummer ->
                 val dato = (10 oktober 2022).plusDays(nummer)
                 if (dato.erHelg()) return@mapNotNull null
-                UtbetalingstidslinjedagModellApi(
-                    type = "UTBETALINGSDAG",
+                UtbetalingstidslinjedagModellApi.UtbetalingsdagModellApi(
                     dato = dato,
                     grunnlagsfaktor = 4.0,
                     barnetillegg = 0.0,

@@ -1,8 +1,6 @@
 package no.nav.aap.app.kafka
 
 import no.nav.aap.domene.utbetaling.modellapi.*
-import no.nav.aap.domene.utbetaling.modellapi.Paragraf_11_20_1_ledd_ModellApi
-import no.nav.aap.domene.utbetaling.modellapi.Paragraf_11_20_2_ledd_2_punktum_ModellApi
 import no.nav.aap.dto.kafka.MottakereKafkaDto
 import no.nav.aap.dto.kafka.MottakereKafkaDto.*
 
@@ -35,24 +33,33 @@ internal fun DagKafkaDto.toModellApi() = DagModellApi(
 )
 
 internal fun UtbetalingstidslinjeKafkaDto.toModellApi() = UtbetalingstidslinjeModellApi(
-    dager = dager.map(UtbetalingstidslinjedagKafkaDto::toModellApi)
+    dager = dager.mapNotNull(UtbetalingstidslinjedagKafkaDto::toModellApi)
 )
 
-internal fun UtbetalingstidslinjedagKafkaDto.toModellApi() = UtbetalingstidslinjedagModellApi(
-    type = type,
-    dato = dato,
-    grunnlagsfaktor = grunnlagsfaktor,
-    barnetillegg = barnetillegg,
-    grunnlag = grunnlag?.toModellApi(),
-    årligYtelse = årligYtelse?.toModellApi(),
-    dagsats = dagsats?.toModellApi(),
-    høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg?.toModellApi(),
-    høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg,
-    dagsatsMedBarnetillegg = dagsatsMedBarnetillegg,
-    beløpMedBarnetillegg = beløpMedBarnetillegg,
-    beløp = beløp,
-    arbeidsprosent = arbeidsprosent,
-)
+internal fun UtbetalingstidslinjedagKafkaDto.toModellApi() =
+    utbetalingsdag?.toModellApi() ?: ikkeUtbetalingsdag?.toModellApi()
+
+internal fun UtbetalingstidslinjedagKafkaDto.UtbetalingsdagKafkaDto.toModellApi() =
+    UtbetalingstidslinjedagModellApi.UtbetalingsdagModellApi(
+        dato = dato,
+        grunnlagsfaktor = grunnlagsfaktor,
+        barnetillegg = barnetillegg,
+        grunnlag = grunnlag.toModellApi(),
+        årligYtelse = årligYtelse.toModellApi(),
+        dagsats = dagsats.toModellApi(),
+        høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg.toModellApi(),
+        høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg,
+        dagsatsMedBarnetillegg = dagsatsMedBarnetillegg,
+        beløpMedBarnetillegg = beløpMedBarnetillegg,
+        beløp = beløp,
+        arbeidsprosent = arbeidsprosent,
+    )
+
+internal fun UtbetalingstidslinjedagKafkaDto.IkkeUtbetalingsdagKafkaDto.toModellApi() =
+    UtbetalingstidslinjedagModellApi.IkkeUtbetalingsdagModellApi(
+        dato = dato,
+        arbeidsprosent = arbeidsprosent,
+    )
 
 internal fun Paragraf_11_19_3_leddKafkaDto.toModellApi() = Paragraf_11_19_3_leddModellApi(
     dato = dato,
@@ -147,21 +154,49 @@ internal fun UtbetalingstidslinjeModellApi.toJson() = UtbetalingstidslinjeKafkaD
     dager = dager.map(UtbetalingstidslinjedagModellApi::toJson)
 )
 
-internal fun UtbetalingstidslinjedagModellApi.toJson() = UtbetalingstidslinjedagKafkaDto(
-    type = type,
-    dato = dato,
-    grunnlagsfaktor = grunnlagsfaktor,
-    barnetillegg = barnetillegg,
-    grunnlag = grunnlag?.toKafkaDto(),
-    årligYtelse = årligYtelse?.toKafkaDto(),
-    dagsats = dagsats?.toKafkaDto(),
-    høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg?.toKafkaDto(),
-    høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg,
-    dagsatsMedBarnetillegg = dagsatsMedBarnetillegg,
-    beløpMedBarnetillegg = beløpMedBarnetillegg,
-    beløp = beløp,
-    arbeidsprosent = arbeidsprosent,
-)
+internal fun UtbetalingstidslinjedagModellApi.toJson() = object : UtbetalingstidslinjedagModellApiVisitor {
+    lateinit var dag: UtbetalingstidslinjedagKafkaDto
+
+    init {
+        accept(this)
+    }
+
+    override fun visitUtbetalingsdag(utbetalingsdag: UtbetalingstidslinjedagModellApi.UtbetalingsdagModellApi) {
+        dag = utbetalingsdag.toJson()
+    }
+
+    override fun visitIkkeUtbetalingsdag(ikkeUtbetalingsdag: UtbetalingstidslinjedagModellApi.IkkeUtbetalingsdagModellApi) {
+        dag = ikkeUtbetalingsdag.toJson()
+    }
+}.dag
+
+internal fun UtbetalingstidslinjedagModellApi.UtbetalingsdagModellApi.toJson() =
+    UtbetalingstidslinjedagKafkaDto(
+        utbetalingsdag = UtbetalingstidslinjedagKafkaDto.UtbetalingsdagKafkaDto(
+            dato = dato,
+            grunnlagsfaktor = grunnlagsfaktor,
+            barnetillegg = barnetillegg,
+            grunnlag = grunnlag.toKafkaDto(),
+            årligYtelse = årligYtelse.toKafkaDto(),
+            dagsats = dagsats.toKafkaDto(),
+            høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg.toKafkaDto(),
+            høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg,
+            dagsatsMedBarnetillegg = dagsatsMedBarnetillegg,
+            beløpMedBarnetillegg = beløpMedBarnetillegg,
+            beløp = beløp,
+            arbeidsprosent = arbeidsprosent,
+        ),
+        ikkeUtbetalingsdag = null,
+    )
+
+internal fun UtbetalingstidslinjedagModellApi.IkkeUtbetalingsdagModellApi.toJson() =
+    UtbetalingstidslinjedagKafkaDto(
+        utbetalingsdag = null,
+        ikkeUtbetalingsdag = UtbetalingstidslinjedagKafkaDto.IkkeUtbetalingsdagKafkaDto(
+            dato = dato,
+            arbeidsprosent = arbeidsprosent,
+        ),
+    )
 
 internal fun Paragraf_11_19_3_leddModellApi.toKafkaDto() = Paragraf_11_19_3_leddKafkaDto(
     dato = dato,
