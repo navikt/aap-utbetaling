@@ -2,8 +2,8 @@ package no.nav.aap.app.stream
 
 import no.nav.aap.app.kafka.KafkaUtbetalingsbehovWrapper.KafkaUtbetalingsbehov
 import no.nav.aap.app.kafka.Topics
+import no.nav.aap.app.kafka.toKafkaDto
 import no.nav.aap.app.kafka.toModellApi
-import no.nav.aap.app.kafka.toJson
 import no.nav.aap.dto.kafka.MottakereKafkaDto
 import no.nav.aap.kafka.streams.extension.consume
 import no.nav.aap.kafka.streams.extension.filterNotNullBy
@@ -23,5 +23,5 @@ private val håndter = { løsning: KafkaUtbetalingsbehov, mottakerKafkaDto: Mott
     val mottakerModellApi = mottakerKafkaDto.toModellApi()
     val response = requireNotNull(løsning.response) { "Hendelse uten response må filtreres bort" }
     val endretMottaker = response.barn.håndter(mottakerModellApi)
-    endretMottaker.toJson(mottakerKafkaDto.sekvensnummer)
+    endretMottaker.toKafkaDto(mottakerKafkaDto.sekvensnummer)
 }

@@ -1,8 +1,8 @@
 package no.nav.aap.app.stream
 
 import no.nav.aap.app.kafka.Topics
+import no.nav.aap.app.kafka.toKafkaDto
 import no.nav.aap.app.kafka.toModellApi
-import no.nav.aap.app.kafka.toJson
 import no.nav.aap.domene.utbetaling.modellapi.MottakerModellApi
 import no.nav.aap.domene.utbetaling.modellapi.VedtakshendelseModellApi
 import no.nav.aap.dto.kafka.IverksettVedtakKafkaDto
@@ -25,7 +25,7 @@ private val håndter = { ident: String, kafkaDto: IverksettVedtakKafkaDto, motta
     val mottakerModellApi = mottakerKafkaDto?.toModellApi() ?: MottakerModellApi.opprettMottaker(ident, kafkaDto.fødselsdato)
     val vedtakshendelseModellApi = gjenopprett(kafkaDto)
     val endretDtoMottaker = vedtakshendelseModellApi.håndter(mottakerModellApi)
-    endretDtoMottaker.toJson(mottakerKafkaDto?.sekvensnummer ?: MottakereKafkaDto.INIT_SEKVENS)
+    endretDtoMottaker.toKafkaDto(mottakerKafkaDto?.sekvensnummer ?: MottakereKafkaDto.INIT_SEKVENS)
 }
 
 private fun gjenopprett(kafkaDto: IverksettVedtakKafkaDto) = VedtakshendelseModellApi(

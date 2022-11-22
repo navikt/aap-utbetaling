@@ -1,8 +1,8 @@
 package no.nav.aap.app.stream
 
 import no.nav.aap.app.kafka.Topics
+import no.nav.aap.app.kafka.toKafkaDto
 import no.nav.aap.app.kafka.toModellApi
-import no.nav.aap.app.kafka.toJson
 import no.nav.aap.domene.utbetaling.modellapi.MeldepliktshendelseModellApi
 import no.nav.aap.dto.kafka.MottakereKafkaDto
 import no.nav.aap.kafka.streams.extension.*
@@ -28,5 +28,5 @@ private val håndter = { ident: String, meldepliktshendelseModellApi: Meldeplikt
     val mottakerModellApi = mottakerKafkaDto.toModellApi()
     val observer = BehovObserver(ident)
     val endretMottakerModellApi = meldepliktshendelseModellApi.håndter(mottakerModellApi, observer)
-    endretMottakerModellApi.toJson(mottakerKafkaDto.sekvensnummer) to observer.behovene()
+    endretMottakerModellApi.toKafkaDto(mottakerKafkaDto.sekvensnummer) to observer.behovene()
 }
