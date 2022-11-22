@@ -22,7 +22,7 @@ data class MottakereKafkaDto(
     private var erMigrertAkkuratNå: Boolean = false
 
     companion object {
-        const val VERSION = 3
+        const val VERSION = 4
         const val INIT_SEKVENS = 0L
     }
 

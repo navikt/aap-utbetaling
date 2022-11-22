@@ -11,7 +11,7 @@ data class ForrigeMottakereKafkaDto(
     val aktivitetstidslinje: List<MeldeperiodeKafkaDto>,
     val utbetalingstidslinjehistorikk: List<UtbetalingstidslinjeKafkaDto>,
     val oppdragshistorikk: List<OppdragKafkaDto>,
-//    val barnetillegg: List<Barna>,
+    val barnetillegg: List<BarnaKafkaDto>,
     val tilstand: String,
     val version: Int = MottakereKafkaDto.VERSION - 1,
 ) {
@@ -40,19 +40,34 @@ data class ForrigeMottakereKafkaDto(
     )
 
     data class UtbetalingstidslinjedagKafkaDto(
-        val type: String,
+        val utbetalingsdag: UtbetalingsdagKafkaDto?,
+        val ikkeUtbetalingsdag: IkkeUtbetalingsdagKafkaDto?,
+    ) {
+        data class UtbetalingsdagKafkaDto(
+            val dato: LocalDate,
+            val grunnlagsfaktor: Double,
+            val barnetillegg: Double,
+            val grunnlag: Paragraf_11_19_3_leddKafkaDto,
+            val årligYtelse: Paragraf_11_20_1_ledd_KafkaDto,
+            val dagsats: Paragraf_11_20_2_ledd_2_punktum_KafkaDto,
+            val høyesteÅrligYtelseMedBarnetillegg: Paragraf_11_20_6_leddKafkaDto,
+            val høyesteBeløpMedBarnetillegg: Double,
+            val dagsatsMedBarnetillegg: Double,
+            val beløpMedBarnetillegg: Double,
+            val beløp: Double,
+            val arbeidsprosent: Double
+        )
+
+        data class IkkeUtbetalingsdagKafkaDto(
+            val dato: LocalDate,
+            val arbeidsprosent: Double
+        )
+    }
+
+    data class Paragraf_11_19_3_leddKafkaDto(
         val dato: LocalDate,
-        val grunnlagsfaktor: Double?,
-        val barnetillegg: Double?,
-        val grunnlag: Double?,
-        val årligYtelse: Paragraf_11_20_1_ledd_KafkaDto?,
-        val dagsats: Paragraf_11_20_2_ledd_2_punktum_KafkaDto?,
-        val høyesteÅrligYtelseMedBarnetillegg: Double?,
-        val høyestebeløpMedBarnetillegg: Double?,
-        val dagsatsMedBarnetillegg: Double?,
-        val beløpMedBarnetillegg: Double?,
-        val beløp: Double?,
-        val arbeidsprosent: Double
+        val grunnlagsfaktor: Double,
+        val grunnlag: Double
     )
 
     data class Paragraf_11_20_1_ledd_KafkaDto(
@@ -65,6 +80,12 @@ data class ForrigeMottakereKafkaDto(
         val antallDagerMedUtbetalingPerÅr: Int,
         val årligYtelse: Double,
         val dagsats: Double
+    )
+
+    data class Paragraf_11_20_6_leddKafkaDto(
+        val maksFaktorAvGrunnlag: Double,
+        val grunnlag: Double,
+        val høyesteÅrligYtelseMedBarnetillegg: Double
     )
 
     data class OppdragKafkaDto(
