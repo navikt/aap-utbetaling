@@ -58,7 +58,7 @@ internal class Vedtak(
     internal fun toModellApi() = VedtakModellApi(
         vedtaksid = vedtaksid,
         innvilget = innvilget,
-        grunnlagsfaktor = grunnlagsfaktor.toDto(),
+        grunnlagsfaktor = grunnlagsfaktor.toModellApi(),
         vedtaksdato = vedtaksdato,
         virkningsdato = virkningsdato,
         fødselsdato = fødselsdato.toDto()

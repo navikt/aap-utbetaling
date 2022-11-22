@@ -13,6 +13,7 @@ data class ForrigeMottakereKafkaDto(
     val oppdragshistorikk: List<OppdragKafkaDto>,
 //    val barnetillegg: List<Barna>,
     val tilstand: String,
+    val version: Int = MottakereKafkaDto.VERSION - 1,
 ) {
 
     data class VedtakKafkaDto(

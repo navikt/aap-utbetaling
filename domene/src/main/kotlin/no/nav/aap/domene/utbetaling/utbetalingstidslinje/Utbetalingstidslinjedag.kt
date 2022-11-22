@@ -4,7 +4,6 @@ import no.nav.aap.domene.utbetaling.Barnetillegg
 import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjedagModellApi
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
-import no.nav.aap.domene.utbetaling.entitet.Grunnbeløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.visitor.UtbetalingsdagVisitor
 import java.time.LocalDate
@@ -39,15 +38,14 @@ internal sealed class Utbetalingstidslinjedag(
     //TODO: Flytt kode for fastsetting av minstegrunnlag (2G) inn hit
     internal class Utbetalingsdag private constructor(
         dato: LocalDate,
-        private val grunnlagsfaktor: Grunnlagsfaktor,
         private val barnetillegg: Beløp,
+        private val grunnlagsfaktor: Grunnlagsfaktor,
         //§11-19 3. ledd
-        private val grunnlag: Beløp = Grunnbeløp.grunnlagINOK(dato, grunnlagsfaktor),
+        private val grunnlag: Paragraf_11_19_3_ledd = Paragraf_11_19_3_ledd(dato, grunnlagsfaktor),
         private val årligYtelse: Paragraf_11_20_1_ledd = Paragraf_11_20_1_ledd(grunnlag),
         private val dagsats: Paragraf_11_20_2_ledd_2_punktum = Paragraf_11_20_2_ledd_2_punktum(årligYtelse),
 
-        //§11-20 6. ledd
-        private val høyesteÅrligYtelseMedBarnetillegg: Beløp = grunnlag * MAKS_FAKTOR_AV_GRUNNLAG,
+        private val høyesteÅrligYtelseMedBarnetillegg: Paragraf_11_20_6_ledd = Paragraf_11_20_6_ledd(grunnlag),
         //§11-20 2. ledd 2. punktum
         //TODO: Denne også heltall?
         private val høyesteBeløpMedBarnetillegg: Beløp = høyesteÅrligYtelseMedBarnetillegg / ANTALL_DAGER_MED_UTBETALING_PER_ÅR,
@@ -66,20 +64,24 @@ internal sealed class Utbetalingstidslinjedag(
             grunnlagsfaktor: Grunnlagsfaktor,
             barnetillegg: Beløp
         ) : this(
-            dato = dato,
-            grunnlagsfaktor = grunnlagsfaktor,
-            barnetillegg = barnetillegg,
-            grunnlag = Grunnbeløp.grunnlagINOK(dato, grunnlagsfaktor),
+            dato,
+            barnetillegg,
+            grunnlagsfaktor,
         )
 
         internal companion object {
-            private const val MAKS_FAKTOR_AV_GRUNNLAG = 0.9
             private const val ANTALL_DAGER_MED_UTBETALING_PER_ÅR = 260
 
             internal fun gjenopprett(utbetalingstidslinjedagModellApi: UtbetalingstidslinjedagModellApi): Utbetalingsdag {
+                val grunnlag = Paragraf_11_19_3_ledd.gjenopprett(
+                    dato = requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).dato,
+                    grunnlagsfaktor = Grunnlagsfaktor(requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).grunnlagsfaktor),
+                    grunnlag = requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).grunnlag.beløp
+                )
+
                 val årligYtelse = Paragraf_11_20_1_ledd.gjenopprett(
                     faktorForReduksjonAvGrunnlag = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).faktorForReduksjonAvGrunnlag,
-                    inntektsgrunnlag = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).inntektsgrunnlag.beløp,
+                    inntektsgrunnlag = grunnlag,
                     årligYtelse = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).årligytelse.beløp
                 )
 
@@ -88,14 +90,19 @@ internal sealed class Utbetalingstidslinjedag(
                     årligYtelse = årligYtelse,
                     dagsats = requireNotNull(utbetalingstidslinjedagModellApi.dagsats).dagsats.beløp
                 )
+                val høyesteÅrligYtelseMedBarnetillegg = Paragraf_11_20_6_ledd.gjenopprett(
+                    maksFaktorAvGrunnlag = requireNotNull(utbetalingstidslinjedagModellApi.høyesteÅrligYtelseMedBarnetillegg).maksFaktorAvGrunnlag,
+                    grunnlag = grunnlag,
+                    høyesteÅrligYtelseMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.høyesteÅrligYtelseMedBarnetillegg).høyesteÅrligYtelseMedBarnetillegg.beløp
+                )
                 val utbetalingsdag = Utbetalingsdag(
                     dato = utbetalingstidslinjedagModellApi.dato,
                     grunnlagsfaktor = Grunnlagsfaktor(requireNotNull(utbetalingstidslinjedagModellApi.grunnlagsfaktor)),
                     barnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.barnetillegg).beløp,
-                    grunnlag = requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).beløp,
+                    grunnlag = grunnlag,
                     årligYtelse = årligYtelse,
                     dagsats = dagsats,
-                    høyesteÅrligYtelseMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.høyesteÅrligYtelseMedBarnetillegg).beløp,
+                    høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg,
                     høyesteBeløpMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.høyesteBeløpMedBarnetillegg).beløp,
                     dagsatsMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.dagsatsMedBarnetillegg).beløp,
                     beløpMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.beløpMedBarnetillegg).beløp,
@@ -120,16 +127,16 @@ internal sealed class Utbetalingstidslinjedag(
         override fun toModellApi() = UtbetalingstidslinjedagModellApi(
             type = dagtype.name,
             dato = dato,
-            grunnlagsfaktor = grunnlagsfaktor.toDto(),
-            barnetillegg = barnetillegg.toDto(),
-            grunnlag = grunnlag.toDto(),
+            grunnlagsfaktor = grunnlagsfaktor.toModellApi(),
+            barnetillegg = barnetillegg.toModellApi(),
+            grunnlag = grunnlag.toModellApi(),
             årligYtelse = årligYtelse.toModellApi(),
             dagsats = dagsats.toModellApi(),
-            høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg.toDto(),
-            høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg.toDto(),
-            dagsatsMedBarnetillegg = dagsatsMedBarnetillegg.toDto(),
-            beløpMedBarnetillegg = beløpMedBarnetillegg.toDto(),
-            beløp = beløp.toDto(),
+            høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg.toModellApi(),
+            høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg.toModellApi(),
+            dagsatsMedBarnetillegg = dagsatsMedBarnetillegg.toModellApi(),
+            beløpMedBarnetillegg = beløpMedBarnetillegg.toModellApi(),
+            beløp = beløp.toModellApi(),
             arbeidsprosent = arbeidsprosent
         )
     }

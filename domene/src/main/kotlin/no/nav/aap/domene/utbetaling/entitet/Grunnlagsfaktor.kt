@@ -20,7 +20,7 @@ internal class Grunnlagsfaktor(verdi: Number) : Comparable<Grunnlagsfaktor> {
         internal fun Iterable<Grunnlagsfaktor>.summer() = Grunnlagsfaktor(sumOf { it.verdi })
     }
 
-    internal fun toDto() = verdi
+    internal fun toModellApi() = verdi
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

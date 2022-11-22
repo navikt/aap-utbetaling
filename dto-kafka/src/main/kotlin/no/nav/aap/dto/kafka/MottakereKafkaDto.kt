@@ -54,15 +54,21 @@ data class MottakereKafkaDto(
         val dato: LocalDate,
         val grunnlagsfaktor: Double?,
         val barnetillegg: Double?,
-        val grunnlag: Double?,
+        val grunnlag: Paragraf_11_19_3_leddKafkaDto?,
         val årligYtelse: Paragraf_11_20_1_ledd_KafkaDto?,
         val dagsats: Paragraf_11_20_2_ledd_2_punktum_KafkaDto?,
-        val høyesteÅrligYtelseMedBarnetillegg: Double?,
+        val høyesteÅrligYtelseMedBarnetillegg: Paragraf_11_20_6_leddKafkaDto?,
         val høyesteBeløpMedBarnetillegg: Double?,
         val dagsatsMedBarnetillegg: Double?,
         val beløpMedBarnetillegg: Double?,
         val beløp: Double?,
         val arbeidsprosent: Double
+    )
+
+    data class Paragraf_11_19_3_leddKafkaDto(
+        val dato: LocalDate,
+        val grunnlagsfaktor: Double,
+        val grunnlag: Double
     )
 
     data class Paragraf_11_20_1_ledd_KafkaDto(
@@ -77,6 +83,11 @@ data class MottakereKafkaDto(
         val dagsats: Double
     )
 
+    data class Paragraf_11_20_6_leddKafkaDto(
+        val maksFaktorAvGrunnlag: Double,
+        val grunnlag: Double,
+        val høyesteÅrligYtelseMedBarnetillegg: Double
+    )
 
     data class OppdragKafkaDto(
         val mottaker: String,
