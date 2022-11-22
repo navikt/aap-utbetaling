@@ -22,7 +22,7 @@ internal class Beløp private constructor(verdi: Number) : Comparable<Beløp> {
 
     internal fun avrundet(): Beløp = Beløp(this.verdi.roundToInt())
 
-    internal fun toDto() = verdi
+    internal fun toModellApi() = verdi
 
     override fun compareTo(other: Beløp) = verdi.compareTo(other.verdi)
 

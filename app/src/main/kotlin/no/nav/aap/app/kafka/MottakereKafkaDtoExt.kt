@@ -43,15 +43,21 @@ internal fun UtbetalingstidslinjedagKafkaDto.toModellApi() = Utbetalingstidslinj
     dato = dato,
     grunnlagsfaktor = grunnlagsfaktor,
     barnetillegg = barnetillegg,
-    grunnlag = grunnlag,
+    grunnlag = grunnlag?.toModellApi(),
     årligYtelse = årligYtelse?.toModellApi(),
     dagsats = dagsats?.toModellApi(),
-    høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg,
+    høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg?.toModellApi(),
     høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg,
     dagsatsMedBarnetillegg = dagsatsMedBarnetillegg,
     beløpMedBarnetillegg = beløpMedBarnetillegg,
     beløp = beløp,
     arbeidsprosent = arbeidsprosent,
+)
+
+internal fun Paragraf_11_19_3_leddKafkaDto.toModellApi() = Paragraf_11_19_3_leddModellApi(
+    dato = dato,
+    grunnlagsfaktor = grunnlagsfaktor,
+    grunnlag = grunnlag
 )
 
 internal fun Paragraf_11_20_2_ledd_2_punktum_KafkaDto.toModellApi() = Paragraf_11_20_2_ledd_2_punktum_ModellApi(
@@ -64,6 +70,12 @@ internal fun Paragraf_11_20_1_ledd_KafkaDto.toModellApi() = Paragraf_11_20_1_led
     faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
     inntektsgrunnlag = inntektsgrunnlag,
     årligytelse = årligytelse
+)
+
+internal fun Paragraf_11_20_6_leddKafkaDto.toModellApi() = Paragraf_11_20_6_leddModellApi(
+    maksFaktorAvGrunnlag = maksFaktorAvGrunnlag,
+    grunnlag = grunnlag,
+    høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg
 )
 
 internal fun OppdragKafkaDto.toModellApi() = OppdragModellApi(
@@ -140,15 +152,21 @@ internal fun UtbetalingstidslinjedagModellApi.toJson() = Utbetalingstidslinjedag
     dato = dato,
     grunnlagsfaktor = grunnlagsfaktor,
     barnetillegg = barnetillegg,
-    grunnlag = grunnlag,
+    grunnlag = grunnlag?.toKafkaDto(),
     årligYtelse = årligYtelse?.toKafkaDto(),
     dagsats = dagsats?.toKafkaDto(),
-    høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg,
+    høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg?.toKafkaDto(),
     høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg,
     dagsatsMedBarnetillegg = dagsatsMedBarnetillegg,
     beløpMedBarnetillegg = beløpMedBarnetillegg,
     beløp = beløp,
     arbeidsprosent = arbeidsprosent,
+)
+
+internal fun Paragraf_11_19_3_leddModellApi.toKafkaDto() = Paragraf_11_19_3_leddKafkaDto(
+    dato = dato,
+    grunnlagsfaktor = grunnlagsfaktor,
+    grunnlag = grunnlag
 )
 
 internal fun Paragraf_11_20_2_ledd_2_punktum_ModellApi.toKafkaDto() = Paragraf_11_20_2_ledd_2_punktum_KafkaDto(
@@ -161,6 +179,12 @@ internal fun Paragraf_11_20_1_ledd_ModellApi.toKafkaDto() = Paragraf_11_20_1_led
     faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
     inntektsgrunnlag = inntektsgrunnlag,
     årligytelse = årligytelse
+)
+
+internal fun Paragraf_11_20_6_leddModellApi.toKafkaDto() = Paragraf_11_20_6_leddKafkaDto(
+    maksFaktorAvGrunnlag = maksFaktorAvGrunnlag,
+    grunnlag = grunnlag,
+    høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg
 )
 
 internal fun OppdragModellApi.toJson() = OppdragKafkaDto(

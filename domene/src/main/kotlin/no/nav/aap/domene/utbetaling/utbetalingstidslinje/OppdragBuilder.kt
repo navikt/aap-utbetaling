@@ -38,8 +38,8 @@ internal class OppdragBuilder : UtbetalingstidslinjeVisitor {
                 Utbetalingslinje(
                     fom = it.fom,
                     tom = it.tom,
-                    beløp = it.beløp.toDto().roundToInt(),
-                    aktuellDagsinntekt = it.beløp.toDto().roundToInt(), //FIXME
+                    beløp = it.beløp.toModellApi().roundToInt(),
+                    aktuellDagsinntekt = it.beløp.toModellApi().roundToInt(), //FIXME
                     grad = 100 //FIXME
                 )
             }
