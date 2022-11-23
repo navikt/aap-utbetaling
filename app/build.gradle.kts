@@ -30,7 +30,7 @@ dependencies {
 
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
     implementation("com.fasterxml.jackson.core:jackson-core:2.14.0")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0")
 
     testImplementation(kotlin("test"))
