@@ -13,11 +13,13 @@ internal class Fødselsdato(private val dato: LocalDate) {
 
     internal fun erUnder18År(dato: LocalDate) = dato < `18ÅrsDagen`
 
-    internal fun justerGrunnlagsfaktorForAlder(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor): Grunnlagsfaktor {
-        val minsteGrunnlagsfaktorForAlder =
-            if (dato < `25ÅrsDagen`) MINSTE_GRUNNLAGSFAKTOR_UNDER_25_ÅR else MINSTE_GRUNNLAGSFAKTOR_OVER_25_ÅR
-        return maxOf(grunnlagsfaktor, minsteGrunnlagsfaktorForAlder)
-    }
+    internal fun justerGrunnlagsfaktorForAlder(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor): Grunnlagsfaktor =
+        when {
+            grunnlagsfaktor >= MINSTE_GRUNNLAGSFAKTOR_OVER_25_ÅR -> grunnlagsfaktor
+            dato >= `25ÅrsDagen` -> MINSTE_GRUNNLAGSFAKTOR_OVER_25_ÅR
+            grunnlagsfaktor >= MINSTE_GRUNNLAGSFAKTOR_UNDER_25_ÅR -> grunnlagsfaktor
+            else -> MINSTE_GRUNNLAGSFAKTOR_UNDER_25_ÅR
+        }
 
     internal fun toDto() = dato
 }
