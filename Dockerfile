@@ -9,7 +9,7 @@ RUN zip -d app.jar librocksdbjni-linux32.so librocksdbjni-linux32-musl.so libroc
 
 
 # Docker image on Alpine Linux with JRE 18 Temurin and C++ standard lib (for rocksdb)
-FROM eclipse-temurin:18.0.2_9-jre-alpine
+FROM eclipse-temurin:19.0.1_10-jre-alpine
 ENV LANG='nb_NO.UTF-8' LANGUAGE='nb_NO:nb' LC_ALL='nb:NO.UTF-8' TZ="Europe/Oslo"
 RUN apk --update --no-cache add libstdc++
 COPY --from=app app.jar .
