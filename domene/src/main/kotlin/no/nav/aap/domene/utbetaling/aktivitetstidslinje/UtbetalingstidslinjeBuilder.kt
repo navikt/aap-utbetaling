@@ -84,8 +84,8 @@ internal class UtbetalingstidslinjeBuilder(
 
     private fun opprettUtbetaling(dato: LocalDate) = Utbetalingstidslinjedag.Utbetalingsdag(
         dato = dato,
-        //TODO: Flytt kode for fastsetting av minstegrunnlag til Utbetalingstidslinjedag
-        grunnlagsfaktor = fødselsdato.justerGrunnlagsfaktorForAlder(dato, grunnlagsfaktor),
+        fødselsdato = fødselsdato,
+        grunnlagsfaktorVedtak = grunnlagsfaktor,
         barnetillegg = barnetillegg.barnetilleggForDag(dato)
     )
 

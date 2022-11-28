@@ -155,7 +155,9 @@ internal class GjenopprettTest {
                 if (dato.erHelg()) return@mapNotNull null
                 UtbetalingstidslinjedagModellApi.UtbetalingsdagModellApi(
                     dato = dato,
+                    fødselsdato = 1 januar 2000,
                     grunnlagsfaktor = 4.0,
+                    grunnlagsfaktorJustertForAlder = 4.0,
                     barnetillegg = 0.0,
                     grunnlag = Paragraf_11_19_3_leddModellApi(dato, 4.0, 445908.0),
                     årligYtelse = Paragraf_11_20_1_ledd_ModellApi(0.66, 445908.0, 294299.28),

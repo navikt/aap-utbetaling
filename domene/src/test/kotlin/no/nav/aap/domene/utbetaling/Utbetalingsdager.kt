@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling
 
+import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjedag
 import java.time.LocalDate
@@ -17,11 +18,17 @@ internal object Utbetalingsdager {
     }
 
     internal val Int.U get() = U()
-    internal fun Int.U(grunnlagsfaktor: Number = 3, arbeidsprosent: Number = 1, barn: List<Barnetillegg.Barn> = emptyList()) = (1..this)
+    internal fun Int.U(
+        grunnlagsfaktor: Number = 3,
+        fødselsdato: LocalDate = 1 januar 2004,
+        arbeidsprosent: Number = 1,
+        barn: List<Barnetillegg.Barn> = emptyList()
+    ) = (1..this)
         .map {
             val dato = seed
             Utbetalingstidslinjedag.Utbetalingsdag(
                 dato,
+                Fødselsdato(fødselsdato),
                 Grunnlagsfaktor(grunnlagsfaktor),
                 Barnetillegg().apply { leggTilBarn(barn) }.barnetilleggForDag(dato)
             ).apply {

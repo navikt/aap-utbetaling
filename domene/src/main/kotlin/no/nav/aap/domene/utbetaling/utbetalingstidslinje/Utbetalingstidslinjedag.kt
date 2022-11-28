@@ -3,6 +3,7 @@ package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 import no.nav.aap.domene.utbetaling.Barnetillegg
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
+import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjedagModellApi
 import no.nav.aap.domene.utbetaling.visitor.UtbetalingsdagVisitor
@@ -27,13 +28,15 @@ internal sealed class Utbetalingstidslinjedag(
     internal abstract fun toModellApi(): UtbetalingstidslinjedagModellApi
 
     //TODO: Gå gjennom hvilke beløp som skal rundes av
-    //TODO: Flytt kode for fastsetting av minstegrunnlag (2G) inn hit
     internal class Utbetalingsdag private constructor(
         dato: LocalDate,
         private val barnetillegg: Beløp,
+        private val fødselsdato: Fødselsdato,
         private val grunnlagsfaktor: Grunnlagsfaktor,
+        private val grunnlagsfaktorJustertForAlder: Grunnlagsfaktor =
+            fødselsdato.justerGrunnlagsfaktorForAlder(dato, grunnlagsfaktor),
         //§11-19 3. ledd
-        private val grunnlag: Paragraf_11_19_3_ledd = Paragraf_11_19_3_ledd(dato, grunnlagsfaktor),
+        private val grunnlag: Paragraf_11_19_3_ledd = Paragraf_11_19_3_ledd(dato, grunnlagsfaktorJustertForAlder),
         private val årligYtelse: Paragraf_11_20_1_ledd = Paragraf_11_20_1_ledd(grunnlag),
         private val dagsats: Paragraf_11_20_2_ledd_2_punktum = Paragraf_11_20_2_ledd_2_punktum(årligYtelse),
 
@@ -53,12 +56,14 @@ internal sealed class Utbetalingstidslinjedag(
 
         internal constructor(
             dato: LocalDate,
-            grunnlagsfaktor: Grunnlagsfaktor,
+            fødselsdato: Fødselsdato,
+            grunnlagsfaktorVedtak: Grunnlagsfaktor,
             barnetillegg: Beløp
         ) : this(
             dato,
             barnetillegg,
-            grunnlagsfaktor,
+            fødselsdato,
+            grunnlagsfaktorVedtak,
         )
 
         internal companion object {
@@ -88,7 +93,9 @@ internal sealed class Utbetalingstidslinjedag(
                 )
                 val utbetalingsdag = Utbetalingsdag(
                     dato = utbetalingstidslinjedagModellApi.dato,
+                    fødselsdato = Fødselsdato(utbetalingstidslinjedagModellApi.fødselsdato),
                     grunnlagsfaktor = Grunnlagsfaktor(requireNotNull(utbetalingstidslinjedagModellApi.grunnlagsfaktor)),
+                    grunnlagsfaktorJustertForAlder = Grunnlagsfaktor(requireNotNull(utbetalingstidslinjedagModellApi.grunnlagsfaktorJustertForAlder)),
                     barnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.barnetillegg).beløp,
                     grunnlag = grunnlag,
                     årligYtelse = årligYtelse,
@@ -117,7 +124,9 @@ internal sealed class Utbetalingstidslinjedag(
 
         override fun toModellApi() = UtbetalingstidslinjedagModellApi.UtbetalingsdagModellApi(
             dato = dato,
+            fødselsdato = fødselsdato.toDto(),
             grunnlagsfaktor = grunnlagsfaktor.toModellApi(),
+            grunnlagsfaktorJustertForAlder = grunnlagsfaktorJustertForAlder.toModellApi(),
             barnetillegg = barnetillegg.toModellApi(),
             grunnlag = grunnlag.toModellApi(),
             årligYtelse = årligYtelse.toModellApi(),

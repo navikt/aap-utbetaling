@@ -3,20 +3,16 @@ package no.nav.aap.app.kafka
 import no.nav.aap.dto.kafka.ForrigeMottakereKafkaDto
 import no.nav.aap.dto.kafka.ForrigeMottakereKafkaDto.*
 import no.nav.aap.dto.kafka.MottakereKafkaDto
+import java.time.LocalDate
 
 internal fun ForrigeMottakereKafkaDto.toKafkaDto() = MottakereKafkaDto(
     personident = personident,
     fødselsdato = fødselsdato,
     vedtakshistorikk = vedtakshistorikk.map(VedtakKafkaDto::toKafkaDto),
     aktivitetstidslinje = aktivitetstidslinje.map(MeldeperiodeKafkaDto::toKafkaDto),
-    utbetalingstidslinjehistorikk = utbetalingstidslinjehistorikk.map(UtbetalingstidslinjeKafkaDto::toKafkaDto),
+    utbetalingstidslinjehistorikk = utbetalingstidslinjehistorikk.map { it.toKafkaDto(fødselsdato) },
     oppdragshistorikk = oppdragshistorikk.map(OppdragKafkaDto::toKafkaDto),
-    //TODO: Fjern kode du ikke forstår før neste migrering
-    barnetillegg = barnetillegg
-        .map(BarnaKafkaDto::toKafkaDto)
-        .takeIf(List<MottakereKafkaDto.BarnaKafkaDto>::isNotEmpty)
-        ?: if (utbetalingstidslinjehistorikk.isNotEmpty()) listOf(MottakereKafkaDto.BarnaKafkaDto(emptyList()))
-        else emptyList(),
+    barnetillegg = barnetillegg.map(BarnaKafkaDto::toKafkaDto),
     tilstand = tilstand,
 )
 
@@ -39,20 +35,24 @@ internal fun DagKafkaDto.toKafkaDto() = MottakereKafkaDto.DagKafkaDto(
     type = type
 )
 
-internal fun UtbetalingstidslinjeKafkaDto.toKafkaDto() = MottakereKafkaDto.UtbetalingstidslinjeKafkaDto(
-    dager = dager.map(UtbetalingstidslinjedagKafkaDto::toKafkaDto)
+internal fun UtbetalingstidslinjeKafkaDto.toKafkaDto(fødselsdato: LocalDate) = MottakereKafkaDto.UtbetalingstidslinjeKafkaDto(
+    dager = dager.map { it.toKafkaDto(fødselsdato) }
 )
 
-internal fun UtbetalingstidslinjedagKafkaDto.toKafkaDto() =
+internal fun UtbetalingstidslinjedagKafkaDto.toKafkaDto(fødselsdato: LocalDate) =
     MottakereKafkaDto.UtbetalingstidslinjedagKafkaDto(
-        utbetalingsdag = utbetalingsdag?.toKafkaDto(),
+        utbetalingsdag = utbetalingsdag?.toKafkaDto(fødselsdato),
         ikkeUtbetalingsdag = ikkeUtbetalingsdag?.toKafkaDto(),
     )
 
-internal fun UtbetalingstidslinjedagKafkaDto.UtbetalingsdagKafkaDto.toKafkaDto() =
+//FIXME: Fjern fødselsdato-parameter
+internal fun UtbetalingstidslinjedagKafkaDto.UtbetalingsdagKafkaDto.toKafkaDto(fødselsdato: LocalDate) =
     MottakereKafkaDto.UtbetalingstidslinjedagKafkaDto.UtbetalingsdagKafkaDto(
         dato = dato,
+        //FIXME: Hent fødselsdato fra utbetalingsdag, og ikke fra parameter
+        fødselsdato = fødselsdato,
         grunnlagsfaktor = grunnlagsfaktor,
+        grunnlagsfaktorJustertForAlder = grunnlagsfaktor,
         barnetillegg = barnetillegg,
         grunnlag = grunnlag.toKafkaDto(),
         årligYtelse = årligYtelse.toKafkaDto(),

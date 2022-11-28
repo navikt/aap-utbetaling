@@ -42,7 +42,9 @@ internal fun UtbetalingstidslinjedagKafkaDto.toModellApi() =
 internal fun UtbetalingstidslinjedagKafkaDto.UtbetalingsdagKafkaDto.toModellApi() =
     UtbetalingstidslinjedagModellApi.UtbetalingsdagModellApi(
         dato = dato,
+        fødselsdato = fødselsdato,
         grunnlagsfaktor = grunnlagsfaktor,
+        grunnlagsfaktorJustertForAlder = grunnlagsfaktorJustertForAlder,
         barnetillegg = barnetillegg,
         grunnlag = grunnlag.toModellApi(),
         årligYtelse = årligYtelse.toModellApi(),
@@ -174,7 +176,9 @@ internal fun UtbetalingstidslinjedagModellApi.UtbetalingsdagModellApi.toKafkaDto
     UtbetalingstidslinjedagKafkaDto(
         utbetalingsdag = UtbetalingstidslinjedagKafkaDto.UtbetalingsdagKafkaDto(
             dato = dato,
+            fødselsdato = fødselsdato,
             grunnlagsfaktor = grunnlagsfaktor,
+            grunnlagsfaktorJustertForAlder = grunnlagsfaktorJustertForAlder,
             barnetillegg = barnetillegg,
             grunnlag = grunnlag.toKafkaDto(),
             årligYtelse = årligYtelse.toKafkaDto(),

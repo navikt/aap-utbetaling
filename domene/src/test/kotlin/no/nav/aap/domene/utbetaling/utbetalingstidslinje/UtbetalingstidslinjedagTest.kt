@@ -52,11 +52,12 @@ internal class UtbetalingstidslinjedagTest {
     fun `Dagsats inkludert barnetillegg begrenses oppad til 90 prosent av grunnlaget`() {
         val visitor = TestDagVisitor()
         val dager = 1.U(
-            grunnlagsfaktor = 2,
+            grunnlagsfaktor = 2.1,
+            fødselsdato = 1 januar 2004,
             arbeidsprosent = 0,
             barn = (1..14).map { Barnetillegg.Barn(Fødselsdato(3 januar 2017)) })
         dager.forEach { it.accept(visitor) }
-        assertEquals(736.61.beløp, visitor.dagbeløp)
+        assertEquals(773.44.beløp, visitor.dagbeløp)
     }
 
     private class TestDagVisitor : UtbetalingsdagVisitor {

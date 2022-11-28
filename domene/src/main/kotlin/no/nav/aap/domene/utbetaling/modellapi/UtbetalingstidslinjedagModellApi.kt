@@ -18,7 +18,9 @@ sealed class UtbetalingstidslinjedagModellApi {
 
     data class UtbetalingsdagModellApi(
         val dato: LocalDate,
+        val fødselsdato: LocalDate,
         val grunnlagsfaktor: Double,
+        val grunnlagsfaktorJustertForAlder: Double,
         val barnetillegg: Double,
         val grunnlag: Paragraf_11_19_3_leddModellApi,
         val årligYtelse: Paragraf_11_20_1_ledd_ModellApi,
