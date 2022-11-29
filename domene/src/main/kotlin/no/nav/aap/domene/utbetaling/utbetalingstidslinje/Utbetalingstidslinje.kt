@@ -1,6 +1,5 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
-import no.nav.aap.domene.utbetaling.Barnetillegg
 import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjeModellApi
 import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjedagModellApi
 import no.nav.aap.domene.utbetaling.visitor.UtbetalingstidslinjeVisitor
@@ -17,10 +16,6 @@ internal class Utbetalingstidslinje(
 
     internal fun arbeidsprosent(arbeidsprosent: Double) {
         dager.forEach { it.arbeidsprosent(arbeidsprosent) }
-    }
-
-    internal fun barnetillegg(barnetillegg: Barnetillegg) {
-        dager.forEach { it.barnetillegg(barnetillegg) }
     }
 
     internal operator fun plus(dag: Utbetalingstidslinjedag) = Utbetalingstidslinje(this.dager + dag)

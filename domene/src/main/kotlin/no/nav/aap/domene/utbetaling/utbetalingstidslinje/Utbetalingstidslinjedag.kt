@@ -1,6 +1,5 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
-import no.nav.aap.domene.utbetaling.Barnetillegg
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
@@ -14,7 +13,6 @@ internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
     protected var arbeidsprosent: Double = Double.NaN
 
     internal abstract fun arbeidsprosent(arbeidsprosent: Double)
-    internal open fun barnetillegg(barnetillegg: Barnetillegg) {}
 
     internal abstract fun accept(visitor: UtbetalingsdagVisitor)
     internal abstract fun toModellApi(): UtbetalingstidslinjedagModellApi

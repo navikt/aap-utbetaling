@@ -1,6 +1,5 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
-import no.nav.aap.domene.utbetaling.Barnetillegg
 import no.nav.aap.domene.utbetaling.Oppdragshistorikk
 import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjeModellApi
 import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
@@ -19,10 +18,6 @@ internal class Utbetalingstidslinjehistorikk(
 
     internal fun add(utbetalingstidslinje: Utbetalingstidslinje) {
         utbetalingstidslinjer.add(utbetalingstidslinje)
-    }
-
-    internal fun barnetillegg(barnetillegg: Barnetillegg) {
-        sisteUtbetalingstidslinje.barnetillegg(barnetillegg)
     }
 
     internal fun accept(visitor: MottakerVisitor) {

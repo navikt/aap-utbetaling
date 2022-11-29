@@ -1,7 +1,6 @@
 package no.nav.aap.domene.utbetaling
 
 import no.nav.aap.domene.utbetaling.aktivitetstidslinje.Aktivitetstidslinje
-import no.nav.aap.domene.utbetaling.modellapi.MottakerModellApi
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Personident
 import no.nav.aap.domene.utbetaling.hendelse.Hendelse
@@ -9,6 +8,7 @@ import no.nav.aap.domene.utbetaling.hendelse.Meldepliktshendelse
 import no.nav.aap.domene.utbetaling.hendelse.Vedtakshendelse
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningBarn
 import no.nav.aap.domene.utbetaling.hendelse.løsning.LøsningInstitusjon
+import no.nav.aap.domene.utbetaling.modellapi.MottakerModellApi
 import no.nav.aap.domene.utbetaling.observer.MottakerObserver
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjehistorikk
 import no.nav.aap.domene.utbetaling.visitor.MottakerVisitor
@@ -90,7 +90,6 @@ internal class Mottaker private constructor(
         val builder = vedtakshistorikk.utbetalingstidslinjeBuilder(barnetillegg)
         val utbetalingstidslinje = builder.build(aktivitetstidslinje)
         utbetalingstidslinjehistorikk.add(utbetalingstidslinje)
-        utbetalingstidslinjehistorikk.barnetillegg(barnetillegg)
         utbetalingstidslinjehistorikk.byggOppdrag(oppdragshistorikk)
     }
 
