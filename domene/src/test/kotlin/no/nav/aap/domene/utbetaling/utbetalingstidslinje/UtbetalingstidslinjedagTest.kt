@@ -63,7 +63,7 @@ internal class UtbetalingstidslinjedagTest {
     private class TestDagVisitor : UtbetalingsdagVisitor {
         lateinit var dagbeløp: Beløp
 
-        override fun visitUtbetalingMedBeløp(dag: Utbetalingstidslinjedag.Utbetalingsdag, dato: LocalDate, beløp: Beløp) {
+        override fun visitUtbetaling(dag: Utbetalingstidslinjedag.Utbetalingsdag, dato: LocalDate, beløp: Beløp) {
             this.dagbeløp = beløp
         }
 

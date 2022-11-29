@@ -9,8 +9,8 @@ import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.november
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinje
-import no.nav.aap.domene.utbetaling.visitor.UtbetalingstidslinjeVisitor
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjedag
+import no.nav.aap.domene.utbetaling.visitor.UtbetalingstidslinjeVisitor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -215,7 +215,7 @@ internal class UtbetalingstidslinjeBuilderTest {
         var antallUtbetalingsdager: Int = 0
         var antallIkkeUtbetalingsdager: Int = 0
 
-        override fun visitUtbetalingMedBeløp(dag: Utbetalingstidslinjedag.Utbetalingsdag, dato: LocalDate, beløp: Beløp) {
+        override fun visitUtbetaling(dag: Utbetalingstidslinjedag.Utbetalingsdag, dato: LocalDate, beløp: Beløp) {
             antallUtbetalingsdager++
         }
 

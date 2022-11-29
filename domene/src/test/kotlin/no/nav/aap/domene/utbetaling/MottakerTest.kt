@@ -684,11 +684,7 @@ internal class MottakerTest {
             antallIkkeUtbetalingsdagerIUtbetalingstidslinje[utbetalingstidslinjeIndex] = 0
         }
 
-        override fun visitUtbetaling(dag: Utbetalingstidslinjedag.Utbetalingsdag, dato: LocalDate) {
-            antallUtbetalingsdagerUtenBeløpIUtbetalingstidslinje.computeIfPresent(utbetalingstidslinjeIndex) { _, old -> old + 1 }
-        }
-
-        override fun visitUtbetalingMedBeløp(
+        override fun visitUtbetaling(
             dag: Utbetalingstidslinjedag.Utbetalingsdag,
             dato: LocalDate,
             beløp: Beløp

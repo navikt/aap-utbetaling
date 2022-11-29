@@ -9,15 +9,7 @@ import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjedagModellApi
 import no.nav.aap.domene.utbetaling.visitor.UtbetalingsdagVisitor
 import java.time.LocalDate
 
-internal sealed class Utbetalingstidslinjedag(
-    protected val dato: LocalDate,
-    protected val dagtype: Type,
-) {
-
-    protected enum class Type {
-        UTBETALINGSDAG,
-        IKKE_UTBETALINGSDAG,
-    }
+internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
 
     protected var arbeidsprosent: Double = Double.NaN
 
@@ -50,7 +42,7 @@ internal sealed class Utbetalingstidslinjedag(
         //§11-20 6. ledd
         private val beløpMedBarnetillegg: Beløp = minOf(høyesteBeløpMedBarnetillegg, dagsatsMedBarnetillegg),
 
-        ) : Utbetalingstidslinjedag(dato, Type.UTBETALINGSDAG) {
+        ) : Utbetalingstidslinjedag(dato) {
 
         private lateinit var beløp: Beløp
 
@@ -119,7 +111,7 @@ internal sealed class Utbetalingstidslinjedag(
         }
 
         override fun accept(visitor: UtbetalingsdagVisitor) {
-            visitor.visitUtbetalingMedBeløp(this, dato, beløp)
+            visitor.visitUtbetaling(this, dato, beløp)
         }
 
         override fun toModellApi() = UtbetalingstidslinjedagModellApi.UtbetalingsdagModellApi(
@@ -140,7 +132,7 @@ internal sealed class Utbetalingstidslinjedag(
         )
     }
 
-    internal class IkkeUtbetalingsdag(dato: LocalDate) : Utbetalingstidslinjedag(dato, Type.IKKE_UTBETALINGSDAG) {
+    internal class IkkeUtbetalingsdag(dato: LocalDate) : Utbetalingstidslinjedag(dato) {
 
         internal companion object {
             internal fun gjenopprett(utbetalingstidslinjedagModellApi: UtbetalingstidslinjedagModellApi.IkkeUtbetalingsdagModellApi): IkkeUtbetalingsdag {
