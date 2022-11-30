@@ -22,7 +22,7 @@ data class MottakereKafkaDto(
     private var erMigrertAkkuratNå: Boolean = false
 
     companion object {
-        const val VERSION = 7
+        const val VERSION = 8
         const val INIT_SEKVENS = 0L
     }
 
@@ -63,8 +63,8 @@ data class MottakereKafkaDto(
             val årligYtelse: Paragraf_11_20_1_ledd_KafkaDto,
             val dagsats: Paragraf_11_20_2_ledd_2_punktum_KafkaDto,
             val høyesteÅrligYtelseMedBarnetillegg: Paragraf_11_20_6_leddKafkaDto,
-            val høyesteBeløpMedBarnetillegg: Double,
-            val dagsatsMedBarnetillegg: Double,
+            val høyesteBeløpMedBarnetillegg: Paragraf_11_20_2_ledd_2_punktum_KafkaDto,
+            val dagsatsMedBarnetillegg: Paragraf_11_20_3_5_ledd_KafkaDto,
             val beløpMedBarnetillegg: Double,
             val beløp: Double,
             val arbeidsprosent: Double
@@ -93,6 +93,12 @@ data class MottakereKafkaDto(
         val antallDagerMedUtbetalingPerÅr: Int,
         val årligYtelse: Double,
         val dagsats: Double
+    )
+
+    data class Paragraf_11_20_3_5_ledd_KafkaDto(
+        val dagsats: Double,
+        val barnetillegg: Double,
+        val beløp: Double,
     )
 
     data class Paragraf_11_20_6_leddKafkaDto(

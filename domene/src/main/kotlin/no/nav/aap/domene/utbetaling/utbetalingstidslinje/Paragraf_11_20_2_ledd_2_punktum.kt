@@ -16,7 +16,9 @@ internal class Paragraf_11_20_2_ledd_2_punktum private constructor(
         dagsats = årligYtelse / ANTALL_DAGER_MED_UTBETALING_PER_ÅR
     )
 
-    internal operator fun plus(barnetillegg: Beløp) = dagsats + barnetillegg
+    internal fun medBarnetillegg(barnetillegg: Beløp) = Paragraf_11_20_3_5_ledd(dagsats, barnetillegg)
+
+    internal fun begrensTil(beløp: Beløp) = minOf(dagsats, beløp)
 
     internal fun toModellApi() = Paragraf_11_20_2_ledd_2_punktum_ModellApi(
         antallDagerMedUtbetalingPerÅr = antallDagerMedUtbetalingPerÅr,

@@ -26,8 +26,8 @@ sealed class UtbetalingstidslinjedagModellApi {
         val årligYtelse: Paragraf_11_20_1_ledd_ModellApi,
         val dagsats: Paragraf_11_20_2_ledd_2_punktum_ModellApi,
         val høyesteÅrligYtelseMedBarnetillegg: Paragraf_11_20_6_leddModellApi,
-        val høyesteBeløpMedBarnetillegg: Double,
-        val dagsatsMedBarnetillegg: Double,
+        val høyesteBeløpMedBarnetillegg: Paragraf_11_20_2_ledd_2_punktum_ModellApi,
+        val dagsatsMedBarnetillegg: Paragraf_11_20_3_5_ledd_ModellApi,
         val beløpMedBarnetillegg: Double,
         val beløp: Double,
         val arbeidsprosent: Double

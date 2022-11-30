@@ -17,6 +17,8 @@ internal class Paragraf_11_20_6_ledd(
 
     internal operator fun div(nevner: Number) = høyesteÅrligYtelseMedBarnetillegg / nevner
 
+    internal fun høyesteBeløpMedBarnetillegg() = Paragraf_11_20_2_ledd_2_punktum(høyesteÅrligYtelseMedBarnetillegg)
+
     internal fun toModellApi() = Paragraf_11_20_6_leddModellApi(
         maksFaktorAvGrunnlag = maksFaktorAvGrunnlag,
         grunnlag = grunnlag.toModellApi(),

@@ -33,12 +33,12 @@ internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
         private val høyesteÅrligYtelseMedBarnetillegg: Paragraf_11_20_6_ledd = grunnlag.høyesteÅrligYtelseMedBarnetillegg(),
         //§11-20 2. ledd 2. punktum
         //TODO: Denne også heltall?
-        private val høyesteBeløpMedBarnetillegg: Beløp = høyesteÅrligYtelseMedBarnetillegg / ANTALL_DAGER_MED_UTBETALING_PER_ÅR,
+        private val høyesteBeløpMedBarnetillegg: Paragraf_11_20_2_ledd_2_punktum = høyesteÅrligYtelseMedBarnetillegg.høyesteBeløpMedBarnetillegg(),
 
         //§11-20 3.-5. ledd
-        private val dagsatsMedBarnetillegg: Beløp = dagsats + barnetillegg,
+        private val dagsatsMedBarnetillegg: Paragraf_11_20_3_5_ledd = dagsats.medBarnetillegg(barnetillegg),
         //§11-20 6. ledd
-        private val beløpMedBarnetillegg: Beløp = minOf(høyesteBeløpMedBarnetillegg, dagsatsMedBarnetillegg),
+        private val beløpMedBarnetillegg: Beløp = dagsatsMedBarnetillegg.begrensTil(høyesteBeløpMedBarnetillegg),
 
         ) : Utbetalingstidslinjedag(dato) {
 
@@ -92,8 +92,20 @@ internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
                     årligYtelse = årligYtelse,
                     dagsats = dagsats,
                     høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg,
-                    høyesteBeløpMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.høyesteBeløpMedBarnetillegg).beløp,
-                    dagsatsMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.dagsatsMedBarnetillegg).beløp,
+                    høyesteBeløpMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.høyesteBeløpMedBarnetillegg).let {
+                        Paragraf_11_20_2_ledd_2_punktum.gjenopprett(
+                            antallDagerMedUtbetalingPerÅr = it.antallDagerMedUtbetalingPerÅr,
+                            årligYtelse = it.årligYtelse.beløp,
+                            dagsats = it.dagsats.beløp,
+                        )
+                    },
+                    dagsatsMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.dagsatsMedBarnetillegg).let {
+                        Paragraf_11_20_3_5_ledd.gjenopprett(
+                            dagsats = it.dagsats.beløp,
+                            barnetillegg = it.barnetillegg.beløp,
+                            beløp = it.beløp.beløp,
+                        )
+                    },
                     beløpMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.beløpMedBarnetillegg).beløp,
                 )
 

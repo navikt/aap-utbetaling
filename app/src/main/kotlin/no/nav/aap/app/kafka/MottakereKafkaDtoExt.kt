@@ -50,8 +50,8 @@ internal fun UtbetalingstidslinjedagKafkaDto.UtbetalingsdagKafkaDto.toModellApi(
         årligYtelse = årligYtelse.toModellApi(),
         dagsats = dagsats.toModellApi(),
         høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg.toModellApi(),
-        høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg,
-        dagsatsMedBarnetillegg = dagsatsMedBarnetillegg,
+        høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg.toModellApi(),
+        dagsatsMedBarnetillegg = dagsatsMedBarnetillegg.toModellApi(),
         beløpMedBarnetillegg = beløpMedBarnetillegg,
         beløp = beløp,
         arbeidsprosent = arbeidsprosent,
@@ -80,6 +80,12 @@ internal fun Paragraf_11_20_1_ledd_KafkaDto.toModellApi() = Paragraf_11_20_1_led
     faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
     grunnlag = grunnlag,
     årligytelse = årligytelse
+)
+
+internal fun Paragraf_11_20_3_5_ledd_KafkaDto.toModellApi() = Paragraf_11_20_3_5_ledd_ModellApi(
+    dagsats = dagsats,
+    barnetillegg = barnetillegg,
+    beløp = beløp
 )
 
 internal fun Paragraf_11_20_6_leddKafkaDto.toModellApi() = Paragraf_11_20_6_leddModellApi(
@@ -185,8 +191,8 @@ internal fun UtbetalingstidslinjedagModellApi.UtbetalingsdagModellApi.toKafkaDto
             årligYtelse = årligYtelse.toKafkaDto(),
             dagsats = dagsats.toKafkaDto(),
             høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg.toKafkaDto(),
-            høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg,
-            dagsatsMedBarnetillegg = dagsatsMedBarnetillegg,
+            høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg.toKafkaDto(),
+            dagsatsMedBarnetillegg = dagsatsMedBarnetillegg.toKafkaDto(),
             beløpMedBarnetillegg = beløpMedBarnetillegg,
             beløp = beløp,
             arbeidsprosent = arbeidsprosent,
@@ -220,6 +226,12 @@ internal fun Paragraf_11_20_1_ledd_ModellApi.toKafkaDto() = Paragraf_11_20_1_led
     faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
     grunnlag = grunnlag,
     årligytelse = årligytelse
+)
+
+internal fun Paragraf_11_20_3_5_ledd_ModellApi.toKafkaDto() = Paragraf_11_20_3_5_ledd_KafkaDto(
+    dagsats = dagsats,
+    barnetillegg = barnetillegg,
+    beløp = beløp
 )
 
 internal fun Paragraf_11_20_6_leddModellApi.toKafkaDto() = Paragraf_11_20_6_leddKafkaDto(

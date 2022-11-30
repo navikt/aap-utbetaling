@@ -75,7 +75,7 @@ data class ForrigeMottakereKafkaDto(
 
     data class Paragraf_11_20_1_ledd_KafkaDto(
         val faktorForReduksjonAvGrunnlag: Double,
-        val inntektsgrunnlag: Double,
+        val grunnlag: Double,
         val årligytelse: Double
     )
 
