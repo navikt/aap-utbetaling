@@ -5,12 +5,12 @@ import no.nav.aap.domene.utbetaling.modellapi.Paragraf_11_20_2_ledd_2_punktum_Mo
 
 internal class Paragraf_11_20_2_ledd_2_punktum private constructor(
     private val antallDagerMedUtbetalingPerÅr: Int,
-    private val årligYtelse: Paragraf_11_20_1_ledd,
+    private val årligYtelse: Beløp,
     //TODO: Heltall??
     private val dagsats: Beløp
 ) {
 
-    internal constructor(årligYtelse: Paragraf_11_20_1_ledd) : this(
+    internal constructor(årligYtelse: Beløp) : this(
         antallDagerMedUtbetalingPerÅr = ANTALL_DAGER_MED_UTBETALING_PER_ÅR,
         årligYtelse = årligYtelse,
         dagsats = årligYtelse / ANTALL_DAGER_MED_UTBETALING_PER_ÅR
@@ -20,7 +20,7 @@ internal class Paragraf_11_20_2_ledd_2_punktum private constructor(
 
     internal fun toModellApi() = Paragraf_11_20_2_ledd_2_punktum_ModellApi(
         antallDagerMedUtbetalingPerÅr = antallDagerMedUtbetalingPerÅr,
-        årligYtelse = årligYtelse.toModellApi().årligytelse,
+        årligYtelse = årligYtelse.toModellApi(),
         dagsats = dagsats.toModellApi()
     )
 
@@ -29,7 +29,7 @@ internal class Paragraf_11_20_2_ledd_2_punktum private constructor(
 
         internal fun gjenopprett(
             antallDagerMedUtbetalingPerÅr: Int,
-            årligYtelse: Paragraf_11_20_1_ledd,
+            årligYtelse: Beløp,
             dagsats: Beløp
         ) = Paragraf_11_20_2_ledd_2_punktum(
             antallDagerMedUtbetalingPerÅr = antallDagerMedUtbetalingPerÅr,

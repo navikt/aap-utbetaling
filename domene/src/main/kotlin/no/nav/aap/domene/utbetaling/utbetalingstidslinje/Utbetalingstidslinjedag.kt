@@ -28,7 +28,7 @@ internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
         //§11-19 3. ledd
         private val grunnlag: Paragraf_11_19_3_ledd = Paragraf_11_19_3_ledd(dato, grunnlagsfaktorJustertForAlder),
         private val årligYtelse: Paragraf_11_20_1_ledd = grunnlag.årligYtelse(),
-        private val dagsats: Paragraf_11_20_2_ledd_2_punktum = Paragraf_11_20_2_ledd_2_punktum(årligYtelse),
+        private val dagsats: Paragraf_11_20_2_ledd_2_punktum = årligYtelse.dagsats(),
 
         private val høyesteÅrligYtelseMedBarnetillegg: Paragraf_11_20_6_ledd = Paragraf_11_20_6_ledd(grunnlag),
         //§11-20 2. ledd 2. punktum
@@ -74,7 +74,7 @@ internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
 
                 val dagsats = Paragraf_11_20_2_ledd_2_punktum.gjenopprett(
                     antallDagerMedUtbetalingPerÅr = requireNotNull(utbetalingstidslinjedagModellApi.dagsats).antallDagerMedUtbetalingPerÅr,
-                    årligYtelse = årligYtelse,
+                    årligYtelse = requireNotNull(utbetalingstidslinjedagModellApi.dagsats).årligYtelse.beløp,
                     dagsats = requireNotNull(utbetalingstidslinjedagModellApi.dagsats).dagsats.beløp,
                 )
                 val høyesteÅrligYtelseMedBarnetillegg = Paragraf_11_20_6_ledd.gjenopprett(

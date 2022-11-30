@@ -15,7 +15,7 @@ internal class Paragraf_11_20_1_ledd private constructor(
         årligYtelse = grunnlag * FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG
     )
 
-    internal operator fun div(nevner: Number) = årligYtelse / nevner
+    internal fun dagsats() = Paragraf_11_20_2_ledd_2_punktum(årligYtelse)
 
     internal fun toModellApi() = Paragraf_11_20_1_ledd_ModellApi(
         faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
