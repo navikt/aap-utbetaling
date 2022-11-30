@@ -45,7 +45,9 @@ data class ForrigeMottakereKafkaDto(
     ) {
         data class UtbetalingsdagKafkaDto(
             val dato: LocalDate,
+            val fødselsdato: LocalDate,
             val grunnlagsfaktor: Double,
+            val grunnlagsfaktorJustertForAlder: Double,
             val barnetillegg: Double,
             val grunnlag: Paragraf_11_19_3_leddKafkaDto,
             val årligYtelse: Paragraf_11_20_1_ledd_KafkaDto,

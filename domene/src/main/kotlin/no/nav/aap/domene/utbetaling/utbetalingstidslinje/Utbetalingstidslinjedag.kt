@@ -63,23 +63,24 @@ internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
                 val grunnlag = Paragraf_11_19_3_ledd.gjenopprett(
                     dato = requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).dato,
                     grunnlagsfaktor = Grunnlagsfaktor(requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).grunnlagsfaktor),
-                    grunnlag = requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).grunnlag.beløp
+                    grunnbeløp = requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).grunnbeløp.beløp,
+                    grunnlag = requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).grunnlag.beløp,
                 )
                 val årligYtelse = Paragraf_11_20_1_ledd.gjenopprett(
                     faktorForReduksjonAvGrunnlag = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).faktorForReduksjonAvGrunnlag,
                     inntektsgrunnlag = grunnlag,
-                    årligYtelse = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).årligytelse.beløp
+                    årligYtelse = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).årligytelse.beløp,
                 )
 
                 val dagsats = Paragraf_11_20_2_ledd_2_punktum.gjenopprett(
                     antallDagerMedUtbetalingPerÅr = requireNotNull(utbetalingstidslinjedagModellApi.dagsats).antallDagerMedUtbetalingPerÅr,
                     årligYtelse = årligYtelse,
-                    dagsats = requireNotNull(utbetalingstidslinjedagModellApi.dagsats).dagsats.beløp
+                    dagsats = requireNotNull(utbetalingstidslinjedagModellApi.dagsats).dagsats.beløp,
                 )
                 val høyesteÅrligYtelseMedBarnetillegg = Paragraf_11_20_6_ledd.gjenopprett(
                     maksFaktorAvGrunnlag = requireNotNull(utbetalingstidslinjedagModellApi.høyesteÅrligYtelseMedBarnetillegg).maksFaktorAvGrunnlag,
                     grunnlag = grunnlag,
-                    høyesteÅrligYtelseMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.høyesteÅrligYtelseMedBarnetillegg).høyesteÅrligYtelseMedBarnetillegg.beløp
+                    høyesteÅrligYtelseMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.høyesteÅrligYtelseMedBarnetillegg).høyesteÅrligYtelseMedBarnetillegg.beløp,
                 )
                 val utbetalingsdag = Utbetalingsdag(
                     dato = utbetalingstidslinjedagModellApi.dato,

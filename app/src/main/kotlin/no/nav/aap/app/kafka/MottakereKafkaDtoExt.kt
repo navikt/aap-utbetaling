@@ -66,6 +66,7 @@ internal fun UtbetalingstidslinjedagKafkaDto.IkkeUtbetalingsdagKafkaDto.toModell
 internal fun Paragraf_11_19_3_leddKafkaDto.toModellApi() = Paragraf_11_19_3_leddModellApi(
     dato = dato,
     grunnlagsfaktor = grunnlagsfaktor,
+    grunnbeløp = grunnbeløp,
     grunnlag = grunnlag
 )
 
@@ -205,6 +206,7 @@ internal fun UtbetalingstidslinjedagModellApi.IkkeUtbetalingsdagModellApi.toKafk
 internal fun Paragraf_11_19_3_leddModellApi.toKafkaDto() = Paragraf_11_19_3_leddKafkaDto(
     dato = dato,
     grunnlagsfaktor = grunnlagsfaktor,
+    grunnbeløp = grunnbeløp,
     grunnlag = grunnlag
 )
 
