@@ -5,11 +5,11 @@ import no.nav.aap.domene.utbetaling.modellapi.Paragraf_11_20_6_leddModellApi
 
 internal class Paragraf_11_20_6_ledd(
     private val maksFaktorAvGrunnlag: Double,
-    private val grunnlag: Paragraf_11_19_3_ledd,
+    private val grunnlag: Beløp,
     private val høyesteÅrligYtelseMedBarnetillegg: Beløp
 ) {
 
-    internal constructor(grunnlag: Paragraf_11_19_3_ledd) : this (
+    internal constructor(grunnlag: Beløp) : this(
         maksFaktorAvGrunnlag = MAKS_FAKTOR_AV_GRUNNLAG,
         grunnlag = grunnlag,
         høyesteÅrligYtelseMedBarnetillegg = grunnlag * MAKS_FAKTOR_AV_GRUNNLAG
@@ -19,7 +19,7 @@ internal class Paragraf_11_20_6_ledd(
 
     internal fun toModellApi() = Paragraf_11_20_6_leddModellApi(
         maksFaktorAvGrunnlag = maksFaktorAvGrunnlag,
-        grunnlag = grunnlag.toModellApi().grunnlag,
+        grunnlag = grunnlag.toModellApi(),
         høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg.toModellApi()
     )
 
@@ -28,7 +28,7 @@ internal class Paragraf_11_20_6_ledd(
 
         internal fun gjenopprett(
             maksFaktorAvGrunnlag: Double,
-            grunnlag: Paragraf_11_19_3_ledd,
+            grunnlag: Beløp,
             høyesteÅrligYtelseMedBarnetillegg: Beløp
         ) = Paragraf_11_20_6_ledd(
             maksFaktorAvGrunnlag = maksFaktorAvGrunnlag,
@@ -36,5 +36,4 @@ internal class Paragraf_11_20_6_ledd(
             høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg
         )
     }
-
 }

@@ -30,7 +30,7 @@ internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
         private val årligYtelse: Paragraf_11_20_1_ledd = grunnlag.årligYtelse(),
         private val dagsats: Paragraf_11_20_2_ledd_2_punktum = årligYtelse.dagsats(),
 
-        private val høyesteÅrligYtelseMedBarnetillegg: Paragraf_11_20_6_ledd = Paragraf_11_20_6_ledd(grunnlag),
+        private val høyesteÅrligYtelseMedBarnetillegg: Paragraf_11_20_6_ledd = grunnlag.høyesteÅrligYtelseMedBarnetillegg(),
         //§11-20 2. ledd 2. punktum
         //TODO: Denne også heltall?
         private val høyesteBeløpMedBarnetillegg: Beløp = høyesteÅrligYtelseMedBarnetillegg / ANTALL_DAGER_MED_UTBETALING_PER_ÅR,
@@ -79,7 +79,7 @@ internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
                 )
                 val høyesteÅrligYtelseMedBarnetillegg = Paragraf_11_20_6_ledd.gjenopprett(
                     maksFaktorAvGrunnlag = requireNotNull(utbetalingstidslinjedagModellApi.høyesteÅrligYtelseMedBarnetillegg).maksFaktorAvGrunnlag,
-                    grunnlag = grunnlag,
+                    grunnlag = requireNotNull(utbetalingstidslinjedagModellApi.høyesteÅrligYtelseMedBarnetillegg).grunnlag.beløp,
                     høyesteÅrligYtelseMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.høyesteÅrligYtelseMedBarnetillegg).høyesteÅrligYtelseMedBarnetillegg.beløp,
                 )
                 val utbetalingsdag = Utbetalingsdag(
