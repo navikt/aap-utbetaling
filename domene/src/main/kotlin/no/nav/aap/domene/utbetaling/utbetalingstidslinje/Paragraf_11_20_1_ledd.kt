@@ -5,13 +5,13 @@ import no.nav.aap.domene.utbetaling.modellapi.Paragraf_11_20_1_ledd_ModellApi
 
 internal class Paragraf_11_20_1_ledd private constructor(
     private val faktorForReduksjonAvGrunnlag: Double,
-    private val inntektsgrunnlag: Paragraf_11_19_3_ledd,
+    private val grunnlag: Beløp,
     private val årligYtelse: Beløp
 ) {
 
-    internal constructor(grunnlag: Paragraf_11_19_3_ledd) : this(
+    internal constructor(grunnlag: Beløp) : this(
         faktorForReduksjonAvGrunnlag = FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG,
-        inntektsgrunnlag = grunnlag,
+        grunnlag = grunnlag,
         årligYtelse = grunnlag * FAKTOR_FOR_REDUKSJON_AV_GRUNNLAG
     )
 
@@ -19,7 +19,7 @@ internal class Paragraf_11_20_1_ledd private constructor(
 
     internal fun toModellApi() = Paragraf_11_20_1_ledd_ModellApi(
         faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
-        inntektsgrunnlag = inntektsgrunnlag.toModellApi().grunnlag,
+        grunnlag = grunnlag.toModellApi(),
         årligytelse = årligYtelse.toModellApi(),
     )
 
@@ -28,12 +28,12 @@ internal class Paragraf_11_20_1_ledd private constructor(
 
         internal fun gjenopprett(
             faktorForReduksjonAvGrunnlag: Double,
-            inntektsgrunnlag: Paragraf_11_19_3_ledd,
-            årligYtelse: Beløp
+            grunnlag: Beløp,
+            årligYtelse: Beløp,
         ) = Paragraf_11_20_1_ledd(
             faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
-            inntektsgrunnlag = inntektsgrunnlag,
-            årligYtelse = årligYtelse
+            grunnlag = grunnlag,
+            årligYtelse = årligYtelse,
         )
     }
 }

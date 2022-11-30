@@ -78,7 +78,7 @@ internal fun Paragraf_11_20_2_ledd_2_punktum_KafkaDto.toModellApi() = Paragraf_1
 
 internal fun Paragraf_11_20_1_ledd_KafkaDto.toModellApi() = Paragraf_11_20_1_ledd_ModellApi(
     faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
-    inntektsgrunnlag = inntektsgrunnlag,
+    grunnlag = grunnlag,
     årligytelse = årligytelse
 )
 
@@ -218,7 +218,7 @@ internal fun Paragraf_11_20_2_ledd_2_punktum_ModellApi.toKafkaDto() = Paragraf_1
 
 internal fun Paragraf_11_20_1_ledd_ModellApi.toKafkaDto() = Paragraf_11_20_1_ledd_KafkaDto(
     faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
-    inntektsgrunnlag = inntektsgrunnlag,
+    grunnlag = grunnlag,
     årligytelse = årligytelse
 )
 

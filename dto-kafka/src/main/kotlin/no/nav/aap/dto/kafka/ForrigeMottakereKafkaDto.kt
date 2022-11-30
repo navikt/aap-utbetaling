@@ -69,6 +69,7 @@ data class ForrigeMottakereKafkaDto(
     data class Paragraf_11_19_3_leddKafkaDto(
         val dato: LocalDate,
         val grunnlagsfaktor: Double,
+        val grunnbeløp: Double,
         val grunnlag: Double
     )
 

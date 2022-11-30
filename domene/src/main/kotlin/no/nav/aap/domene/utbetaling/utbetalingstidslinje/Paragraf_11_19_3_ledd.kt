@@ -28,6 +28,8 @@ internal class Paragraf_11_19_3_ledd private constructor(
 
     internal operator fun times(faktor: Double) = grunnlag * faktor
 
+    internal fun årligYtelse() = Paragraf_11_20_1_ledd(grunnlag)
+
     internal fun toModellApi() = Paragraf_11_19_3_leddModellApi(
         dato = dato,
         grunnlagsfaktor = grunnlagsfaktor.toModellApi(),

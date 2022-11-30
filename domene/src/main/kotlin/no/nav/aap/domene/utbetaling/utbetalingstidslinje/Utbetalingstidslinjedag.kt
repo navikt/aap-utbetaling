@@ -27,7 +27,7 @@ internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
             fødselsdato.justerGrunnlagsfaktorForAlder(dato, grunnlagsfaktor),
         //§11-19 3. ledd
         private val grunnlag: Paragraf_11_19_3_ledd = Paragraf_11_19_3_ledd(dato, grunnlagsfaktorJustertForAlder),
-        private val årligYtelse: Paragraf_11_20_1_ledd = Paragraf_11_20_1_ledd(grunnlag),
+        private val årligYtelse: Paragraf_11_20_1_ledd = grunnlag.årligYtelse(),
         private val dagsats: Paragraf_11_20_2_ledd_2_punktum = Paragraf_11_20_2_ledd_2_punktum(årligYtelse),
 
         private val høyesteÅrligYtelseMedBarnetillegg: Paragraf_11_20_6_ledd = Paragraf_11_20_6_ledd(grunnlag),
@@ -68,7 +68,7 @@ internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
                 )
                 val årligYtelse = Paragraf_11_20_1_ledd.gjenopprett(
                     faktorForReduksjonAvGrunnlag = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).faktorForReduksjonAvGrunnlag,
-                    inntektsgrunnlag = grunnlag,
+                    grunnlag = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).grunnlag.beløp,
                     årligYtelse = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).årligytelse.beløp,
                 )
 

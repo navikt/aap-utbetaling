@@ -72,8 +72,7 @@ internal fun Paragraf_11_19_3_leddKafkaDto.toKafkaDto() =
     MottakereKafkaDto.Paragraf_11_19_3_leddKafkaDto(
         dato = dato,
         grunnlagsfaktor = grunnlagsfaktor,
-        //FIXME: Hent fra grunnbeløp
-        grunnbeløp = grunnlag / grunnlagsfaktor,
+        grunnbeløp = grunnbeløp,
         grunnlag = grunnlag
     )
 
@@ -87,7 +86,7 @@ internal fun Paragraf_11_20_2_ledd_2_punktum_KafkaDto.toKafkaDto() =
 internal fun Paragraf_11_20_1_ledd_KafkaDto.toKafkaDto() =
     MottakereKafkaDto.Paragraf_11_20_1_ledd_KafkaDto(
         faktorForReduksjonAvGrunnlag = faktorForReduksjonAvGrunnlag,
-        inntektsgrunnlag = inntektsgrunnlag,
+        grunnlag = inntektsgrunnlag,
         årligytelse = årligytelse
     )
 
