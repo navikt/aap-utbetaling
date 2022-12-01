@@ -4,6 +4,10 @@ internal class Arbeidstimer(arbeidstimer: Number) : Comparable<Arbeidstimer> {
 
     private val arbeidstimer: Double = arbeidstimer.toDouble()
 
+    init {
+        require(this.arbeidstimer >= 0) { "Arbeidstimer må være større enn eller lik 0, er ${this.arbeidstimer}" }
+    }
+
     internal companion object {
         internal val NORMAL_ARBEIDSTIMER = 7.5.arbeidstimer
 
@@ -14,7 +18,12 @@ internal class Arbeidstimer(arbeidstimer: Number) : Comparable<Arbeidstimer> {
     internal operator fun plus(addend: Arbeidstimer): Arbeidstimer =
         Arbeidstimer(this.arbeidstimer + addend.arbeidstimer)
 
-    internal operator fun div(nevner: Arbeidstimer): Double = this.arbeidstimer / nevner.arbeidstimer
+    internal operator fun div(nevner: Arbeidstimer): Arbeidsprosent {
+        if (nevner.arbeidstimer == 0.0) return Arbeidsprosent(0)
+        return Arbeidsprosent(this.arbeidstimer / nevner.arbeidstimer)
+    }
+
+    internal fun toModellApi() = arbeidstimer
 
     override fun compareTo(other: Arbeidstimer) = this.arbeidstimer.compareTo(other.arbeidstimer)
 
@@ -30,5 +39,5 @@ internal class Arbeidstimer(arbeidstimer: Number) : Comparable<Arbeidstimer> {
     }
 
     override fun hashCode() = arbeidstimer.hashCode()
-    internal fun toDto() = arbeidstimer
+    override fun toString() = "Arbeidstimer(arbeidstimer=$arbeidstimer)"
 }

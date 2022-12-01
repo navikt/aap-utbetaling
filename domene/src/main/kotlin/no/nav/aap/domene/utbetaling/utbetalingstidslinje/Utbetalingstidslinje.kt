@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
+import no.nav.aap.domene.utbetaling.entitet.Arbeidsprosent
 import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjeModellApi
 import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjedagModellApi
 import no.nav.aap.domene.utbetaling.visitor.UtbetalingstidslinjeVisitor
@@ -14,7 +15,7 @@ internal class Utbetalingstidslinje(
             Utbetalingstidslinje(utbetalingstidslinjeModellApi.dager.map(UtbetalingstidslinjedagModellApi::gjenopprett))
     }
 
-    internal fun arbeidsprosent(arbeidsprosent: Double) {
+    internal fun arbeidsprosent(arbeidsprosent: Arbeidsprosent) {
         dager.forEach { it.arbeidsprosent(arbeidsprosent) }
     }
 

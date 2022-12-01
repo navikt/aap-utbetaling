@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
+import no.nav.aap.domene.utbetaling.entitet.Arbeidsprosent
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
@@ -10,9 +11,9 @@ import java.time.LocalDate
 
 internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
 
-    protected var arbeidsprosent: Double = Double.NaN
+    protected lateinit var arbeidsprosent: Arbeidsprosent
 
-    internal abstract fun arbeidsprosent(arbeidsprosent: Double)
+    internal abstract fun arbeidsprosent(arbeidsprosent: Arbeidsprosent)
 
     internal abstract fun accept(visitor: UtbetalingsdagVisitor)
     internal abstract fun toModellApi(): UtbetalingstidslinjedagModellApi
@@ -57,68 +58,57 @@ internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
         )
 
         internal companion object {
-            private const val ANTALL_DAGER_MED_UTBETALING_PER_ÅR = 260
-
-            internal fun gjenopprett(utbetalingstidslinjedagModellApi: UtbetalingstidslinjedagModellApi.UtbetalingsdagModellApi): Utbetalingsdag {
-                val grunnlag = Paragraf_11_19_3_ledd.gjenopprett(
-                    dato = requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).dato,
-                    grunnlagsfaktor = Grunnlagsfaktor(requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).grunnlagsfaktor),
-                    grunnbeløp = requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).grunnbeløp.beløp,
-                    grunnlag = requireNotNull(utbetalingstidslinjedagModellApi.grunnlag).grunnlag.beløp,
-                )
-                val årligYtelse = Paragraf_11_20_1_ledd.gjenopprett(
-                    faktorForReduksjonAvGrunnlag = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).faktorForReduksjonAvGrunnlag,
-                    grunnlag = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).grunnlag.beløp,
-                    årligYtelse = requireNotNull(utbetalingstidslinjedagModellApi.årligYtelse).årligytelse.beløp,
-                )
-
-                val dagsats = Paragraf_11_20_2_ledd_2_punktum.gjenopprett(
-                    antallDagerMedUtbetalingPerÅr = requireNotNull(utbetalingstidslinjedagModellApi.dagsats).antallDagerMedUtbetalingPerÅr,
-                    årligYtelse = requireNotNull(utbetalingstidslinjedagModellApi.dagsats).årligYtelse.beløp,
-                    dagsats = requireNotNull(utbetalingstidslinjedagModellApi.dagsats).dagsats.beløp,
-                )
-                val høyesteÅrligYtelseMedBarnetillegg = Paragraf_11_20_6_ledd.gjenopprett(
-                    maksFaktorAvGrunnlag = requireNotNull(utbetalingstidslinjedagModellApi.høyesteÅrligYtelseMedBarnetillegg).maksFaktorAvGrunnlag,
-                    grunnlag = requireNotNull(utbetalingstidslinjedagModellApi.høyesteÅrligYtelseMedBarnetillegg).grunnlag.beløp,
-                    høyesteÅrligYtelseMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.høyesteÅrligYtelseMedBarnetillegg).høyesteÅrligYtelseMedBarnetillegg.beløp,
-                )
+            internal fun gjenopprett(modellApi: UtbetalingstidslinjedagModellApi.UtbetalingsdagModellApi): Utbetalingsdag {
                 val utbetalingsdag = Utbetalingsdag(
-                    dato = utbetalingstidslinjedagModellApi.dato,
-                    fødselsdato = Fødselsdato(utbetalingstidslinjedagModellApi.fødselsdato),
-                    grunnlagsfaktor = Grunnlagsfaktor(requireNotNull(utbetalingstidslinjedagModellApi.grunnlagsfaktor)),
-                    grunnlagsfaktorJustertForAlder = Grunnlagsfaktor(requireNotNull(utbetalingstidslinjedagModellApi.grunnlagsfaktorJustertForAlder)),
-                    barnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.barnetillegg).beløp,
-                    grunnlag = grunnlag,
-                    årligYtelse = årligYtelse,
-                    dagsats = dagsats,
-                    høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg,
-                    høyesteBeløpMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.høyesteBeløpMedBarnetillegg).let {
-                        Paragraf_11_20_2_ledd_2_punktum.gjenopprett(
-                            antallDagerMedUtbetalingPerÅr = it.antallDagerMedUtbetalingPerÅr,
-                            årligYtelse = it.årligYtelse.beløp,
-                            dagsats = it.dagsats.beløp,
-                        )
-                    },
-                    dagsatsMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.dagsatsMedBarnetillegg).let {
-                        Paragraf_11_20_3_5_ledd.gjenopprett(
-                            dagsats = it.dagsats.beløp,
-                            barnetillegg = it.barnetillegg.beløp,
-                            beløp = it.beløp.beløp,
-                        )
-                    },
-                    beløpMedBarnetillegg = requireNotNull(utbetalingstidslinjedagModellApi.beløpMedBarnetillegg).beløp,
+                    dato = modellApi.dato,
+                    fødselsdato = Fødselsdato(modellApi.fødselsdato),
+                    grunnlagsfaktor = Grunnlagsfaktor(modellApi.grunnlagsfaktor),
+                    grunnlagsfaktorJustertForAlder = Grunnlagsfaktor(modellApi.grunnlagsfaktorJustertForAlder),
+                    barnetillegg = modellApi.barnetillegg.beløp,
+                    grunnlag = Paragraf_11_19_3_ledd.gjenopprett(
+                        dato = modellApi.grunnlag.dato,
+                        grunnlagsfaktor = Grunnlagsfaktor(modellApi.grunnlag.grunnlagsfaktor),
+                        grunnbeløp = modellApi.grunnlag.grunnbeløp.beløp,
+                        grunnlag = modellApi.grunnlag.grunnlag.beløp,
+                    ),
+                    årligYtelse = Paragraf_11_20_1_ledd.gjenopprett(
+                        faktorForReduksjonAvGrunnlag = modellApi.årligYtelse.faktorForReduksjonAvGrunnlag,
+                        grunnlag = modellApi.årligYtelse.grunnlag.beløp,
+                        årligYtelse = modellApi.årligYtelse.årligytelse.beløp,
+                    ),
+                    dagsats = Paragraf_11_20_2_ledd_2_punktum.gjenopprett(
+                        antallDagerMedUtbetalingPerÅr = modellApi.dagsats.antallDagerMedUtbetalingPerÅr,
+                        årligYtelse = modellApi.dagsats.årligYtelse.beløp,
+                        dagsats = modellApi.dagsats.dagsats.beløp,
+                    ),
+                    høyesteÅrligYtelseMedBarnetillegg = Paragraf_11_20_6_ledd.gjenopprett(
+                        maksFaktorAvGrunnlag = modellApi.høyesteÅrligYtelseMedBarnetillegg.maksFaktorAvGrunnlag,
+                        grunnlag = modellApi.høyesteÅrligYtelseMedBarnetillegg.grunnlag.beløp,
+                        høyesteÅrligYtelseMedBarnetillegg = modellApi.høyesteÅrligYtelseMedBarnetillegg.høyesteÅrligYtelseMedBarnetillegg.beløp,
+                    ),
+                    høyesteBeløpMedBarnetillegg = Paragraf_11_20_2_ledd_2_punktum.gjenopprett(
+                        antallDagerMedUtbetalingPerÅr = modellApi.høyesteBeløpMedBarnetillegg.antallDagerMedUtbetalingPerÅr,
+                        årligYtelse = modellApi.høyesteBeløpMedBarnetillegg.årligYtelse.beløp,
+                        dagsats = modellApi.høyesteBeløpMedBarnetillegg.dagsats.beløp,
+                    ),
+                    dagsatsMedBarnetillegg = Paragraf_11_20_3_5_ledd.gjenopprett(
+                        dagsats = modellApi.dagsatsMedBarnetillegg.dagsats.beløp,
+                        barnetillegg = modellApi.dagsatsMedBarnetillegg.barnetillegg.beløp,
+                        beløp = modellApi.dagsatsMedBarnetillegg.beløp.beløp,
+                    ),
+                    beløpMedBarnetillegg = modellApi.beløpMedBarnetillegg.beløp,
                 )
 
-                utbetalingsdag.beløp = requireNotNull(utbetalingstidslinjedagModellApi.beløp).beløp
-                utbetalingsdag.arbeidsprosent = utbetalingstidslinjedagModellApi.arbeidsprosent
+                utbetalingsdag.beløp = modellApi.beløp.beløp
+                utbetalingsdag.arbeidsprosent = Arbeidsprosent(modellApi.arbeidsprosent)
 
                 return utbetalingsdag
             }
         }
 
-        override fun arbeidsprosent(arbeidsprosent: Double) {
+        override fun arbeidsprosent(arbeidsprosent: Arbeidsprosent) {
             this.arbeidsprosent = arbeidsprosent
-            beløp = beløpMedBarnetillegg * (1 - arbeidsprosent)
+            beløp = beløpMedBarnetillegg.reduserMotArbeid(arbeidsprosent)
         }
 
         override fun accept(visitor: UtbetalingsdagVisitor) {
@@ -139,7 +129,7 @@ internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
             dagsatsMedBarnetillegg = dagsatsMedBarnetillegg.toModellApi(),
             beløpMedBarnetillegg = beløpMedBarnetillegg.toModellApi(),
             beløp = beløp.toModellApi(),
-            arbeidsprosent = arbeidsprosent
+            arbeidsprosent = arbeidsprosent.toModellApi(),
         )
     }
 
@@ -151,13 +141,13 @@ internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
                     dato = utbetalingstidslinjedagModellApi.dato
                 )
 
-                ikkeUtbetalingsdag.arbeidsprosent = utbetalingstidslinjedagModellApi.arbeidsprosent
+                ikkeUtbetalingsdag.arbeidsprosent = Arbeidsprosent(utbetalingstidslinjedagModellApi.arbeidsprosent)
 
                 return ikkeUtbetalingsdag
             }
         }
 
-        override fun arbeidsprosent(arbeidsprosent: Double) {
+        override fun arbeidsprosent(arbeidsprosent: Arbeidsprosent) {
             this.arbeidsprosent = arbeidsprosent
         }
 
@@ -167,7 +157,7 @@ internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
 
         override fun toModellApi() = UtbetalingstidslinjedagModellApi.IkkeUtbetalingsdagModellApi(
             dato = dato,
-            arbeidsprosent = arbeidsprosent
+            arbeidsprosent = arbeidsprosent.toModellApi(),
         )
     }
 }

@@ -22,6 +22,8 @@ internal class Beløp private constructor(verdi: Number) : Comparable<Beløp> {
 
     internal fun avrundet(): Beløp = Beløp(this.verdi.roundToInt())
 
+    internal fun reduserMotArbeid(arbeidsprosent: Arbeidsprosent): Beløp = arbeidsprosent.reduserBeløpMotArbeid(verdi)
+
     internal fun toModellApi() = verdi
 
     override fun compareTo(other: Beløp) = verdi.compareTo(other.verdi)
@@ -38,6 +40,5 @@ internal class Beløp private constructor(verdi: Number) : Comparable<Beløp> {
     }
 
     override fun hashCode() = verdi.hashCode()
-
     override fun toString() = "Beløp($verdi)"
 }

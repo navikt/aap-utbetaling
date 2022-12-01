@@ -1,10 +1,10 @@
 package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
-import no.nav.aap.domene.utbetaling.modellapi.DagModellApi
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.NORMAL_ARBEIDSTIMER
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.summer
+import no.nav.aap.domene.utbetaling.modellapi.DagModellApi
 import no.nav.aap.domene.utbetaling.visitor.DagVisitor
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -41,7 +41,7 @@ internal sealed class Dag(
 
         override fun toModellApi() = DagModellApi(
             dato = dato,
-            arbeidstimer = arbeidstimer.toDto(),
+            arbeidstimer = arbeidstimer.toModellApi(),
             type = Dagtype.HELG.name
         )
     }
@@ -56,7 +56,7 @@ internal sealed class Dag(
 
         override fun toModellApi() = DagModellApi(
             dato = dato,
-            arbeidstimer = arbeidstimer.toDto(),
+            arbeidstimer = arbeidstimer.toModellApi(),
             type = Dagtype.ARBEIDSDAG.name
         )
     }

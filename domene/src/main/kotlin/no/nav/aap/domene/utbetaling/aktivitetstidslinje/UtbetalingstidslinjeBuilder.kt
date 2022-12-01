@@ -1,6 +1,7 @@
 package no.nav.aap.domene.utbetaling.aktivitetstidslinje
 
 import no.nav.aap.domene.utbetaling.Barnetillegg
+import no.nav.aap.domene.utbetaling.entitet.Arbeidsprosent
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.NORMAL_ARBEIDSTIMER
 import no.nav.aap.domene.utbetaling.entitet.Arbeidstimer.Companion.arbeidstimer
@@ -31,6 +32,7 @@ internal class UtbetalingstidslinjeBuilder(
     private lateinit var avvisteDagerUtbetalingstidslinje: Utbetalingstidslinje // Spørsmål 3
 
     private var arbeidstimerIPeriode: Arbeidstimer = 0.arbeidstimer
+
     // Skal kun summeres for hverdager som ikke er fraværsdager, bortsett fra hvis vi har kun en fraværsdag,
     // da skal den telles inn.
     private var normalarbeidstimerIPeriode: Arbeidstimer = 0.arbeidstimer
@@ -38,7 +40,7 @@ internal class UtbetalingstidslinjeBuilder(
     private var tilstand: Tilstand = Tilstand.Start
 
     private companion object {
-        private const val HØYESTE_ARBEIDSMENGDE_SOM_GIR_YTELSE = 0.6 // TODO Skal justeres ved vedtak
+        private val HØYESTE_ARBEIDSMENGDE_SOM_GIR_YTELSE = Arbeidsprosent(0.6) // TODO Skal justeres ved vedtak
     }
 
     internal fun build(aktivitetstidslinje: Aktivitetstidslinje): Utbetalingstidslinje {

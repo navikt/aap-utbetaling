@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling
 
+import no.nav.aap.domene.utbetaling.entitet.Arbeidsprosent
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
 import no.nav.aap.domene.utbetaling.utbetalingstidslinje.Utbetalingstidslinjedag
@@ -32,7 +33,7 @@ internal object Utbetalingsdager {
                 Grunnlagsfaktor(grunnlagsfaktor),
                 Barnetillegg().apply { leggTilBarn(barn) }.barnetilleggForDag(dato)
             ).apply {
-                arbeidsprosent(arbeidsprosent.toDouble())
+                arbeidsprosent(Arbeidsprosent(arbeidsprosent))
             }
         }
 
