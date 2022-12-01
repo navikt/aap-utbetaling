@@ -9,6 +9,7 @@ internal class Grunnlagsfaktor(verdi: Number) : Comparable<Grunnlagsfaktor> {
     internal operator fun plus(addend: Grunnlagsfaktor) = Grunnlagsfaktor(this.verdi + addend.verdi)
 
     internal operator fun times(faktor: Beløp): Beløp = faktor * verdi
+    internal operator fun times(faktor: AvrundetBeløp): Beløp = faktor * verdi
 
     internal operator fun times(faktor: Double): Grunnlagsfaktor = Grunnlagsfaktor(faktor * verdi)
 

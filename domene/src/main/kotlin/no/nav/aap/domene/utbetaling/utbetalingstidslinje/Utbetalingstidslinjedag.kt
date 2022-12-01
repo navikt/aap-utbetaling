@@ -1,6 +1,7 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
 import no.nav.aap.domene.utbetaling.entitet.Arbeidsprosent
+import no.nav.aap.domene.utbetaling.entitet.AvrundetBeløp.Companion.avrundetBeløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
 import no.nav.aap.domene.utbetaling.entitet.Fødselsdato
@@ -68,7 +69,7 @@ internal sealed class Utbetalingstidslinjedag(protected val dato: LocalDate) {
                     grunnlag = Paragraf_11_19_3_ledd.gjenopprett(
                         dato = modellApi.grunnlag.dato,
                         grunnlagsfaktor = Grunnlagsfaktor(modellApi.grunnlag.grunnlagsfaktor),
-                        grunnbeløp = modellApi.grunnlag.grunnbeløp.beløp,
+                        grunnbeløp = modellApi.grunnlag.grunnbeløp.avrundetBeløp,
                         grunnlag = modellApi.grunnlag.grunnlag.beløp,
                     ),
                     årligYtelse = Paragraf_11_20_1_ledd.gjenopprett(

@@ -159,7 +159,7 @@ internal class GjenopprettTest {
                     grunnlagsfaktor = 4.0,
                     grunnlagsfaktorJustertForAlder = 4.0,
                     barnetillegg = 0.0,
-                    grunnlag = Paragraf_11_19_3_leddModellApi(dato, 4.0, 111477.0, 445908.0),
+                    grunnlag = Paragraf_11_19_3_leddModellApi(dato, 4.0, 111477, 445908.0),
                     årligYtelse = Paragraf_11_20_1_ledd_ModellApi(0.66, 445908.0, 294299.28),
                     dagsats = Paragraf_11_20_2_ledd_2_punktum_ModellApi(260, 294299.28, 1131.92),
                     høyesteÅrligYtelseMedBarnetillegg = Paragraf_11_20_6_leddModellApi(0.9, 445908.0, 401317.2),

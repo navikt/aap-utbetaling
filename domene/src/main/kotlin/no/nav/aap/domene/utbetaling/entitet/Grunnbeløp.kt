@@ -1,6 +1,6 @@
 package no.nav.aap.domene.utbetaling.entitet
 
-import no.nav.aap.domene.utbetaling.entitet.Beløp.Companion.beløp
+import no.nav.aap.domene.utbetaling.entitet.AvrundetBeløp.Companion.avrundetBeløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnbeløp.Element.Companion.finnGrunnbeløpForDato
 import java.time.LocalDate
 
@@ -44,9 +44,10 @@ internal object Grunnbeløp {
         gjennomsnittBeløp: Number
     ) {
         private val dato: LocalDate = LocalDate.of(år, måned, dag)
-        private val beløp: Beløp = beløp.beløp
-        private val gjennomsnittBeløp: Beløp = gjennomsnittBeløp.beløp
+        private val beløp: AvrundetBeløp = beløp.avrundetBeløp
+        private val gjennomsnittBeløp: AvrundetBeløp = gjennomsnittBeløp.avrundetBeløp
 
+        internal fun grunnlagINOK(): AvrundetBeløp = beløp
         internal fun grunnlagINOK(grunnlagsfaktor: Grunnlagsfaktor): Beløp = grunnlagsfaktor * beløp
 
         internal companion object {

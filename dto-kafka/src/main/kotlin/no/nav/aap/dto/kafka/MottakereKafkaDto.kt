@@ -22,7 +22,7 @@ data class MottakereKafkaDto(
     private var erMigrertAkkuratNå: Boolean = false
 
     companion object {
-        const val VERSION = 8
+        const val VERSION = 9
         const val INIT_SEKVENS = 0L
     }
 
@@ -79,7 +79,7 @@ data class MottakereKafkaDto(
     data class Paragraf_11_19_3_leddKafkaDto(
         val dato: LocalDate,
         val grunnlagsfaktor: Double,
-        val grunnbeløp: Double,
+        val grunnbeløp: Int,
         val grunnlag: Double
     )
 

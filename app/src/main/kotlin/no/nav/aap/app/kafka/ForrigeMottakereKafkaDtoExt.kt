@@ -3,6 +3,7 @@ package no.nav.aap.app.kafka
 import no.nav.aap.dto.kafka.ForrigeMottakereKafkaDto
 import no.nav.aap.dto.kafka.ForrigeMottakereKafkaDto.*
 import no.nav.aap.dto.kafka.MottakereKafkaDto
+import kotlin.math.roundToInt
 
 internal fun ForrigeMottakereKafkaDto.toKafkaDto() = MottakereKafkaDto(
     personident = personident,
@@ -55,22 +56,8 @@ internal fun UtbetalingstidslinjedagKafkaDto.UtbetalingsdagKafkaDto.toKafkaDto()
         årligYtelse = årligYtelse.toKafkaDto(),
         dagsats = dagsats.toKafkaDto(),
         høyesteÅrligYtelseMedBarnetillegg = høyesteÅrligYtelseMedBarnetillegg.toKafkaDto(),
-        //FIXME: Bytt ut med høyesteBeløpMedBarnetillegg.toKafkaDto() etter migrering
-        høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg.let {
-            MottakereKafkaDto.Paragraf_11_20_2_ledd_2_punktum_KafkaDto(
-                antallDagerMedUtbetalingPerÅr = 260,
-                årligYtelse = høyesteÅrligYtelseMedBarnetillegg.høyesteÅrligYtelseMedBarnetillegg,
-                dagsats = it,
-            )
-        },
-        //FIXME: Bytt ut med dagsatsMedBarnetillegg.toKafkaDto() etter migrering
-        dagsatsMedBarnetillegg = dagsatsMedBarnetillegg.let {
-            MottakereKafkaDto.Paragraf_11_20_3_5_ledd_KafkaDto(
-                dagsats = dagsats.dagsats,
-                barnetillegg = barnetillegg,
-                beløp = it,
-            )
-        },
+        høyesteBeløpMedBarnetillegg = høyesteBeløpMedBarnetillegg.toKafkaDto(),
+        dagsatsMedBarnetillegg = dagsatsMedBarnetillegg.toKafkaDto(),
         beløpMedBarnetillegg = beløpMedBarnetillegg,
         beløp = beløp,
         arbeidsprosent = arbeidsprosent,
@@ -86,7 +73,8 @@ internal fun Paragraf_11_19_3_leddKafkaDto.toKafkaDto() =
     MottakereKafkaDto.Paragraf_11_19_3_leddKafkaDto(
         dato = dato,
         grunnlagsfaktor = grunnlagsfaktor,
-        grunnbeløp = grunnbeløp,
+        //FIXME: Fjern avrunding
+        grunnbeløp = grunnbeløp.roundToInt(),
         grunnlag = grunnlag
     )
 
@@ -103,6 +91,12 @@ internal fun Paragraf_11_20_1_ledd_KafkaDto.toKafkaDto() =
         grunnlag = grunnlag,
         årligytelse = årligytelse
     )
+
+internal fun Paragraf_11_20_3_5_ledd_KafkaDto.toKafkaDto() = MottakereKafkaDto.Paragraf_11_20_3_5_ledd_KafkaDto(
+    dagsats = dagsats,
+    barnetillegg = barnetillegg,
+    beløp = beløp
+)
 
 internal fun Paragraf_11_20_6_leddKafkaDto.toKafkaDto() =
     MottakereKafkaDto.Paragraf_11_20_6_leddKafkaDto(

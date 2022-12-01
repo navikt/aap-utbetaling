@@ -1,5 +1,6 @@
 package no.nav.aap.domene.utbetaling.utbetalingstidslinje
 
+import no.nav.aap.domene.utbetaling.entitet.AvrundetBeløp
 import no.nav.aap.domene.utbetaling.entitet.Beløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnbeløp
 import no.nav.aap.domene.utbetaling.entitet.Grunnlagsfaktor
@@ -9,7 +10,7 @@ import java.time.LocalDate
 internal class Paragraf_11_19_3_ledd private constructor(
     private val dato: LocalDate,
     private val grunnlagsfaktor: Grunnlagsfaktor,
-    private val grunnbeløp: Beløp,
+    private val grunnbeløp: AvrundetBeløp,
     private val grunnlag: Beløp
 ) {
 
@@ -22,7 +23,7 @@ internal class Paragraf_11_19_3_ledd private constructor(
     private constructor(dato: LocalDate, grunnlagsfaktor: Grunnlagsfaktor, grunnbeløp: Grunnbeløp.Element) : this(
         dato = dato,
         grunnlagsfaktor = grunnlagsfaktor,
-        grunnbeløp = grunnbeløp.grunnlagINOK(Grunnlagsfaktor(1)),
+        grunnbeløp = grunnbeløp.grunnlagINOK(),
         grunnlag = grunnbeløp.grunnlagINOK(grunnlagsfaktor),
     )
 
@@ -40,7 +41,7 @@ internal class Paragraf_11_19_3_ledd private constructor(
         internal fun gjenopprett(
             dato: LocalDate,
             grunnlagsfaktor: Grunnlagsfaktor,
-            grunnbeløp: Beløp,
+            grunnbeløp: AvrundetBeløp,
             grunnlag: Beløp
         ) = Paragraf_11_19_3_ledd(
             dato = dato,
