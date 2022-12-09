@@ -1,12 +1,13 @@
 package no.nav.aap.app.kafka
 
+import no.nav.aap.dto.kafka.ForrigeMottakereKafkaDtoHistorikk
 import no.nav.aap.dto.kafka.MottakereKafkaDtoHistorikk
 import no.nav.aap.dto.kafka.ForrigeMottakereKafkaDto as Fra
 import no.nav.aap.dto.kafka.MottakereKafkaDto as Til
 
-internal fun Fra.toKafkaDtoPreMigrering() = MottakereKafkaDtoHistorikk(
-    mottakereKafkaDto = toKafkaDto(),
-    forrigeMottakereKafkaDto = this
+internal fun ForrigeMottakereKafkaDtoHistorikk.toKafkaDto() = MottakereKafkaDtoHistorikk(
+    mottakereKafkaDto = mottakereKafkaDto.toKafkaDto(),
+    forrigeMottakereKafkaDto = mottakereKafkaDto
 )
 
 private fun Fra.toKafkaDto() = Til(

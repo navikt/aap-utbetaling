@@ -1,7 +1,7 @@
 package no.nav.aap.app.kafka
 
 import no.nav.aap.domene.utbetaling.modellapi.MeldepliktshendelseModellApi
-import no.nav.aap.dto.kafka.ForrigeMottakereKafkaDto
+import no.nav.aap.dto.kafka.ForrigeMottakereKafkaDtoHistorikk
 import no.nav.aap.dto.kafka.IverksettVedtakKafkaDto
 import no.nav.aap.dto.kafka.MottakereKafkaDto
 import no.nav.aap.dto.kafka.MottakereKafkaDtoHistorikk
@@ -18,7 +18,7 @@ internal object Topics {
         name = "aap.mottakere.v1",
         valueSerde = JsonSerde.jackson(
             dtoVersion = MottakereKafkaDto.VERSION,
-            migrate = ForrigeMottakereKafkaDto::toKafkaDtoPreMigrering
+            migrate = ForrigeMottakereKafkaDtoHistorikk::toKafkaDto
         ) { json -> json.get("mottakereKafkaDto")?.get("version")?.takeIf { it.isNumber }?.intValue() },
         buffer = buffer,
     )

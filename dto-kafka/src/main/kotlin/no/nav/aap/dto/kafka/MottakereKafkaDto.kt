@@ -40,7 +40,7 @@ data class MottakereKafkaDto(
 
     companion object {
         //Husk å oppdatere andre konsumenter etter migrering
-        const val VERSION = 11
+        const val VERSION = 12
     }
 
     data class VedtakKafkaDto(
