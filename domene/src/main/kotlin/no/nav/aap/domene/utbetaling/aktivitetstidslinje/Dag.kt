@@ -22,12 +22,6 @@ internal sealed class Dag(
 
     internal abstract fun toModellApi(): DagModellApi
 
-    private enum class Dagtype {
-        HELG,
-        ARBEIDSDAG,
-        FRAVÆRSDAG
-    }
-
     internal class Helg(
         dato: LocalDate,
         private val arbeidstimer: Arbeidstimer
@@ -39,11 +33,17 @@ internal sealed class Dag(
             visitor.visitHelgedag(this, dato, arbeidstimer)
         }
 
-        override fun toModellApi() = DagModellApi(
+        override fun toModellApi() = DagModellApi.HelgedagModellApi(
             dato = dato,
             arbeidstimer = arbeidstimer.toModellApi(),
-            type = Dagtype.HELG.name
         )
+
+        internal companion object {
+            internal fun gjenopprett(modellApi: DagModellApi.HelgedagModellApi) = Helg(
+                dato = modellApi.dato,
+                arbeidstimer = Arbeidstimer(modellApi.arbeidstimer),
+            )
+        }
     }
 
     internal class Arbeidsdag(
@@ -54,11 +54,17 @@ internal sealed class Dag(
 
         override fun accept(visitor: DagVisitor) = visitor.visitArbeidsdag(dato, arbeidstimer)
 
-        override fun toModellApi() = DagModellApi(
+        override fun toModellApi() = DagModellApi.ArbeidsdagModellApi(
             dato = dato,
             arbeidstimer = arbeidstimer.toModellApi(),
-            type = Dagtype.ARBEIDSDAG.name
         )
+
+        internal companion object {
+            internal fun gjenopprett(modellApi: DagModellApi.ArbeidsdagModellApi) = Arbeidsdag(
+                dato = modellApi.dato,
+                arbeidstimer = Arbeidstimer(modellApi.arbeidstimer),
+            )
+        }
     }
 
     internal class Fraværsdag(
@@ -71,11 +77,15 @@ internal sealed class Dag(
             visitor.visitFraværsdag(this, dato)
         }
 
-        override fun toModellApi() = DagModellApi(
+        override fun toModellApi() = DagModellApi.FraværsdagModellApi(
             dato = dato,
-            arbeidstimer = null,
-            type = Dagtype.FRAVÆRSDAG.name
         )
+
+        internal companion object {
+            internal fun gjenopprett(modellApi: DagModellApi.FraværsdagModellApi) = Fraværsdag(
+                dato = modellApi.dato,
+            )
+        }
     }
 
     internal companion object {
@@ -88,12 +98,6 @@ internal sealed class Dag(
 
         internal fun fraværsdag(dato: LocalDate) =
             Fraværsdag(dato)
-
-        internal fun gjenopprett(dagModellApi: DagModellApi) = when (enumValueOf<Dagtype>(dagModellApi.type)) {
-            Dagtype.HELG -> Helg(dagModellApi.dato, Arbeidstimer(requireNotNull(dagModellApi.arbeidstimer)))
-            Dagtype.ARBEIDSDAG -> Arbeidsdag(dagModellApi.dato, Arbeidstimer(requireNotNull(dagModellApi.arbeidstimer)))
-            Dagtype.FRAVÆRSDAG -> Fraværsdag(dagModellApi.dato)
-        }
     }
 }
 

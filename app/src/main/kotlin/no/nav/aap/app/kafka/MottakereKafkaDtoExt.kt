@@ -25,11 +25,24 @@ internal fun VedtakKafkaDto.toModellApi() = VedtakModellApi(
 )
 
 internal fun MeldeperiodeKafkaDto.toModellApi() = MeldeperiodeModellApi(
-    dager = dager.map(DagKafkaDto::toModellApi)
+    dager = dager.mapNotNull(DagKafkaDto::toModellApi)
 )
 
-internal fun DagKafkaDto.toModellApi() = DagModellApi(
-    dato = dato, arbeidstimer = arbeidstimer, type = type
+internal fun DagKafkaDto.toModellApi() =
+    helgedag?.toModellApi() ?: arbeidsdag?.toModellApi() ?: fraværsdag?.toModellApi()
+
+internal fun DagKafkaDto.HelgedagKafkaDto.toModellApi() = DagModellApi.HelgedagModellApi(
+    dato = dato,
+    arbeidstimer = arbeidstimer,
+)
+
+internal fun DagKafkaDto.ArbeidsdagKafkaDto.toModellApi() = DagModellApi.ArbeidsdagModellApi(
+    dato = dato,
+    arbeidstimer = arbeidstimer,
+)
+
+internal fun DagKafkaDto.FraværsdagKafkaDto.toModellApi() = DagModellApi.FraværsdagModellApi(
+    dato = dato,
 )
 
 internal fun UtbetalingstidslinjeKafkaDto.toModellApi() = UtbetalingstidslinjeModellApi(
@@ -155,8 +168,50 @@ internal fun MeldeperiodeModellApi.toKafkaDto() = MeldeperiodeKafkaDto(
     dager = dager.map(DagModellApi::toKafkaDto)
 )
 
-internal fun DagModellApi.toKafkaDto() = DagKafkaDto(
-    dato = dato, arbeidstimer = arbeidstimer, type = type
+internal fun DagModellApi.toKafkaDto() = object : DagModellApiVisitor {
+    lateinit var dag: DagKafkaDto
+
+    init {
+        accept(this)
+    }
+
+    override fun visitHelgedag(helgedag: DagModellApi.HelgedagModellApi) {
+        dag = helgedag.toKafkaDto()
+    }
+
+    override fun visitArbeidsdag(arbeidsdag: DagModellApi.ArbeidsdagModellApi) {
+        dag = arbeidsdag.toKafkaDto()
+    }
+
+    override fun visitFraværsdag(fraværsdag: DagModellApi.FraværsdagModellApi) {
+        dag = fraværsdag.toKafkaDto()
+    }
+}.dag
+
+internal fun DagModellApi.HelgedagModellApi.toKafkaDto() = DagKafkaDto(
+    helgedag = DagKafkaDto.HelgedagKafkaDto(
+        dato = dato,
+        arbeidstimer = arbeidstimer,
+    ),
+    arbeidsdag = null,
+    fraværsdag = null,
+)
+
+internal fun DagModellApi.ArbeidsdagModellApi.toKafkaDto() = DagKafkaDto(
+    helgedag = null,
+    arbeidsdag = DagKafkaDto.ArbeidsdagKafkaDto(
+        dato = dato,
+        arbeidstimer = arbeidstimer,
+    ),
+    fraværsdag = null,
+)
+
+internal fun DagModellApi.FraværsdagModellApi.toKafkaDto() = DagKafkaDto(
+    helgedag = null,
+    arbeidsdag = null,
+    fraværsdag = DagKafkaDto.FraværsdagKafkaDto(
+        dato = dato,
+    ),
 )
 
 internal fun UtbetalingstidslinjeModellApi.toKafkaDto() = UtbetalingstidslinjeKafkaDto(

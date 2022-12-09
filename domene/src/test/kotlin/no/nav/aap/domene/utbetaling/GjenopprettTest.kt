@@ -76,11 +76,16 @@ internal class GjenopprettTest {
                 MeldeperiodeModellApi(dager =
                 (0 until 14L).map { nummer ->
                     val dato = (10 oktober 2022).plusDays(nummer)
-                    DagModellApi(
-                        dato = dato,
-                        arbeidstimer = 0.0,
-                        type = if (dato.erHelg()) "HELG" else "ARBEIDSDAG",
-                    )
+                    if (dato.erHelg())
+                        DagModellApi.HelgedagModellApi(
+                            dato = dato,
+                            arbeidstimer = 0.0,
+                        )
+                    else
+                        DagModellApi.ArbeidsdagModellApi(
+                            dato = dato,
+                            arbeidstimer = 0.0,
+                        )
                 })
             ),
             utbetalingstidslinjehistorikk = emptyList(),
@@ -143,11 +148,16 @@ internal class GjenopprettTest {
                 MeldeperiodeModellApi(dager =
                 (0 until 14L).map { nummer ->
                     val dato = (10 oktober 2022).plusDays(nummer)
-                    DagModellApi(
-                        dato = dato,
-                        arbeidstimer = 0.0,
-                        type = if (dato.erHelg()) "HELG" else "ARBEIDSDAG",
-                    )
+                    if (dato.erHelg())
+                        DagModellApi.HelgedagModellApi(
+                            dato = dato,
+                            arbeidstimer = 0.0,
+                        )
+                    else
+                        DagModellApi.ArbeidsdagModellApi(
+                            dato = dato,
+                            arbeidstimer = 0.0,
+                        )
                 })
             ),
             utbetalingstidslinjehistorikk = listOf(UtbetalingstidslinjeModellApi(dager = (0 until 14L).mapNotNull { nummer ->

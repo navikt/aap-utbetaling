@@ -3,7 +3,6 @@ package no.nav.aap.app.kafka
 import no.nav.aap.dto.kafka.ForrigeMottakereKafkaDto
 import no.nav.aap.dto.kafka.ForrigeMottakereKafkaDto.*
 import no.nav.aap.dto.kafka.MottakereKafkaDto
-import kotlin.math.roundToInt
 
 internal fun ForrigeMottakereKafkaDto.toKafkaDto() = MottakereKafkaDto(
     personident = personident,
@@ -29,11 +28,34 @@ internal fun MeldeperiodeKafkaDto.toKafkaDto() = MottakereKafkaDto.MeldeperiodeK
     dager = dager.map(DagKafkaDto::toKafkaDto)
 )
 
-internal fun DagKafkaDto.toKafkaDto() = MottakereKafkaDto.DagKafkaDto(
-    dato = dato,
-    arbeidstimer = arbeidstimer,
-    type = type
-)
+internal fun DagKafkaDto.toKafkaDto() =
+    when (type) {
+        "HELG" -> MottakereKafkaDto.DagKafkaDto(
+            helgedag = MottakereKafkaDto.DagKafkaDto.HelgedagKafkaDto(
+                dato = dato,
+                arbeidstimer = requireNotNull(arbeidstimer),
+            ),
+            arbeidsdag = null,
+            fraværsdag = null,
+        )
+
+        "ARBEIDSDAG" -> MottakereKafkaDto.DagKafkaDto(
+            helgedag = null,
+            arbeidsdag = MottakereKafkaDto.DagKafkaDto.ArbeidsdagKafkaDto(
+                dato = dato,
+                arbeidstimer = requireNotNull(arbeidstimer),
+            ),
+            fraværsdag = null,
+        )
+
+        else -> MottakereKafkaDto.DagKafkaDto(
+            helgedag = null,
+            arbeidsdag = null,
+            fraværsdag = MottakereKafkaDto.DagKafkaDto.FraværsdagKafkaDto(
+                dato = dato,
+            ),
+        )
+    }
 
 internal fun UtbetalingstidslinjeKafkaDto.toKafkaDto() = MottakereKafkaDto.UtbetalingstidslinjeKafkaDto(
     dager = dager.map(UtbetalingstidslinjedagKafkaDto::toKafkaDto)
@@ -73,8 +95,7 @@ internal fun Paragraf_11_19_3_leddKafkaDto.toKafkaDto() =
     MottakereKafkaDto.Paragraf_11_19_3_leddKafkaDto(
         dato = dato,
         grunnlagsfaktor = grunnlagsfaktor,
-        //FIXME: Fjern avrunding
-        grunnbeløp = grunnbeløp.roundToInt(),
+        grunnbeløp = grunnbeløp,
         grunnlag = grunnlag
     )
 

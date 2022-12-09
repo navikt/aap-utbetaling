@@ -22,7 +22,7 @@ data class MottakereKafkaDto(
     private var erMigrertAkkuratNå: Boolean = false
 
     companion object {
-        const val VERSION = 9
+        const val VERSION = 10
         const val INIT_SEKVENS = 0L
     }
 
@@ -40,10 +40,24 @@ data class MottakereKafkaDto(
     )
 
     data class DagKafkaDto(
-        val dato: LocalDate,
-        val arbeidstimer: Double?,
-        val type: String
-    )
+        val helgedag: HelgedagKafkaDto?,
+        val arbeidsdag: ArbeidsdagKafkaDto?,
+        val fraværsdag: FraværsdagKafkaDto?,
+    ) {
+        data class HelgedagKafkaDto(
+            val dato: LocalDate,
+            val arbeidstimer: Double,
+        )
+
+        data class ArbeidsdagKafkaDto(
+            val dato: LocalDate,
+            val arbeidstimer: Double,
+        )
+
+        data class FraværsdagKafkaDto(
+            val dato: LocalDate,
+        )
+    }
 
     data class UtbetalingstidslinjeKafkaDto(
         val dager: List<UtbetalingstidslinjedagKafkaDto>

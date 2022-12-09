@@ -32,7 +32,7 @@ internal class Meldeperiode(dager: List<Dag> = emptyList()) {
         }
 
         internal fun gjenopprett(meldeperiodeModellApi: MeldeperiodeModellApi) = Meldeperiode(
-            dager = meldeperiodeModellApi.dager.map { Dag.gjenopprett(it) }
+            dager = meldeperiodeModellApi.dager.map { it.gjenopprett() }
         )
     }
 }

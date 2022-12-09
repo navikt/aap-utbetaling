@@ -1,8 +1,6 @@
 package no.nav.aap.app.simulering
 
-import no.nav.aap.domene.utbetaling.modellapi.MottakerModellApi
-import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjedagModellApi
-import no.nav.aap.domene.utbetaling.modellapi.UtbetalingstidslinjedagModellApiVisitor
+import no.nav.aap.domene.utbetaling.modellapi.*
 import java.time.LocalDate
 
 data class SimuleringResponse(
@@ -40,11 +38,37 @@ data class SimuleringResponse(
     companion object {
         fun lagNy(endretMottakerMedBarn: MottakerModellApi): SimuleringResponse {
             val aktivitetstidslinje = endretMottakerMedBarn.aktivitetstidslinje.single().dager.map {
-                Aktivitetsdag(
-                    dato = it.dato,
-                    arbeidstimer = it.arbeidstimer,
-                    type = it.type,
-                )
+                object : DagModellApiVisitor {
+                    lateinit var dag: Aktivitetsdag
+
+                    init {
+                        it.accept(this)
+                    }
+
+                    override fun visitHelgedag(helgedag: DagModellApi.HelgedagModellApi) {
+                        dag = Aktivitetsdag(
+                            dato = helgedag.dato,
+                            arbeidstimer = helgedag.arbeidstimer,
+                            type = "HELG",
+                        )
+                    }
+
+                    override fun visitArbeidsdag(arbeidsdag: DagModellApi.ArbeidsdagModellApi) {
+                        dag = Aktivitetsdag(
+                            dato = arbeidsdag.dato,
+                            arbeidstimer = arbeidsdag.arbeidstimer,
+                            type = "ARBEIDSDAG",
+                        )
+                    }
+
+                    override fun visitFraværsdag(fraværsdag: DagModellApi.FraværsdagModellApi) {
+                        dag = Aktivitetsdag(
+                            dato = fraværsdag.dato,
+                            arbeidstimer = null,
+                            type = "FRAVÆRSDAG",
+                        )
+                    }
+                }.dag
             }
             val utbetalingstidslinje = endretMottakerMedBarn.utbetalingstidslinjehistorikk.single().dager.map {
                 object : UtbetalingstidslinjedagModellApiVisitor {
