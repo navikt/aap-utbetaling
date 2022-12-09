@@ -6,6 +6,26 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
+data class MottakereKafkaDtoHistorikk(
+    val mottakereKafkaDto: MottakereKafkaDto,
+    val forrigeMottakereKafkaDto: ForrigeMottakereKafkaDto,
+    val sekvensnummer: Long = INIT_SEKVENS,
+) : Migratable, Bufferable<MottakereKafkaDtoHistorikk> {
+    override fun erNyere(other: MottakereKafkaDtoHistorikk): Boolean = sekvensnummer > other.sekvensnummer
+
+    private var erMigrertAkkuratNå: Boolean = false
+
+    private companion object {
+        private const val INIT_SEKVENS = 0L
+    }
+
+    override fun markerSomMigrertAkkuratNå() {
+        erMigrertAkkuratNå = true
+    }
+
+    override fun erMigrertAkkuratNå(): Boolean = erMigrertAkkuratNå
+}
+
 data class MottakereKafkaDto(
     val personident: String,
     val fødselsdato: LocalDate,
@@ -15,15 +35,12 @@ data class MottakereKafkaDto(
     val oppdragshistorikk: List<OppdragKafkaDto>,
     val barnetillegg: List<BarnaKafkaDto>,
     val tilstand: String,
-    val sekvensnummer: Long = INIT_SEKVENS,
     val version: Int = VERSION, // Denne bumpes ved hver migrering
-) : Migratable, Bufferable<MottakereKafkaDto> {
-
-    private var erMigrertAkkuratNå: Boolean = false
+) {
 
     companion object {
-        const val VERSION = 10
-        const val INIT_SEKVENS = 0L
+        //Husk å oppdatere andre konsumenter etter migrering
+        const val VERSION = 11
     }
 
     data class VedtakKafkaDto(
@@ -156,12 +173,4 @@ data class MottakereKafkaDto(
     data class BarnKafkaDto(
         val fødselsdato: LocalDate
     )
-
-    override fun markerSomMigrertAkkuratNå() {
-        erMigrertAkkuratNå = true
-    }
-
-    override fun erMigrertAkkuratNå(): Boolean = erMigrertAkkuratNå
-
-    override fun erNyere(other: MottakereKafkaDto): Boolean = sekvensnummer > other.sekvensnummer
 }

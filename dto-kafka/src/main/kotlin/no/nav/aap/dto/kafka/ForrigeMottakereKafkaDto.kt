@@ -4,6 +4,10 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
+data class ForrigeMottakereKafkaDtoHistorikk(
+    val mottakereKafkaDto: ForrigeMottakereKafkaDto,
+)
+
 data class ForrigeMottakereKafkaDto(
     val personident: String,
     val fødselsdato: LocalDate,
@@ -30,10 +34,24 @@ data class ForrigeMottakereKafkaDto(
     )
 
     data class DagKafkaDto(
-        val dato: LocalDate,
-        val arbeidstimer: Double?,
-        val type: String
-    )
+        val helgedag: HelgedagKafkaDto?,
+        val arbeidsdag: ArbeidsdagKafkaDto?,
+        val fraværsdag: FraværsdagKafkaDto?,
+    ) {
+        data class HelgedagKafkaDto(
+            val dato: LocalDate,
+            val arbeidstimer: Double,
+        )
+
+        data class ArbeidsdagKafkaDto(
+            val dato: LocalDate,
+            val arbeidstimer: Double,
+        )
+
+        data class FraværsdagKafkaDto(
+            val dato: LocalDate,
+        )
+    }
 
     data class UtbetalingstidslinjeKafkaDto(
         val dager: List<UtbetalingstidslinjedagKafkaDto>

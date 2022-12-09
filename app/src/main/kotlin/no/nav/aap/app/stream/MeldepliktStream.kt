@@ -1,15 +1,15 @@
 package no.nav.aap.app.stream
 
 import no.nav.aap.app.kafka.Topics
-import no.nav.aap.app.kafka.toKafkaDto
 import no.nav.aap.app.kafka.toModellApi
+import no.nav.aap.app.kafka.toMottakereKafkaDtoHistorikk
 import no.nav.aap.domene.utbetaling.modellapi.MeldepliktshendelseModellApi
-import no.nav.aap.dto.kafka.MottakereKafkaDto
+import no.nav.aap.dto.kafka.MottakereKafkaDtoHistorikk
 import no.nav.aap.kafka.streams.extension.*
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.KTable
 
-internal fun StreamsBuilder.meldepliktStream(mottakerKtable: KTable<String, MottakereKafkaDto>) {
+internal fun StreamsBuilder.meldepliktStream(mottakerKtable: KTable<String, MottakereKafkaDtoHistorikk>) {
     val hendelseHåndtert = consume(Topics.meldeplikt)
         .filterNotNull("meldepliktshendelse-filter-tombstone")
         .join(Topics.meldeplikt with Topics.mottakere, mottakerKtable, håndter)
@@ -24,9 +24,10 @@ internal fun StreamsBuilder.meldepliktStream(mottakerKtable: KTable<String, Mott
         .sendBehov("meldeplikt")
 }
 
-private val håndter = { ident: String, meldepliktshendelseModellApi: MeldepliktshendelseModellApi, mottakerKafkaDto: MottakereKafkaDto ->
-    val mottakerModellApi = mottakerKafkaDto.toModellApi()
-    val observer = BehovObserver(ident)
-    val endretMottakerModellApi = meldepliktshendelseModellApi.håndter(mottakerModellApi, observer)
-    endretMottakerModellApi.toKafkaDto(mottakerKafkaDto.sekvensnummer) to observer.behovene()
-}
+private val håndter =
+    { ident: String, meldepliktshendelseModellApi: MeldepliktshendelseModellApi, (mottakerKafkaDto, _, gammeltSekvensnummer): MottakereKafkaDtoHistorikk ->
+        val mottakerModellApi = mottakerKafkaDto.toModellApi()
+        val observer = BehovObserver(ident)
+        val endretMottakerModellApi = meldepliktshendelseModellApi.håndter(mottakerModellApi, observer)
+        endretMottakerModellApi.toMottakereKafkaDtoHistorikk(gammeltSekvensnummer) to observer.behovene()
+    }

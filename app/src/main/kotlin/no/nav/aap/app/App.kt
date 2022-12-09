@@ -25,6 +25,7 @@ import no.nav.aap.app.stream.mock.utbetalingsbehovStreamMock
 import no.nav.aap.app.stream.vedtakStream
 import no.nav.aap.domene.utbetaling.modellapi.*
 import no.nav.aap.dto.kafka.MottakereKafkaDto
+import no.nav.aap.dto.kafka.MottakereKafkaDtoHistorikk
 import no.nav.aap.kafka.streams.KStreams
 import no.nav.aap.kafka.streams.KafkaStreams
 import no.nav.aap.kafka.streams.extension.consume
@@ -74,7 +75,7 @@ internal fun Application.server(kafka: KStreams = KafkaStreams) {
     }
 }
 
-internal fun topology(registry: MeterRegistry, mottakerProducer: Producer<String, MottakereKafkaDto>): Topology {
+internal fun topology(registry: MeterRegistry, mottakerProducer: Producer<String, MottakereKafkaDtoHistorikk>): Topology {
     val streams = StreamsBuilder()
     val mottakerKtable = streams
         // Setter timestamp for mottakere tilbake ett år for å tvinge topologien å oppdatere tabellen før neste hendelse leses

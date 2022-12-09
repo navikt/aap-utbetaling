@@ -79,7 +79,7 @@ internal class AppTest {
         }
 
         mottakTopic.assertThat().hasValuesForPredicate("123", 1) {
-            it.personident == "123"
+            it.mottakereKafkaDto.personident == "123"
         }
     }
 
@@ -100,7 +100,7 @@ internal class AppTest {
         }
 
         mottakTopic.assertThat().hasValuesForPredicate("123", 1) {
-            it.vedtakshistorikk.size == 1 && it.vedtakshistorikk[0].vedtaksid == vedtaksid
+            it.mottakereKafkaDto.vedtakshistorikk.size == 1 && it.mottakereKafkaDto.vedtakshistorikk[0].vedtaksid == vedtaksid
         }
     }
 
@@ -134,7 +134,7 @@ internal class AppTest {
         }
 
         mottakTopic.assertThat().hasValuesForPredicate("123", 1) {
-            it.aktivitetstidslinje.size == 1
+            it.mottakereKafkaDto.aktivitetstidslinje.size == 1
         }
     }
 
@@ -181,7 +181,7 @@ internal class AppTest {
         }
 
         mottakTopic.assertThat().hasValuesForPredicate("123", 1) {
-            it.utbetalingstidslinjehistorikk.size == 1 && it.oppdragshistorikk.size == 1
+            it.mottakereKafkaDto.utbetalingstidslinjehistorikk.size == 1 && it.mottakereKafkaDto.oppdragshistorikk.size == 1
         }
     }
 
