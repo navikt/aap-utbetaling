@@ -1,5 +1,5 @@
-val aapLibVersion = "3.5.33"
-val ktorVersion = "2.1.3"
+val aapLibVersion = "3.5.34"
+val ktorVersion = "2.2.1"
 
 plugins {
     id("io.ktor.plugin")
@@ -13,7 +13,7 @@ application {
 dependencies {
     implementation(project(":domene"))
     implementation(project(":dto-kafka"))
-    implementation("com.github.navikt:aap-vedtak:1.0.219")
+    implementation("com.github.navikt:aap-vedtak:1.0.264")
 
     implementation("com.github.navikt.aap-libs:ktor-utils:$aapLibVersion")
     implementation("com.github.navikt.aap-libs:kafka:$aapLibVersion")
