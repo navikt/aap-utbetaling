@@ -1,4 +1,5 @@
-name: Build PR
+name: Pull Request
+
 on: [ pull_request ]
 
 permissions:
@@ -23,7 +24,7 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2.3.3
         with:
-          arguments: test --continue --no-daemon
+          arguments: test --continue --no-daemon --configuration-cache
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
       - name: 📊 Publish results with dorny
@@ -34,3 +35,10 @@ jobs:
           path: "**/build/test-results/test/TEST-*.xml"
           reporter: java-junit
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-merge Dependabot's pull request
+        if: ${{ github.actor == 'dependabot[bot]' }}
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
