@@ -1,4 +1,4 @@
-package simulering
+package app.simulering
 
 import no.nav.aap.domene.utbetaling.modellapi.*
 import java.time.LocalDate

@@ -1,7 +1,7 @@
-package kafka
+package app.kafka
 
-import stream.BehovUtbetaling
-import stream.BehovUtbetalingVisitor
+import app.stream.BehovUtbetaling
+import app.stream.BehovUtbetalingVisitor
 import no.nav.aap.domene.utbetaling.modellapi.LøsningModellApi
 
 internal data class KafkaUtbetalingsbehovWrapper(

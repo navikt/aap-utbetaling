@@ -1,4 +1,4 @@
-package kafka
+package app.kafka
 
 import no.nav.aap.dto.kafka.ForrigeMottakereKafkaDtoHistorikk
 import no.nav.aap.dto.kafka.MottakereKafkaDtoHistorikk

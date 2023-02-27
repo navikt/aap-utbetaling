@@ -5,7 +5,6 @@ import no.nav.aap.kafka.streams.v2.config.StreamsConfig
 import no.nav.aap.kafka.streams.v2.test.KStreamsMock
 import org.apache.kafka.clients.producer.MockProducer
 import org.junit.jupiter.api.Test
-import topology
 import java.io.File
 
 internal class TopologyDiagram {

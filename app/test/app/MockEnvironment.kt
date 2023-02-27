@@ -7,7 +7,6 @@ import io.ktor.server.testing.*
 import kotlinx.coroutines.runBlocking
 import no.nav.aap.kafka.streams.v2.test.KStreamsMock
 import org.apache.kafka.streams.TestInputTopic
-import server
 
 fun withTestApp(test: ApplicationTestBuilder.(mocks: MockEnvironment) -> Unit) = MockEnvironment().use { mocks ->
     testApplication {

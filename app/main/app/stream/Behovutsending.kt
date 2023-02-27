@@ -1,6 +1,6 @@
-package stream
+package app.stream
 
-import kafka.KafkaUtbetalingsbehovWrapper
+import app.kafka.KafkaUtbetalingsbehovWrapper
 import no.nav.aap.domene.utbetaling.modellapi.MottakerModellApiObserver
 import no.nav.aap.kafka.streams.v2.behov.Behov
 import no.nav.aap.kafka.streams.v2.behov.BehovExtractor

@@ -1,3 +1,5 @@
+package app
+
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.ktor.serialization.jackson.*
@@ -10,8 +12,8 @@ import io.ktor.server.routing.*
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
-import kafka.Tables
-import kafka.Topics
+import app.kafka.Tables
+import app.kafka.Topics
 import no.nav.aap.dto.kafka.MottakereKafkaDtoHistorikk
 import no.nav.aap.kafka.streams.v2.KStreams
 import no.nav.aap.kafka.streams.v2.KafkaStreams
@@ -21,9 +23,9 @@ import no.nav.aap.kafka.streams.v2.processor.state.MigrateStateInitProcessor
 import no.nav.aap.kafka.streams.v2.topology
 import no.nav.aap.ktor.config.loadConfig
 import org.apache.kafka.clients.producer.Producer
-import stream.løsningStream
-import stream.meldepliktStream
-import stream.vedtakStream
+import app.stream.løsningStream
+import app.stream.meldepliktStream
+import app.stream.vedtakStream
 import kotlin.time.Duration.Companion.minutes
 
 fun main() {

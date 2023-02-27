@@ -1,14 +1,14 @@
 package app
 
-import kafka.KafkaUtbetalingsbehovWrapper
-import kafka.Topics
+import app.kafka.KafkaUtbetalingsbehovWrapper
+import app.kafka.Topics
 import no.nav.aap.domene.utbetaling.modellapi.AkivitetPerDagModellApi
 import no.nav.aap.domene.utbetaling.modellapi.LøsningBarnModellApi
 import no.nav.aap.domene.utbetaling.modellapi.LøsningModellApi
 import no.nav.aap.domene.utbetaling.modellapi.MeldepliktshendelseModellApi
 import no.nav.aap.dto.kafka.IverksettVedtakKafkaDto
 import org.junit.jupiter.api.Test
-import simulering.SimuleringRequest
+import app.simulering.SimuleringRequest
 import java.time.LocalDate
 import java.util.*
 

@@ -1,7 +1,7 @@
-package stream.mock
+package app.stream.mock
 
-import kafka.KafkaUtbetalingsbehovWrapper
-import kafka.Topics
+import app.kafka.KafkaUtbetalingsbehovWrapper
+import app.kafka.Topics
 import no.nav.aap.domene.utbetaling.modellapi.LøsningModellApi
 import no.nav.aap.kafka.streams.v2.stream.ConsumedKStream
 

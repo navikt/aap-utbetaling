@@ -1,4 +1,4 @@
-package kafka
+package app.kafka
 
 import no.nav.aap.domene.utbetaling.modellapi.*
 import no.nav.aap.dto.kafka.MottakereKafkaDto

@@ -1,9 +1,9 @@
-package stream
+package app.stream
 
-import kafka.Topics
-import kafka.buffer
-import kafka.toModellApi
-import kafka.toMottakereKafkaDtoHistorikk
+import app.kafka.Topics
+import app.kafka.buffer
+import app.kafka.toModellApi
+import app.kafka.toMottakereKafkaDtoHistorikk
 import no.nav.aap.dto.kafka.MottakereKafkaDtoHistorikk
 import no.nav.aap.kafka.streams.v2.KTable
 import no.nav.aap.kafka.streams.v2.Topology

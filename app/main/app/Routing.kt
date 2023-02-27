@@ -1,3 +1,5 @@
+package app
+
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -9,8 +11,8 @@ import no.nav.aap.domene.utbetaling.modellapi.LøsningModellApi
 import no.nav.aap.domene.utbetaling.modellapi.MottakerModellApi
 import no.nav.aap.domene.utbetaling.modellapi.MottakerModellApiObserver
 import no.nav.aap.kafka.streams.v2.KStreams
-import simulering.SimuleringRequest
-import simulering.SimuleringResponse
+import app.simulering.SimuleringRequest
+import app.simulering.SimuleringResponse
 import java.time.LocalDate
 
 internal fun Routing.simulering() {
