@@ -1,7 +1,7 @@
-package no.nav.aap.app.kafka
+package kafka
 
-import no.nav.aap.app.stream.BehovUtbetaling
-import no.nav.aap.app.stream.BehovUtbetalingVisitor
+import stream.BehovUtbetaling
+import stream.BehovUtbetalingVisitor
 import no.nav.aap.domene.utbetaling.modellapi.LøsningModellApi
 
 internal data class KafkaUtbetalingsbehovWrapper(
@@ -17,9 +17,7 @@ internal data class KafkaUtbetalingsbehovWrapper(
         val request: Request,
         val response: Response?
     ) {
-        data class Request(
-            val ident: String
-        )
+        class Request
 
         data class Response(
             val barn: LøsningModellApi

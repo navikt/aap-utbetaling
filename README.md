@@ -2,4 +2,4 @@
 
 # Topology
 Se overordnet topologi:
-[doc/topology.md](doc/topology.md)
+[docs/topology.md](docs/topology.md)

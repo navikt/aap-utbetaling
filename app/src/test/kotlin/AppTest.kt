@@ -1,66 +1,58 @@
-package no.nav.aap.app
+package app
 
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import io.ktor.client.call.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.request.*
-import io.ktor.http.*
-import io.ktor.serialization.jackson.*
-import io.ktor.server.testing.*
-import no.nav.aap.app.kafka.KafkaUtbetalingsbehovWrapper
-import no.nav.aap.app.kafka.Topics
-import no.nav.aap.app.simulering.SimuleringRequest
-import no.nav.aap.app.simulering.SimuleringResponse
-import no.nav.aap.domene.utbetaling.modellapi.*
+import kafka.KafkaUtbetalingsbehovWrapper
+import kafka.Topics
+import no.nav.aap.domene.utbetaling.modellapi.AkivitetPerDagModellApi
+import no.nav.aap.domene.utbetaling.modellapi.LøsningBarnModellApi
+import no.nav.aap.domene.utbetaling.modellapi.LøsningModellApi
+import no.nav.aap.domene.utbetaling.modellapi.MeldepliktshendelseModellApi
 import no.nav.aap.dto.kafka.IverksettVedtakKafkaDto
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
+import simulering.SimuleringRequest
 import java.time.LocalDate
 import java.util.*
-import kotlin.test.assertEquals
 
 internal class AppTest {
 
-    @Test
-    @Disabled("Disabler til vi finner ut av hvorfor denne ikke rydder skikkelig opp og får alle andre tester til å feile")
-    fun `test simulering`() {
-        MockEnvironment().use { mocks ->
-            testApplication {
-                environment { config = mocks.containerProperties }
-                application {
-                    server(mocks.kafka)
-                }
-
-                val client = createClient {
-                    install(ContentNegotiation) {
-                        jackson {
-                            registerModule(JavaTimeModule())
-                            disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-                        }
-                    }
-                }
-                // Hvis dette kallet kommenteres ut, så funker det
-                val response = client.post("/simuler/12345678910") {
-                    contentType(ContentType.Application.Json)
-                    setBody(
-                        SimuleringRequest(
-                            fødselsdato = LocalDate.now(),
-                            innvilget = false,
-                            grunnlagsfaktor = 20.0,
-                            vedtaksdato = LocalDate.now(),
-                            virkningsdato = LocalDate.now(),
-                            aktivitetsdager = enkelMeldeplikt()
-                        )
-                    )
-                }
-                val body: SimuleringResponse = response.body()
-                assertEquals(14, body.aktivitetstidslinje.size)
-                assertEquals(10, body.utbetalingstidslinje.size)
-                assertEquals(HttpStatusCode.OK, response.status)
-            }
-        }
-    }
+//    @Test
+//    @Disabled("Disabler til vi finner ut av hvorfor denne ikke rydder skikkelig opp og får alle andre tester til å feile")
+//    fun `test simulering`() {
+//        MockEnvironment().use { mocks ->
+//            testApplication {
+//                environment { config = mocks.containerProperties }
+//                application {
+//                    server(mocks.kafka)
+//                }
+//
+//                val client = createClient {
+//                    install(ContentNegotiation) {
+//                        jackson {
+//                            registerModule(JavaTimeModule())
+//                            disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+//                        }
+//                    }
+//                }
+//                // Hvis dette kallet kommenteres ut, så funker det
+//                val response = client.post("/simuler/12345678910") {
+//                    contentType(ContentType.Application.Json)
+//                    setBody(
+//                        SimuleringRequest(
+//                            fødselsdato = LocalDate.now(),
+//                            innvilget = false,
+//                            grunnlagsfaktor = 20.0,
+//                            vedtaksdato = LocalDate.now(),
+//                            virkningsdato = LocalDate.now(),
+//                            aktivitetsdager = enkelMeldeplikt()
+//                        )
+//                    )
+//                }
+//                val body: SimuleringResponse = response.body()
+//                assertEquals(14, body.aktivitetstidslinje.size)
+//                assertEquals(10, body.utbetalingstidslinje.size)
+//                assertEquals(HttpStatusCode.OK, response.status)
+//            }
+//        }
+//    }
 
     @Test
     fun `Innsendt vedtak oppretter en mottaker`() = withTestApp { mocks ->
@@ -214,8 +206,8 @@ internal class AppTest {
             )
         }
 
-        utbetalingsbehovOutputTopic.assertThat().hasValuesForPredicate("123", 1) {
-            it.request.ident == "123"
+        utbetalingsbehovOutputTopic.assertThat().hasLastValueMatching {
+            it?.request != null && it.response == null
         }
     }
 

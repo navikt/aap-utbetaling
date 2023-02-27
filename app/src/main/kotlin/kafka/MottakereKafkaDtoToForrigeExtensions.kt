@@ -1,4 +1,4 @@
-package no.nav.aap.app.kafka
+package kafka
 
 import no.nav.aap.dto.kafka.ForrigeMottakereKafkaDto as Til
 import no.nav.aap.dto.kafka.MottakereKafkaDto as Fra

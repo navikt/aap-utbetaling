@@ -1,9 +1,8 @@
-val aapLibVersion = "3.5.37"
-val ktorVersion = "2.2.2"
+val aapLibVersion = "3.6.8"
+val ktorVersion = "2.2.3"
 
 plugins {
     id("io.ktor.plugin")
-    application
 }
 
 application {
@@ -13,10 +12,12 @@ application {
 dependencies {
     implementation(project(":domene"))
     implementation(project(":dto-kafka"))
-    implementation("com.github.navikt:aap-vedtak:1.0.272")
 
+    implementation("com.github.navikt.aap-vedtak:kafka-dto:1.1.1")
     implementation("com.github.navikt.aap-libs:ktor-utils:$aapLibVersion")
-    implementation("com.github.navikt.aap-libs:kafka:$aapLibVersion")
+    implementation("com.github.navikt.aap-libs:kafka-2:$aapLibVersion")
+
+    implementation("org.apache.kafka:kafka-clients:3.3.1")
 
     implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
@@ -34,7 +35,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1")
 
     testImplementation(kotlin("test"))
-    testImplementation("com.github.navikt.aap-libs:kafka-test:$aapLibVersion")
+    testImplementation("com.github.navikt.aap-libs:kafka-test-2:$aapLibVersion")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
 }
