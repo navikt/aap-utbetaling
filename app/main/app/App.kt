@@ -68,7 +68,7 @@ internal fun topology(
     mottakerProducer: Producer<String, MottakereKafkaDtoHistorikk>,
 ): Topology = topology {
     val mottakerKtable =
-        consume(Topics.mottakere).produce(Tables.mottakere)
+        consume(Tables.mottakere)
 
     mottakerKtable.schedule(
         GaugeStoreEntriesStateScheduleProcessor(
