@@ -10,7 +10,7 @@ import no.nav.aap.domene.utbetaling.modellapi.LøsningBarnModellApi
 import no.nav.aap.domene.utbetaling.modellapi.LøsningModellApi
 import no.nav.aap.domene.utbetaling.modellapi.MottakerModellApi
 import no.nav.aap.domene.utbetaling.modellapi.MottakerModellApiObserver
-import no.nav.aap.kafka.streams.v2.KStreams
+import no.nav.aap.kafka.streams.v2.Streams
 import app.simulering.SimuleringRequest
 import app.simulering.SimuleringResponse
 import java.time.LocalDate
@@ -33,7 +33,7 @@ internal fun Routing.simulering() {
     }
 }
 
-internal fun Routing.actuator(prometheus: PrometheusMeterRegistry, kafka: KStreams) {
+internal fun Routing.actuator(prometheus: PrometheusMeterRegistry, kafka: Streams) {
     route("/actuator") {
         get("/metrics") {
             call.respondText { prometheus.scrape() }

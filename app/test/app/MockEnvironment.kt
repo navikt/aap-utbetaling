@@ -5,7 +5,7 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.testing.*
 import kotlinx.coroutines.runBlocking
-import no.nav.aap.kafka.streams.v2.test.KStreamsMock
+import no.nav.aap.kafka.streams.v2.test.StreamsMock
 import org.apache.kafka.streams.TestInputTopic
 
 fun withTestApp(test: ApplicationTestBuilder.(mocks: MockEnvironment) -> Unit) = MockEnvironment().use { mocks ->
@@ -19,7 +19,7 @@ fun withTestApp(test: ApplicationTestBuilder.(mocks: MockEnvironment) -> Unit) =
 }
 
 class MockEnvironment : AutoCloseable {
-    val kafka = KStreamsMock()
+    val kafka = StreamsMock()
 
     val containerProperties = MapApplicationConfig(
         "KAFKA_STREAMS_APPLICATION_ID" to "utbetaling",

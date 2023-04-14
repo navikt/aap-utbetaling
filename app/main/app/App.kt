@@ -15,7 +15,7 @@ import io.micrometer.prometheus.PrometheusMeterRegistry
 import app.kafka.Tables
 import app.kafka.Topics
 import no.nav.aap.dto.kafka.MottakereKafkaDtoHistorikk
-import no.nav.aap.kafka.streams.v2.KStreams
+import no.nav.aap.kafka.streams.v2.Streams
 import no.nav.aap.kafka.streams.v2.KafkaStreams
 import no.nav.aap.kafka.streams.v2.Topology
 import no.nav.aap.kafka.streams.v2.processor.state.GaugeStoreEntriesStateScheduleProcessor
@@ -32,7 +32,7 @@ fun main() {
     embeddedServer(Netty, port = 8080, module = Application::server).start(wait = true)
 }
 
-internal fun Application.server(kafka: KStreams = KafkaStreams()) {
+internal fun Application.server(kafka: Streams = KafkaStreams()) {
     val prometheus = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
     val config = loadConfig<Config>()
     val mottakerProducer = kafka.createProducer(config.kafka, Topics.mottakere)
@@ -82,7 +82,6 @@ internal fun topology(
         MigrateStateInitProcessor(
             ktable = mottakerKtable,
             producer = mottakerProducer,
-            logValue = true,
         )
     )
 
