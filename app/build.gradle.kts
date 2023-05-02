@@ -26,7 +26,7 @@ dependencies {
     implementation("io.ktor:ktor-server-metrics-micrometer:$ktorVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:1.10.6")
 
-    implementation("ch.qos.logback:logback-classic:1.4.6")
+    implementation("ch.qos.logback:logback-classic:1.4.7")
     implementation("net.logstash.logback:logstash-logback-encoder:7.3")
 
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
